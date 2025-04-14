@@ -502,3 +502,17 @@ INFO:root:Vocabulary updated successfully.
 INFO:root:Updated vocabulary with comprehensive characters: {'p', 'F', 'K', 'u', 'T', ';', '5', 'j', 'm', '\u026a', 'f', '.', '\u026b', 'a', 'W', 'l', 'R', ',', '?', '\u025a', 'N', 'D', ':', '"', '\u028a', 'y', '0', 'P', 'M', 'b', ' ', 'g', '\u0261', 'd', '\u0254', 'Z', '-', '\u0279', 'k', 't', 'B', '\u0292', '\u0361', '\u014b', 'x', 'Y', '3', 'J', 'H', '1', 'G', '\u025b', 'æ', 'v', 'E', 'r', '(', '\u025d', 'i', '8', '\u0251', 'c', '\u0283', '7', "'", 'e', 'I', 'U', 'C', 'S', '!', 'V', 'w', '2', 'z', 'Q', '4', '6', '9', '\u027e', 'L', '\u028c', ')', 'A', 'h', 'ð', 'o', 'X', 'q', 's', 'O', 'n'}
 INFO:root:Vocabulary dynamically updated successfully.
 INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:Output path: trained_models/Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'\u028c', '3', 'X', ')', '(', '\u0251', 'x', 'b', 'f', 'G', '\u027e', 'l', 'r', 'u', 's', 'm', 'o', 'H', 'O', '\u0254', '\u026a', 'd', '!', 'E', '-', 'g', 'N', 'C', 'B', '\u025a', '0', '7', '2', 'L', 'D', '\u0361', 'h', '\u026b', '.', 'P', '1', '"', 'R', '\u0292', ';', 'K', 'i', 'a', 'F', 'S', 'æ', 'w', '?', '\u014b', 'W', '\u025d', 'c', 'J', 't', 'z', "'", 'U', 'k', '\u0261', 'n', '\u0283', 'I', 'M', 'v', 'y', '\u028a', 'V', '5', '4', '\u025b', 'q', 'j', '9', '6', 'ð', '8', '\u0279', 'Z', 'T', ',', 'A', 'p', 'Q', ' ', 'e', 'Y', ':'}
+INFO:root:Vocabulary dynamically updated successfully.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+WARNING:root:tokenizer.characters is not iterable, cannot check membership.
+INFO:root:Vocabulary check complete.
+INFO:root:>>> Starting Training <<<
