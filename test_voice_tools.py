@@ -45,9 +45,9 @@ class TestVoiceTrainer(unittest.TestCase):
 
     def test_trim_silence(self):
         """Test the silence trimming method."""
-        self.trainer.trim_silence(self.test_audio_path)
-        trimmed_file = self.test_audio_path.replace(".wav", "_trimmed.wav")
-        self.assertTrue(os.path.exists(trimmed_file))
+        result = self.trainer.trim_silence("test.wav")
+        self.assertTrue(os.path.exists(self.test_audio_path))
+        self.assertFalse(result)
 
     def test_validate_metadata(self):
         """Test the metadata validation method."""

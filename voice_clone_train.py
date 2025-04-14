@@ -262,6 +262,9 @@ def main():
 
         # Validate dataset paths
         for sample in train_samples:
+            if not sample["audio_file"].lower().endswith(".wav"):
+                logging.error(f"Non-WAV file found in dataset: {sample['audio_file']}")
+                return
             if not os.path.isfile(sample["audio_file"]):
                 logging.error(f"Missing audio file: {sample['audio_file']}")
                 return
