@@ -9,6 +9,7 @@ import threading
 import subprocess
 import os
 import logging
+from tkinter import ttk  # Import ttk for modern widgets
 
 # Function to run the training command and display output in the GUI
 def run_command_with_output(command, output_text_widget):
@@ -86,19 +87,29 @@ root = tk.Tk()
 root.title("Voice Trainer GUI")
 root.geometry("500x400")
 
+# Use a Notebook widget to organize sections
+notebook = ttk.Notebook(root)
+notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+# Create frames for different sections
+parameters_frame = ttk.Frame(notebook)
+output_frame = ttk.Frame(notebook)
+notebook.add(parameters_frame, text="Parameters")
+notebook.add(output_frame, text="Output")
+
 # Character Selection
-Label(root, text="Select Character:").pack(pady=5)
 character_list = fetch_character_list()
 character_var = tk.StringVar(root)
 if character_list:
     character_var.set(character_list[0])  # Default to the first character
 else:
     character_var.set("No characters found")
-character_dropdown = tk.OptionMenu(root, character_var, *character_list)
-character_dropdown.pack(pady=5)
+
+ttk.Label(parameters_frame, text="Select Character:").grid(row=0, column=0, sticky="w", padx=5, pady=5)
+character_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state="readonly")
+character_dropdown.grid(row=0, column=1, sticky="ew", padx=5, pady=5)
 
 # Add a dropdown menu for selecting actions
-Label(root, text="Select Action:").pack(pady=5)
 actions = [
     "record",
     "provide",
@@ -113,30 +124,30 @@ actions = [
 ]
 action_var = tk.StringVar(root)
 action_var.set(actions[0])  # Default to the first action
-action_dropdown = tk.OptionMenu(root, action_var, *actions)
-action_dropdown.pack(pady=5)
+
+ttk.Label(parameters_frame, text="Select Action:").grid(row=1, column=0, sticky="w", padx=5, pady=5)
+action_dropdown = ttk.Combobox(parameters_frame, textvariable=action_var, values=actions, state="readonly")
+action_dropdown.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
 # Dataset Path Display
-Label(root, text="Dataset Path (Default):").pack(pady=5)
-dataset_path_label = Label(root, text="voice_datasets/<character>", relief=tk.SUNKEN, anchor="w")
-dataset_path_label.pack(pady=5, fill=tk.X)
+ttk.Label(parameters_frame, text="Dataset Path (Default):").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+dataset_path_label = ttk.Label(parameters_frame, text="voice_datasets/<character>", relief=tk.SUNKEN, anchor="w")
+dataset_path_label.grid(row=2, column=1, sticky="ew", padx=5, pady=5)
 
 # Output Path Display
-Label(root, text="Output Path (Default):").pack(pady=5)
-output_path_label = Label(root, text="trained_models/<character>", relief=tk.SUNKEN, anchor="w")
-output_path_label.pack(pady=5, fill=tk.X)
+ttk.Label(parameters_frame, text="Output Path (Default):").grid(row=3, column=0, sticky="w", padx=5, pady=5)
+output_path_label = ttk.Label(parameters_frame, text="trained_models/<character>", relief=tk.SUNKEN, anchor="w")
+output_path_label.grid(row=3, column=1, sticky="ew", padx=5, pady=5)
 
 # Training Parameters
-Label(root, text="Training Parameters:").pack(pady=5)
-
-Label(root, text="Epochs:").pack(pady=5)
-epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)
+ttk.Label(parameters_frame, text="Epochs:").grid(row=4, column=0, sticky="w", padx=5, pady=5)
+epochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)
 epochs_scale.set(500)
-epochs_scale.pack(pady=5)
+epochs_scale.grid(row=4, column=1, sticky="ew", padx=5, pady=5)
 
 # Add a label to display the current value of the epochs slider
-epochs_value_label = Label(root, text=f"Epochs: {epochs_scale.get()}")
-epochs_value_label.pack(pady=5)
+epochs_value_label = ttk.Label(parameters_frame, text=f"Epochs: {epochs_scale.get()}")
+epochs_value_label.grid(row=4, column=2, sticky="w", padx=5, pady=5)
 
 # Update the label dynamically as the slider is moved
 def update_epochs_label(value):
@@ -145,14 +156,14 @@ def update_epochs_label(value):
 # Configure the epochs slider to call the update function
 epochs_scale.config(command=update_epochs_label)
 
-Label(root, text="Batch Size:").pack(pady=5)
-batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)
+ttk.Label(parameters_frame, text="Batch Size:").grid(row=5, column=0, sticky="w", padx=5, pady=5)
+batch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)
 batch_size_scale.set(16)
-batch_size_scale.pack(pady=5)
+batch_size_scale.grid(row=5, column=1, sticky="ew", padx=5, pady=5)
 
 # Add a label to display the current value of the batch size slider
-batch_size_value_label = Label(root, text=f"Batch Size: {batch_size_scale.get()}")
-batch_size_value_label.pack(pady=5)
+batch_size_value_label = ttk.Label(parameters_frame, text=f"Batch Size: {batch_size_scale.get()}")
+batch_size_value_label.grid(row=5, column=2, sticky="w", padx=5, pady=5)
 
 # Update the label dynamically as the slider is moved
 def update_batch_size_label(value):
@@ -161,14 +172,14 @@ def update_batch_size_label(value):
 # Configure the batch size slider to call the update function
 batch_size_scale.config(command=update_batch_size_label)
 
-Label(root, text="Learning Rate:").pack(pady=5)
-learning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)
+ttk.Label(parameters_frame, text="Learning Rate:").grid(row=6, column=0, sticky="w", padx=5, pady=5)
+learning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)
 learning_rate_scale.set(0.0002)
-learning_rate_scale.pack(pady=5)
+learning_rate_scale.grid(row=6, column=1, sticky="ew", padx=5, pady=5)
 
 # Add a label to display the current value of the learning rate slider
-learning_rate_value_label = Label(root, text=f"Learning Rate: {learning_rate_scale.get():.4f}")
-learning_rate_value_label.pack(pady=5)
+learning_rate_value_label = ttk.Label(parameters_frame, text=f"Learning Rate: {learning_rate_scale.get():.4f}")
+learning_rate_value_label.grid(row=6, column=2, sticky="w", padx=5, pady=5)
 
 # Update the label dynamically as the slider is moved
 def update_learning_rate_label(value):
@@ -176,13 +187,6 @@ def update_learning_rate_label(value):
 
 # Configure the learning rate slider to call the update function
 learning_rate_scale.config(command=update_learning_rate_label)
-
-# Add a text widget to display CLI output
-output_label = Label(root, text="CLI Output:")
-output_label.pack(pady=5)
-
-output_text = tk.Text(root, height=10, width=60)
-output_text.pack(pady=5)
 
 # Start Training Button
 def on_start_training():
@@ -211,7 +215,17 @@ def on_start_training():
     else:
         start_training(character, action, epochs, batch_size, learning_rate)
 
-Button(root, text="Start Training", command=on_start_training).pack(pady=20)
+start_button = ttk.Button(parameters_frame, text="Start Training", command=on_start_training)
+start_button.grid(row=7, column=0, columnspan=3, pady=10)
+
+# CLI Output Section
+ttk.Label(output_frame, text="CLI Output:").pack(anchor="w", padx=5, pady=5)
+output_text = tk.Text(output_frame, height=10, width=60)
+output_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+# Adjust column weights for better resizing
+parameters_frame.columnconfigure(1, weight=1)
+output_frame.columnconfigure(0, weight=1)
 
 # Run the GUI
 root.mainloop()

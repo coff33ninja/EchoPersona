@@ -713,6 +713,14 @@
         "documentation": {}
     },
     {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "requests",
         "kind": 6,
         "isExtraImport": true,
@@ -4814,7 +4822,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nLabel(root, text=\"Batch Size:\").pack(pady=5)\nbatch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = Label(root, text=f\"Batch Size: {batch_size_scale.get()}\")",
+        "peekOfCode": "def update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nttk.Label(parameters_frame, text=\"Batch Size:\").grid(row=5, column=0, sticky=\"w\", padx=5, pady=5)\nbatch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.grid(row=5, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4823,7 +4831,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = Label(root, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")",
+        "peekOfCode": "def update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nttk.Label(parameters_frame, text=\"Learning Rate:\").grid(row=6, column=0, sticky=\"w\", padx=5, pady=5)\nlearning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.grid(row=6, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4832,7 +4840,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button",
+        "peekOfCode": "def update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4850,7 +4858,34 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Character Selection\nLabel(root, text=\"Select Character:\").pack(pady=5)\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:",
+        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Use a Notebook widget to organize sections\nnotebook = ttk.Notebook(root)\nnotebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)\n# Create frames for different sections\nparameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "notebook",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "notebook = ttk.Notebook(root)\nnotebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)\n# Create frames for different sections\nparameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "parameters_frame",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "parameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "output_frame",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "output_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4859,7 +4894,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)",
+        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\nttk.Label(parameters_frame, text=\"Select Character:\").grid(row=0, column=0, sticky=\"w\", padx=5, pady=5)\ncharacter_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4868,7 +4903,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)\nactions = [",
+        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\nttk.Label(parameters_frame, text=\"Select Character:\").grid(row=0, column=0, sticky=\"w\", padx=5, pady=5)\ncharacter_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions\nactions = [",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4877,7 +4912,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)\nactions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",",
+        "peekOfCode": "character_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions\nactions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",\n    \"trim\",",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4895,7 +4930,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "action_var = tk.StringVar(root)\naction_var.set(actions[0])  # Default to the first action\naction_dropdown = tk.OptionMenu(root, action_var, *actions)\naction_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)",
+        "peekOfCode": "action_var = tk.StringVar(root)\naction_var.set(actions[0])  # Default to the first action\nttk.Label(parameters_frame, text=\"Select Action:\").grid(row=1, column=0, sticky=\"w\", padx=5, pady=5)\naction_dropdown = ttk.Combobox(parameters_frame, textvariable=action_var, values=actions, state=\"readonly\")\naction_dropdown.grid(row=1, column=1, sticky=\"ew\", padx=5, pady=5)\n# Dataset Path Display\nttk.Label(parameters_frame, text=\"Dataset Path (Default):\").grid(row=2, column=0, sticky=\"w\", padx=5, pady=5)\ndataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4904,7 +4939,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "action_dropdown = tk.OptionMenu(root, action_var, *actions)\naction_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)\noutput_path_label = Label(root, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.pack(pady=5, fill=tk.X)",
+        "peekOfCode": "action_dropdown = ttk.Combobox(parameters_frame, textvariable=action_var, values=actions, state=\"readonly\")\naction_dropdown.grid(row=1, column=1, sticky=\"ew\", padx=5, pady=5)\n# Dataset Path Display\nttk.Label(parameters_frame, text=\"Dataset Path (Default):\").grid(row=2, column=0, sticky=\"w\", padx=5, pady=5)\ndataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display\nttk.Label(parameters_frame, text=\"Output Path (Default):\").grid(row=3, column=0, sticky=\"w\", padx=5, pady=5)\noutput_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4913,7 +4948,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "dataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)\noutput_path_label = Label(root, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.pack(pady=5, fill=tk.X)\n# Training Parameters\nLabel(root, text=\"Training Parameters:\").pack(pady=5)\nLabel(root, text=\"Epochs:\").pack(pady=5)\nepochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)",
+        "peekOfCode": "dataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display\nttk.Label(parameters_frame, text=\"Output Path (Default):\").grid(row=3, column=0, sticky=\"w\", padx=5, pady=5)\noutput_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)\n# Training Parameters\nttk.Label(parameters_frame, text=\"Epochs:\").grid(row=4, column=0, sticky=\"w\", padx=5, pady=5)\nepochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4922,7 +4957,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_path_label = Label(root, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.pack(pady=5, fill=tk.X)\n# Training Parameters\nLabel(root, text=\"Training Parameters:\").pack(pady=5)\nLabel(root, text=\"Epochs:\").pack(pady=5)\nepochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = Label(root, text=f\"Epochs: {epochs_scale.get()}\")",
+        "peekOfCode": "output_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)\n# Training Parameters\nttk.Label(parameters_frame, text=\"Epochs:\").grid(row=4, column=0, sticky=\"w\", padx=5, pady=5)\nepochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.grid(row=4, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4931,7 +4966,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = Label(root, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function",
+        "peekOfCode": "epochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.grid(row=4, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4940,7 +4975,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "epochs_value_label = Label(root, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nLabel(root, text=\"Batch Size:\").pack(pady=5)\nbatch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)",
+        "peekOfCode": "epochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nttk.Label(parameters_frame, text=\"Batch Size:\").grid(row=5, column=0, sticky=\"w\", padx=5, pady=5)\nbatch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4949,7 +4984,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = Label(root, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function",
+        "peekOfCode": "batch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.grid(row=5, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.grid(row=5, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4958,7 +4993,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "batch_size_value_label = Label(root, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
+        "peekOfCode": "batch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.grid(row=5, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nttk.Label(parameters_frame, text=\"Learning Rate:\").grid(row=6, column=0, sticky=\"w\", padx=5, pady=5)\nlearning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4967,7 +5002,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "learning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = Label(root, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function",
+        "peekOfCode": "learning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.grid(row=6, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.grid(row=6, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4976,16 +5011,16 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "learning_rate_value_label = Label(root, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.pack(pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)",
+        "peekOfCode": "learning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.grid(row=6, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
     {
-        "label": "output_label",
+        "label": "start_button",
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()",
+        "peekOfCode": "start_button = ttk.Button(parameters_frame, text=\"Start Training\", command=on_start_training)\nstart_button.grid(row=7, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4994,7 +5029,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:",
+        "peekOfCode": "output_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI\nroot.mainloop()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     }
