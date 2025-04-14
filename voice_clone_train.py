@@ -83,6 +83,28 @@ def update_vocabulary(vocabulary_path, new_characters):
     except Exception as e:
         logging.error(f"Failed to update vocabulary: {e}", exc_info=True)
 
+# Update the vocabulary dynamically to include missing characters.
+def update_vocabulary_dynamically(vocabulary_path, missing_characters):
+    """Adds missing characters to the vocabulary dynamically."""
+    try:
+        # Read existing vocabulary
+        if os.path.exists(vocabulary_path):
+            with open(vocabulary_path, "r", encoding="utf-8") as f:
+                existing_vocab = set(f.read().strip())
+        else:
+            existing_vocab = set()
+
+        # Add missing characters
+        updated_vocab = existing_vocab.union(missing_characters)
+
+        # Write updated vocabulary back to file
+        with open(vocabulary_path, "w", encoding="utf-8") as f:
+            f.write("".join(sorted(updated_vocab)))
+
+        logging.info("Vocabulary dynamically updated successfully.")
+    except Exception as e:
+        logging.error(f"Failed to dynamically update vocabulary: {e}", exc_info=True)
+
 # Fix for PermissionError: Retry file deletion with a delay.
 
 # Custom function to retry file deletion.
@@ -371,6 +393,10 @@ def main():
 
     # Log the vocabulary update
     logging.info(f"Updated vocabulary with comprehensive characters: {comprehensive_characters}")
+
+    # Add the missing character '͡' to the vocabulary dynamically.
+    missing_characters = {'͡'}
+    update_vocabulary_dynamically(vocabulary_path, missing_characters)
 
     # --- Start Training ---
     try:
