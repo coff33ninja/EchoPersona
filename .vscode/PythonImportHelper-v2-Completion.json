@@ -4230,75 +4230,57 @@
         "documentation": {}
     },
     {
-        "label": "custom_formatter",
-        "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
-        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "documentation": {}
-    },
-    {
         "label": "parse_arguments",
         "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
         "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,\n        help=\"Path to the character's dataset directory (containing metadata.csv and wav files).\",\n    )",
-        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
         "label": "main",
         "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
-        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(\n            f\"Dataset path not found or is not a directory: {args.dataset_path}\"\n        )\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
         "label": "METADATA_FILENAME",
         "kind": 5,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).",
-        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "custom_formatter",
-        "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
-        "detail": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Argument Parser ---\ndef parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+48AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
         "label": "parse_arguments",
         "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
         "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,\n        help=\"Path to the character's dataset directory (containing metadata.csv and wav files).\",\n    )",
-        "detail": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
         "label": "main",
         "kind": 2,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
-        "detail": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(\n            f\"Dataset path not found or is not a directory: {args.dataset_path}\"\n        )\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
         "label": "METADATA_FILENAME",
         "kind": 5,
-        "importPath": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "description": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# Configure logging\nlogging.basicConfig(filename=\"training.log\", level=logging.INFO)\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.",
-        "detail": "trained_models.arlecchino.run-April-14-2025_04+03PM-e0e6e1b.voice_clone_train",
+        "importPath": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Argument Parser ---\ndef parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,",
+        "detail": "trained_models.Arlecchino.run-April-14-2025_12+56AM-0000000.voice_clone_train",
         "documentation": {}
     },
     {
