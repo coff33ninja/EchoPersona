@@ -545,3 +545,4 @@ INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
 WARNING:root:Tokenizer does not support dynamic vocabulary updates.
 INFO:root:Vocabulary check complete.
 INFO:root:>>> Starting Training <<<
+INFO:root:Output path: trained_models/Arlecchino
