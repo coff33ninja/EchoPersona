@@ -401,8 +401,19 @@ def main():
     # Ensure the missing character is explicitly added to the tokenizer's vocabulary.
     def ensure_character_in_vocabulary(tokenizer, character):
         """Ensures a specific character is in the tokenizer's vocabulary."""
-        if character not in tokenizer.characters:
-            tokenizer.characters.add(character)
+        # Convert tokenizer.characters to a set if not already iterable
+        try:
+            characters = set(tokenizer.characters)
+        except TypeError:
+            # If not iterable, convert to set by accessing attribute or method if available
+            if hasattr(tokenizer.characters, 'to_list'):
+                characters = set(tokenizer.characters.to_list())
+            else:
+                characters = set()
+
+        if character not in characters:
+            characters.add(character)
+            tokenizer.characters = characters
             logging.info(f"Character '{character}' added to tokenizer vocabulary.")
         else:
             logging.info(f"Character '{character}' already exists in tokenizer vocabulary.")
