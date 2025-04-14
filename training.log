@@ -109,3 +109,11 @@ Traceback (most recent call last):
   File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
     os.unlink(fullname)
 PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:/Users/USER/Documents/GitHub/EchoPersona/trained_models/arlecchino/run-April-14-2025_04+03PM-e0e6e1b\\trainer_0_log.txt'
+INFO:root:Output path: trained_models/Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:>>> Starting Training <<<
