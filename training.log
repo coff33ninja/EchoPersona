@@ -163,3 +163,4 @@ Traceback (most recent call last):
   File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
     os.unlink(fullname)
 PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-14-2025_06+31PM-dd0adc8\\trainer_0_log.txt'
+INFO:root:Output path: trained_models/Arlecchino

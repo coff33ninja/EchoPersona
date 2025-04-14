@@ -315,17 +315,24 @@ def main():
         logging.error(f"Failed to initialize Trainer: {e}", exc_info=True)
         return
 
+    # Update the vocabulary with a comprehensive set of characters
     # Define the path to the vocabulary file
     vocabulary_path = os.path.join(args.output_path, "vocabulary.log")
 
-    # Define the missing characters to add
-    missing_characters = {"͡"}
+    # Define a comprehensive set of characters for the vocabulary
+    comprehensive_characters = set(
+        "abcdefghijklmnopqrstuvwxyz"  # Lowercase letters
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # Uppercase letters
+        "0123456789"                  # Numbers
+        ".,?!'\":;-()"               # Punctuation
+        "ðʃʒŋæɔɪʊɛɑʌɚɝɹɾɫɡ͡ "         # Phonetic symbols and space
+    )
 
     # Update the vocabulary
-    update_vocabulary(vocabulary_path, missing_characters)
+    update_vocabulary(vocabulary_path, comprehensive_characters)
 
     # Log the vocabulary update
-    logging.info(f"Updated vocabulary with missing characters: {missing_characters}")
+    logging.info(f"Updated vocabulary with comprehensive characters: {comprehensive_characters}")
 
     # --- Start Training ---
     try:
