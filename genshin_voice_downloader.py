@@ -502,6 +502,23 @@ def transcribe_character_audio(character_output_dir, status_label=None):
             status_label.config(text="Error during transcription.")
 
 
+def validate_metadata_existence(character_output_dir):
+    """
+    Validate the existence of the metadata file after transcription.
+
+    Args:
+        character_output_dir (str): Path to the character's output directory.
+
+    Returns:
+        bool: True if the metadata file exists, False otherwise.
+    """
+    metadata_path = os.path.join(character_output_dir, "metadata.csv")
+    if not os.path.exists(metadata_path):
+        logging.warning(f"Metadata file does not exist: {metadata_path}")
+        return False
+    return True
+
+
 def process_character_voices(
     character, language, base_output_dir, download_wiki_audio=True, status_label=None
 ):
@@ -855,6 +872,12 @@ def main_gui():
         # 2. Transcribe if processing was successful (or folder exists)
         if character_folder_path and os.path.isdir(character_folder_path):
             transcribe_character_audio(character_folder_path, status_label)
+
+            # Validate metadata existence
+            if not validate_metadata_existence(character_folder_path):
+                status_label.config(text=f"Metadata file missing for {character}. Please check transcription.")
+                logging.error(f"Metadata file missing for {character} after transcription.")
+                return
 
             # Run the retrainer after transcription
             try:
