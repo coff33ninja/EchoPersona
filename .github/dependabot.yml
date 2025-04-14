@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/" # Location of requirements.txt
+    schedule:
+      interval: "weekly" # Check for updates weekly
+    commit-message:
+      prefix: "fix" # Prefix for commit messages
+    versioning-strategy: "increase" # Update to the latest version
