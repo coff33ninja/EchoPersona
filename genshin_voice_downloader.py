@@ -716,7 +716,7 @@ def process_character_voices(
             for i, line in enumerate(lines):
                 if i == 0:
                     # Update header
-                    f.write("audio_file|text|speaker_id\n")
+                    f.write("audio_file|text|normalized_text|speaker_id\n")
                 else:
                     # Append speaker_id to each line
                     f.write(line.strip() + "|speaker_1\n")
