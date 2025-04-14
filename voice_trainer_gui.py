@@ -1,10 +1,14 @@
-import os
+# This script creates a GUI for training a voice cloning model using Tkinter.
+# It allows users to input parameters such as character name, dataset path, output path, epochs, batch size, and learning rate.
+# The GUI also provides a button to start the training process and displays the output in a text widget.
+# Import necessary libraries
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter.ttk import Label, Button, Scale, Entry
 import threading
 import subprocess
 
+# Function to run the training command and display output in the GUI
 def run_command_with_output(command, output_text_widget):
     """
     Run a shell command and display its output in the GUI.
@@ -25,6 +29,7 @@ def run_command_with_output(command, output_text_widget):
     thread = threading.Thread(target=target)
     thread.start()
 
+# Function to start the training process
 def start_training(character, dataset_path, output_path, epochs, batch_size, learning_rate):
     """
     Start the training process with the provided parameters and display output in the GUI.
