@@ -949,14 +949,6 @@
         "documentation": {}
     },
     {
-        "label": "Entry",
-        "importPath": "tkinter.ttk",
-        "description": "tkinter.ttk",
-        "isExtraImport": true,
-        "detail": "tkinter.ttk",
-        "documentation": {}
-    },
-    {
         "label": "threading",
         "kind": 6,
         "isExtraImport": true,

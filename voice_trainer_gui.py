@@ -4,7 +4,7 @@
 # Import necessary libraries
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog
-from tkinter.ttk import Label, Button, Scale, Entry
+from tkinter.ttk import Label, Button, Scale
 import threading
 import subprocess
 import os
@@ -45,9 +45,6 @@ def start_training(character, action, epochs, batch_size, learning_rate, text=No
         text (str, optional): Text for 'test' or 'use' actions.
         file (str, optional): File path for actions like 'provide', 'augment', 'trim', 'quality'.
     """
-    dataset_path = f"voice_datasets/{character}"
-    output_path = f"trained_models/{character}"
-
     try:
         command = (
             f"python voice_trainer_cli.py --character \"{character}\" --action \"{action}\" "
