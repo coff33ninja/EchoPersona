@@ -4801,6 +4801,15 @@
         "documentation": {}
     },
     {
+        "label": "fetch_character_list",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def fetch_character_list():\n    \"\"\"\n    Fetches a list of character names based on subdirectories in the voice_datasets folder.\n    Returns:\n        list: A sorted list of character names.\n    \"\"\"\n    base_dir = \"voice_datasets\"\n    try:\n        if not os.path.exists(base_dir):\n            return []",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
         "label": "select_dataset",
         "kind": 2,
         "importPath": "voice_trainer_gui",
@@ -4823,7 +4832,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character or not dataset_path or not output_path:\n        messagebox.showerror(\"Error\", \"Please fill in all fields.\")\n        return",
+        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character or not dataset_path or not output_path:\n        messagebox.showerror(\"Error\", \"Please fill in all fields.\")\n        return",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4832,16 +4841,34 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Character Selection\nLabel(root, text=\"Character Name:\").pack(pady=5)\ncharacter_entry = Entry(root)\ncharacter_entry.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():",
+        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Character Selection\nLabel(root, text=\"Select Character:\").pack(pady=5)\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
     {
-        "label": "character_entry",
+        "label": "character_list",
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_entry = Entry(root)\ncharacter_entry.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():\n    path = filedialog.askdirectory()\n    dataset_path_entry.delete(0, tk.END)\n    dataset_path_entry.insert(0, path)\ndataset_path_entry = Entry(root, width=50)\ndataset_path_entry.pack(pady=5)",
+        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "character_var",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "character_dropdown",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "character_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():\n    path = filedialog.askdirectory()\n    dataset_path_entry.delete(0, tk.END)\n    dataset_path_entry.insert(0, path)\ndataset_path_entry = Entry(root, width=50)\ndataset_path_entry.pack(pady=5)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4895,7 +4922,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()",
+        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4904,7 +4931,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()",
+        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     }

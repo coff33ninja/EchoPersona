@@ -7,6 +7,8 @@ from tkinter import filedialog, messagebox
 from tkinter.ttk import Label, Button, Scale, Entry
 import threading
 import subprocess
+import os
+import logging
 
 # Function to run the training command and display output in the GUI
 def run_command_with_output(command, output_text_widget):
@@ -53,15 +55,40 @@ def start_training(character, dataset_path, output_path, epochs, batch_size, lea
     except Exception as e:
         messagebox.showerror("Error", f"Failed to start training: {e}")
 
+# Function to dynamically fetch character names from the voice_datasets directory
+def fetch_character_list():
+    """
+    Fetches a list of character names based on subdirectories in the voice_datasets folder.
+
+    Returns:
+        list: A sorted list of character names.
+    """
+    base_dir = "voice_datasets"
+    try:
+        if not os.path.exists(base_dir):
+            return []
+        return sorted(
+            [name for name in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, name))]
+        )
+    except Exception as e:
+        logging.error(f"Error fetching character list: {e}")
+        return []
+
 # GUI Setup
 root = tk.Tk()
 root.title("Voice Trainer GUI")
 root.geometry("500x400")
 
 # Character Selection
-Label(root, text="Character Name:").pack(pady=5)
-character_entry = Entry(root)
-character_entry.pack(pady=5)
+Label(root, text="Select Character:").pack(pady=5)
+character_list = fetch_character_list()
+character_var = tk.StringVar(root)
+if character_list:
+    character_var.set(character_list[0])  # Default to the first character
+else:
+    character_var.set("No characters found")
+character_dropdown = tk.OptionMenu(root, character_var, *character_list)
+character_dropdown.pack(pady=5)
 
 # Dataset Path Selection
 Label(root, text="Dataset Path:").pack(pady=5)
@@ -114,7 +141,7 @@ output_text.pack(pady=5)
 
 # Start Training Button
 def on_start_training():
-    character = character_entry.get()
+    character = character_var.get()
     dataset_path = dataset_path_entry.get()
     output_path = output_path_entry.get()
     epochs = epochs_scale.get()
