@@ -214,7 +214,7 @@ def download_and_convert(file_url, output_dir, file_name, status_label=None):
         # Use -y to overwrite existing intermediate files if ffmpeg asks
         # Use -loglevel error to suppress verbose ffmpeg output unless error occurs
         # Ensure ffmpeg is in the system PATH or provide full path
-        process = subprocess.run(
+        subprocess.run(
             [
                 "ffmpeg",
                 "-y",
@@ -762,7 +762,7 @@ def main_gui():
             # Run the retrainer after transcription
             try:
                 retrainer_command = (
-                    f"python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
+                    "python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
                 )
                 subprocess.run(retrainer_command, shell=True, check=True)
                 status_label.config(text=f"Retraining completed for {character}.")

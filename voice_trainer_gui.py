@@ -4,7 +4,7 @@
 # Import necessary libraries
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog
-from tkinter.ttk import Label, Button, Scale
+from tkinter.ttk import Scale
 import threading
 import subprocess
 import os

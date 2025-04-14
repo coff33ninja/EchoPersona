@@ -933,22 +933,6 @@
         "documentation": {}
     },
     {
-        "label": "Label",
-        "importPath": "tkinter.ttk",
-        "description": "tkinter.ttk",
-        "isExtraImport": true,
-        "detail": "tkinter.ttk",
-        "documentation": {}
-    },
-    {
-        "label": "Button",
-        "importPath": "tkinter.ttk",
-        "description": "tkinter.ttk",
-        "isExtraImport": true,
-        "detail": "tkinter.ttk",
-        "documentation": {}
-    },
-    {
         "label": "Scale",
         "importPath": "tkinter.ttk",
         "description": "tkinter.ttk",
