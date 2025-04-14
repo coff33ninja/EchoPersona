@@ -1,7 +1,7 @@
 # 🎙️ EchoPersona
 **Proof of Concept: Custom TTS/STT with Character Voices**
 
-## 🚀 Overview  
+## 🚀 Overview
 This project is a full-stack playground for Text-to-Speech (TTS) and Speech-to-Text (STT) enthusiasts. It empowers you to:
 
 - 🎧 **Download Voice Data**: Automatically fetch and transcribe voice lines from characters (e.g., Genshin Impact).
@@ -14,9 +14,9 @@ This project is a full-stack playground for Text-to-Speech (TTS) and Speech-to-T
 
 ## 🧩 Key Concepts
 
-**Character**: Represents a unique voice persona. All associated audio, metadata, and models live in folders named after them.  
-**Base Directories**:  
-- `voice_datasets/` – Raw audio data per character  
+**Character**: Represents a unique voice persona. All associated audio, metadata, and models live in folders named after them.
+**Base Directories**:
+- `voice_datasets/` – Raw audio data per character
 - `trained_models/` – Output from model training
 
 ---
@@ -123,32 +123,32 @@ Creates `voice_datasets/Amber/` with WAVs + `metadata.csv`.
 
 Use `--character <Name>` with all actions:
 
-- **Record New Samples**  
+- **Record New Samples**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action record
   ```
 
-- **Add Existing Audio**  
+- **Add Existing Audio**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action provide --file "/path/to/audio.wav"
   ```
 
-- **Validate Metadata**  
+- **Validate Metadata**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action validate
   ```
 
-- **View Stats**  
+- **View Stats**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action stats
   ```
 
-- **Augment File**  
+- **Augment File**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action augment --file "sample_Amber_001.wav"
   ```
 
-- **Trim Silence**  
+- **Trim Silence**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action trim --file "VO_Amber_001.wav"
   ```
@@ -167,19 +167,29 @@ Output lands in `trained_models/Amber/`. Training may take hours, coffee recomme
 
 ### 4. 🗣️ Use the Trained Voice
 
-- **Quick Test via CLI**  
+- **Quick Test via CLI**
   ```bash
   python voice_trainer_cli.py --character "Amber" --action use --text "Hello, this is a test."
   ```
 
-- **Manual Test Script**  
+- **Manual Test Script**
   ```bash
   python test_trained_model.py --character "Amber" --text "Testing the model directly." --output_file "output.wav"
   ```
 
 ---
 
-### 5. 🔎 General Speech-to-Text (STT)
+### 5. 🔄 Re-attempt Transcription
+
+Use the `genshin_voice_retranscriber.py` script to re-attempt transcription for audio files marked as 'Validation Needed' in the metadata. If transcription fails, the audio file is moved to a `voiceless` directory, and its entry is removed from the metadata.
+
+```bash
+python genshin_voice_retranscriber.py --character_output_dir "voice_datasets/character_name" # change the name to character name of your choice
+```
+
+This command will process the audio files in the specified character's directory, updating the metadata and organizing files as needed.
+
+### 6. 🔎 General Speech-to-Text (STT)
 
 ```bash
 python voice_tools.py
@@ -229,8 +239,8 @@ Pull requests are welcome! Feel free to open an issue or fork and experiment. Le
 
 ## ⚠️ Disclaimer
 
-The Genshin Impact voice downloader is included as a **technical proof of concept**.  
-Voice data from external sources **may be copyrighted**.  
+The Genshin Impact voice downloader is included as a **technical proof of concept**.
+Voice data from external sources **may be copyrighted**.
 Use at your own risk. This project:
 - ❌ Does **not endorse** copyright infringement.
 - ✅ Supports **personal, educational, non-commercial** use under fair use.
