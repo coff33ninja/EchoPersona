@@ -546,3 +546,17 @@ WARNING:root:Tokenizer does not support dynamic vocabulary updates.
 INFO:root:Vocabulary check complete.
 INFO:root:>>> Starting Training <<<
 INFO:root:Output path: trained_models/Arlecchino
+INFO:root:Output path: trained_models/Arlecchino
+INFO:root:Tokenizer configuration should be handled separately if required.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'\u025b', '?', '\u027e', 's', 'X', 'k', '0', 'O', 'b', 'r', '\u028c', ' ', 'g', 'h', 'd', ',', "'", 'p', 'x', '\u026b', 'A', 'J', 'N', '.', 'V', '\u0254', '\u0261', '6', '\u025d', 'j', '5', 'ð', 'z', 'n', 'q', 'U', '4', 'i', 'D', '9', '\u0279', '\u0251', '\u014b', '\u025a', 'W', 'F', '(', 'Q', 'H', 'm', 'v', '\u026a', 'S', 'a', 'M', '!', '8', 'T', '-', 'w', '2', 'c', 'C', 'Y', '3', 'y', 'R', 'f', 'u', 'B', '\u0361', 'æ', 'P', 'L', 'I', 'o', ':', '7', '"', 'K', 'G', '\u0292', 'Z', '\u028a', 'e', 't', ';', '1', '\u0283', 'l', 'E', ')'}
+INFO:root:Vocabulary dynamically updated successfully.
+WARNING:root:Tokenizer does not support dynamic vocabulary updates.
+INFO:root:>>> Starting Training <<<

@@ -338,19 +338,8 @@ def main():
         lr=args.learning_rate,
     )
 
-    # Predefine the vocabulary with all required characters
-    predefined_vocabulary = set(
-        "abcdefghijklmnopqrstuvwxyz"  # Lowercase letters
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # Uppercase letters
-        "0123456789"                  # Numbers
-        ".,?!'\":;()-"               # Punctuation
-        "ðʃʒŋæɔɪʊɛɑʌɚɝɹɾɫɡ͡ "         # Phonetic symbols and space
-        "\u0361"                      # Missing character
-    )
+    logging.info("Tokenizer configuration should be handled separately if required.")
 
-    # Update the tokenizer configuration to include the predefined vocabulary
-    config.tokenizer.characters = predefined_vocabulary
-    logging.info(f"Tokenizer initialized with predefined vocabulary: {predefined_vocabulary}")
     def safe_remove_experiment_folder(path):
         """Safely remove experiment folder, handling file locks."""
         try:
