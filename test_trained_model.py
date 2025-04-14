@@ -56,11 +56,23 @@ def main():
 
     # --- Check if Model Files Exist ---
     if not os.path.exists(trained_model_path) or not os.path.exists(trained_config_path):
-        logging.error(f"Trained model files not found for character '{args.character}' in directory: {character_model_dir}")
-        logging.error(f"Expected model: {trained_model_path}")
-        logging.error(f"Expected config: {trained_config_path}")
-        print("Error: Trained model files not found. Please ensure training completed successfully.")
-        return
+        logging.warning(f"Model files not found in base directory: {character_model_dir}. Searching subdirectories...")
+        subdirs = [os.path.join(character_model_dir, d) for d in os.listdir(character_model_dir) if os.path.isdir(os.path.join(character_model_dir, d))]
+        subdirs.sort(key=os.path.getmtime, reverse=True)  # Sort by modification time, latest first
+
+        for subdir in subdirs:
+            potential_model_path = os.path.join(subdir, "best_model.pth")
+            potential_config_path = os.path.join(subdir, "config.json")
+            if os.path.exists(potential_model_path) and os.path.exists(potential_config_path):
+                trained_model_path = potential_model_path
+                trained_config_path = potential_config_path
+                logging.info(f"Found model files in subdirectory: {subdir}")
+                break
+
+        if not os.path.exists(trained_model_path) or not os.path.exists(trained_config_path):
+            logging.error(f"Trained model files not found for character '{args.character}' in any subdirectory of: {character_model_dir}")
+            print("Error: Trained model files not found. Please ensure training completed successfully.")
+            return
 
     # --- Load Trained Model using Coqui TTS API ---
     print(f"\n--- Loading Custom Trained TTS Model for Character: {args.character} ---")

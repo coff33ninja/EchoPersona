@@ -436,6 +436,24 @@ def main():
         print("Training did not complete successfully. Please check the logs for details.")
         exit(1)
 
+    # --- Save Model Explicitly ---
+    try:
+        model_save_path = os.path.join(args.output_path, "best_model.pth")
+        config_save_path = os.path.join(args.output_path, "config.json")
+
+        # Save the model state dictionary
+        torch.save(model.state_dict(), model_save_path)
+        logging.info(f"Model saved successfully to: {model_save_path}")
+
+        # Save the model configuration
+        with open(config_save_path, "w", encoding="utf-8") as config_file:
+            config_file.write(config.to_json())
+        logging.info(f"Configuration saved successfully to: {config_save_path}")
+
+    except Exception as e:
+        logging.error(f"Failed to save model or configuration: {e}", exc_info=True)
+        print(f"Error saving model: {e}")
+
     # Fix for TypeError: Cast tensors to float32 before plotting.
     # Ensure `y_hat` and `x_hat` are defined before usage.
     # Example placeholder definitions for `y_hat` and `x_hat`
