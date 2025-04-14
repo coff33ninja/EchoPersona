@@ -576,3 +576,19 @@ Traceback (most recent call last):
   File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 38, in split_dataset
     eval_split_size > 0
 AssertionError:  [!] You do not have enough samples for the evaluation set. You can work around this setting the 'eval_split_size' parameter to a minimum of 0.05
+INFO:root:Output path: trained_models/Zhongli
+INFO:root:Tokenizer configuration should be handled separately if required.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Zhongli
+ERROR:root:Failed to load dataset samples:  [!] You do not have enough samples for the evaluation set. You can work around this setting the 'eval_split_size' parameter to a minimum of 0.05
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 367, in main
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 133, in load_tts_samples
+    meta_data_eval, meta_data_train = split_dataset(meta_data_train, eval_size_per_dataset, eval_split_size)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 38, in split_dataset
+    eval_split_size > 0
+AssertionError:  [!] You do not have enough samples for the evaluation set. You can work around this setting the 'eval_split_size' parameter to a minimum of 0.05
