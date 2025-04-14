@@ -689,6 +689,22 @@
         "documentation": {}
     },
     {
+        "label": "filedialog",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "messagebox",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "requests",
         "kind": 6,
         "isExtraImport": true,
@@ -898,6 +914,47 @@
         "importPath": "csv",
         "description": "csv",
         "detail": "csv",
+        "documentation": {}
+    },
+    {
+        "label": "Label",
+        "importPath": "tkinter.ttk",
+        "description": "tkinter.ttk",
+        "isExtraImport": true,
+        "detail": "tkinter.ttk",
+        "documentation": {}
+    },
+    {
+        "label": "Button",
+        "importPath": "tkinter.ttk",
+        "description": "tkinter.ttk",
+        "isExtraImport": true,
+        "detail": "tkinter.ttk",
+        "documentation": {}
+    },
+    {
+        "label": "Scale",
+        "importPath": "tkinter.ttk",
+        "description": "tkinter.ttk",
+        "isExtraImport": true,
+        "detail": "tkinter.ttk",
+        "documentation": {}
+    },
+    {
+        "label": "Entry",
+        "importPath": "tkinter.ttk",
+        "description": "tkinter.ttk",
+        "isExtraImport": true,
+        "detail": "tkinter.ttk",
+        "documentation": {}
+    },
+    {
+        "label": "threading",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "threading",
+        "description": "threading",
+        "detail": "threading",
         "documentation": {}
     },
     {
@@ -4723,6 +4780,132 @@
         "description": "voice_trainer_cli",
         "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Voice Trainer CLI Tool - Manages datasets and training for specific characters.\",\n        formatter_class=argparse.RawTextHelpFormatter,  # Preserve newline formatting in help\n    )\n    # --- Required Argument ---\n    parser.add_argument(\n        \"--character\",\n        type=str,\n        required=True,",
         "detail": "voice_trainer_cli",
+        "documentation": {}
+    },
+    {
+        "label": "run_command_with_output",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def run_command_with_output(command, output_text_widget):\n    \"\"\"\n    Run a shell command and display its output in the GUI.\n    Args:\n        command (str): The command to run.\n        output_text_widget (tk.Text): The text widget to display the output.\n    \"\"\"\n    def target():\n        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)\n        for line in process.stdout:",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "start_training",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def start_training(character, dataset_path, output_path, epochs, batch_size, learning_rate):\n    \"\"\"\n    Start the training process with the provided parameters and display output in the GUI.\n    Args:\n        character (str): Character name.\n        dataset_path (str): Path to the dataset.\n        output_path (str): Path to save the trained model.\n        epochs (int): Number of training epochs.\n        batch_size (int): Batch size for training.\n        learning_rate (float): Learning rate for training.",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "select_dataset",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def select_dataset():\n    path = filedialog.askdirectory()\n    dataset_path_entry.delete(0, tk.END)\n    dataset_path_entry.insert(0, path)\ndataset_path_entry = Entry(root, width=50)\ndataset_path_entry.pack(pady=5)\nButton(root, text=\"Browse\", command=select_dataset).pack(pady=5)\n# Output Path Selection\nLabel(root, text=\"Output Path:\").pack(pady=5)\ndef select_output():",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "select_output",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def select_output():\n    path = filedialog.askdirectory()\n    output_path_entry.delete(0, tk.END)\n    output_path_entry.insert(0, path)\noutput_path_entry = Entry(root, width=50)\noutput_path_entry.pack(pady=5)\nButton(root, text=\"Browse\", command=select_output).pack(pady=5)\n# Training Parameters\nLabel(root, text=\"Training Parameters:\").pack(pady=5)\nLabel(root, text=\"Epochs:\").pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "on_start_training",
+        "kind": 2,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "def on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character or not dataset_path or not output_path:\n        messagebox.showerror(\"Error\", \"Please fill in all fields.\")\n        return",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "root",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Character Selection\nLabel(root, text=\"Character Name:\").pack(pady=5)\ncharacter_entry = Entry(root)\ncharacter_entry.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "character_entry",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "character_entry = Entry(root)\ncharacter_entry.pack(pady=5)\n# Dataset Path Selection\nLabel(root, text=\"Dataset Path:\").pack(pady=5)\ndef select_dataset():\n    path = filedialog.askdirectory()\n    dataset_path_entry.delete(0, tk.END)\n    dataset_path_entry.insert(0, path)\ndataset_path_entry = Entry(root, width=50)\ndataset_path_entry.pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "dataset_path_entry",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "dataset_path_entry = Entry(root, width=50)\ndataset_path_entry.pack(pady=5)\nButton(root, text=\"Browse\", command=select_dataset).pack(pady=5)\n# Output Path Selection\nLabel(root, text=\"Output Path:\").pack(pady=5)\ndef select_output():\n    path = filedialog.askdirectory()\n    output_path_entry.delete(0, tk.END)\n    output_path_entry.insert(0, path)\noutput_path_entry = Entry(root, width=50)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "output_path_entry",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "output_path_entry = Entry(root, width=50)\noutput_path_entry.pack(pady=5)\nButton(root, text=\"Browse\", command=select_output).pack(pady=5)\n# Training Parameters\nLabel(root, text=\"Training Parameters:\").pack(pady=5)\nLabel(root, text=\"Epochs:\").pack(pady=5)\nepochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\nLabel(root, text=\"Batch Size:\").pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "epochs_scale",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\nLabel(root, text=\"Batch Size:\").pack(pady=5)\nbatch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "batch_size_scale",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "learning_rate_scale",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "learning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "output_label",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "output_text",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_entry.get()\n    dataset_path = dataset_path_entry.get()\n    output_path = output_path_entry.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()",
+        "detail": "voice_trainer_gui",
         "documentation": {}
     }
 ]
