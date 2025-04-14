@@ -134,15 +134,48 @@ epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)
 epochs_scale.set(500)
 epochs_scale.pack(pady=5)
 
+# Add a label to display the current value of the epochs slider
+epochs_value_label = Label(root, text=f"Epochs: {epochs_scale.get()}")
+epochs_value_label.pack(pady=5)
+
+# Update the label dynamically as the slider is moved
+def update_epochs_label(value):
+    epochs_value_label.config(text=f"Epochs: {value}")
+
+# Configure the epochs slider to call the update function
+epochs_scale.config(command=update_epochs_label)
+
 Label(root, text="Batch Size:").pack(pady=5)
 batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)
 batch_size_scale.set(16)
 batch_size_scale.pack(pady=5)
 
+# Add a label to display the current value of the batch size slider
+batch_size_value_label = Label(root, text=f"Batch Size: {batch_size_scale.get()}")
+batch_size_value_label.pack(pady=5)
+
+# Update the label dynamically as the slider is moved
+def update_batch_size_label(value):
+    batch_size_value_label.config(text=f"Batch Size: {value}")
+
+# Configure the batch size slider to call the update function
+batch_size_scale.config(command=update_batch_size_label)
+
 Label(root, text="Learning Rate:").pack(pady=5)
 learning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)
 learning_rate_scale.set(0.0002)
 learning_rate_scale.pack(pady=5)
+
+# Add a label to display the current value of the learning rate slider
+learning_rate_value_label = Label(root, text=f"Learning Rate: {learning_rate_scale.get():.4f}")
+learning_rate_value_label.pack(pady=5)
+
+# Update the label dynamically as the slider is moved
+def update_learning_rate_label(value):
+    learning_rate_value_label.config(text=f"Learning Rate: {float(value):.4f}")
+
+# Configure the learning rate slider to call the update function
+learning_rate_scale.config(command=update_learning_rate_label)
 
 # Add a text widget to display CLI output
 output_label = Label(root, text="CLI Output:")
