@@ -32,18 +32,19 @@ def run_command_with_output(command, output_text_widget):
     thread.start()
 
 # Function to start the training process
-def start_training(character, dataset_path, output_path, epochs, batch_size, learning_rate):
+def start_training(character, epochs, batch_size, learning_rate):
     """
     Start the training process with the provided parameters and display output in the GUI.
 
     Args:
         character (str): Character name.
-        dataset_path (str): Path to the dataset.
-        output_path (str): Path to save the trained model.
         epochs (int): Number of training epochs.
         batch_size (int): Batch size for training.
         learning_rate (float): Learning rate for training.
     """
+    dataset_path = f"voice_datasets/{character}"
+    output_path = f"trained_models/{character}"
+
     try:
         command = (
             f"python voice_clone_train.py --dataset_path \"{dataset_path}\" "
@@ -90,29 +91,15 @@ else:
 character_dropdown = tk.OptionMenu(root, character_var, *character_list)
 character_dropdown.pack(pady=5)
 
-# Dataset Path Selection
-Label(root, text="Dataset Path:").pack(pady=5)
+# Dataset Path Display
+Label(root, text="Dataset Path (Default):").pack(pady=5)
+dataset_path_label = Label(root, text="voice_datasets/<character>", relief=tk.SUNKEN, anchor="w")
+dataset_path_label.pack(pady=5, fill=tk.X)
 
-def select_dataset():
-    path = filedialog.askdirectory()
-    dataset_path_entry.delete(0, tk.END)
-    dataset_path_entry.insert(0, path)
-
-dataset_path_entry = Entry(root, width=50)
-dataset_path_entry.pack(pady=5)
-Button(root, text="Browse", command=select_dataset).pack(pady=5)
-
-# Output Path Selection
-Label(root, text="Output Path:").pack(pady=5)
-
-def select_output():
-    path = filedialog.askdirectory()
-    output_path_entry.delete(0, tk.END)
-    output_path_entry.insert(0, path)
-
-output_path_entry = Entry(root, width=50)
-output_path_entry.pack(pady=5)
-Button(root, text="Browse", command=select_output).pack(pady=5)
+# Output Path Display
+Label(root, text="Output Path (Default):").pack(pady=5)
+output_path_label = Label(root, text="trained_models/<character>", relief=tk.SUNKEN, anchor="w")
+output_path_label.pack(pady=5, fill=tk.X)
 
 # Training Parameters
 Label(root, text="Training Parameters:").pack(pady=5)
@@ -142,17 +129,15 @@ output_text.pack(pady=5)
 # Start Training Button
 def on_start_training():
     character = character_var.get()
-    dataset_path = dataset_path_entry.get()
-    output_path = output_path_entry.get()
     epochs = epochs_scale.get()
     batch_size = batch_size_scale.get()
     learning_rate = learning_rate_scale.get()
 
-    if not character or not dataset_path or not output_path:
-        messagebox.showerror("Error", "Please fill in all fields.")
+    if not character:
+        messagebox.showerror("Error", "Please select a character.")
         return
 
-    start_training(character, dataset_path, output_path, epochs, batch_size, learning_rate)
+    start_training(character, epochs, batch_size, learning_rate)
 
 Button(root, text="Start Training", command=on_start_training).pack(pady=20)
 
