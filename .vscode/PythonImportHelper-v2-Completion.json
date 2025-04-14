@@ -4851,7 +4851,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()",
+        "peekOfCode": "def update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    # Cast epochs to an integer before passing to start_training\n    epochs = int(epochs_scale.get())",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4860,7 +4860,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")\n        return\n    if action in [\"test\", \"use\"]:",
+        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    # Cast epochs to an integer before passing to start_training\n    epochs = int(epochs_scale.get())\n    # Cast batch_size to an integer before passing to start_training\n    batch_size = int(batch_size_scale.get())\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },

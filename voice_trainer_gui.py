@@ -192,8 +192,10 @@ learning_rate_scale.config(command=update_learning_rate_label)
 def on_start_training():
     character = character_var.get()
     action = action_var.get()
-    epochs = epochs_scale.get()
-    batch_size = batch_size_scale.get()
+    # Cast epochs to an integer before passing to start_training
+    epochs = int(epochs_scale.get())
+    # Cast batch_size to an integer before passing to start_training
+    batch_size = int(batch_size_scale.get())
     learning_rate = learning_rate_scale.get()
 
     if not character:
