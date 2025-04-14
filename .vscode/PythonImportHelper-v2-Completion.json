@@ -4722,6 +4722,15 @@
         "documentation": {}
     },
     {
+        "label": "clean_text",
+        "kind": 2,
+        "importPath": "voice_clone_train",
+        "description": "voice_clone_train",
+        "peekOfCode": "def clean_text(text):\n    \"\"\"Removes unsupported characters from the text.\"\"\"\n    supported_chars = set(\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?-'\")\n    return ''.join(c for c in text if c in supported_chars)\n# Add a vocabulary update function to include missing characters\ndef update_vocabulary(vocabulary_path, new_characters):\n    \"\"\"\n    Update the vocabulary file to include new characters.\n    Args:\n        vocabulary_path (str): Path to the vocabulary file.",
+        "detail": "voice_clone_train",
+        "documentation": {}
+    },
+    {
         "label": "update_vocabulary",
         "kind": 2,
         "importPath": "voice_clone_train",

@@ -35,7 +35,7 @@ def custom_formatter(root_path, meta_file, **kwargs):
             if len(parts) < 2 or parts[0] == "audio_file":  # Skip header or malformed lines
                 continue
             audio_file = os.path.join(root_path, parts[0])  # Full filename from metadata
-            text = parts[1]  # Transcription
+            text = clean_text(parts[1])  # Clean text to remove unsupported characters
             items.append(
                 {
                     "text": text,
@@ -45,6 +45,12 @@ def custom_formatter(root_path, meta_file, **kwargs):
                 }
             )
     return items
+
+# Fix for UnicodeEncodeError: Add a preprocessing step to clean unsupported characters.
+def clean_text(text):
+    """Removes unsupported characters from the text."""
+    supported_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?-'")
+    return ''.join(c for c in text if c in supported_chars)
 
 # Add a vocabulary update function to include missing characters
 def update_vocabulary(vocabulary_path, new_characters):
@@ -298,6 +304,10 @@ def main():
     except Exception as e:
         logging.error(f"Failed to initialize VITS model: {e}", exc_info=True)
         return
+
+    # Ensure the phoneme cache directory is created before training.
+    phoneme_cache_dir = os.path.join(args.output_path, 'phoneme_cache')
+    os.makedirs(phoneme_cache_dir, exist_ok=True)
 
     # --- Initialize Trainer ---
     try:
