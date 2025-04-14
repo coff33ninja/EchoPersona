@@ -220,3 +220,73 @@ Traceback (most recent call last):
   File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
     os.unlink(fullname)
 PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-14-2025_10+09PM-6fe7886\\trainer_0_log.txt'
+INFO:root:Output path: trained_models\Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'w', 'I', 'i', 'e', 'W', '6', 'A', 'F', '2', 'X', 'm', '\u0279', '\u0292', '\u025d', 'Q', '\u0283', '0', 'Y', 'G', '\u026a', 'O', 'L', 'v', '\u0251', '\u026b', '\u014b', '-', 'l', 'n', 's', 'H', ';', 'q', '\u027e', '3', 'b', 'K', 'x', '4', 'h', 'B', ')', 'D', 'Z', 'N', "'", 'f', 'æ', '\u0361', '\u0254', 'C', '8', ':', 'T', '1', 'P', 'E', 'z', 'c', '7', '(', 'a', 'S', 'U', '9', 'y', 'ð', '\u025a', 'u', '?', ' ', '"', 'M', ',', 'p', '\u028a', '\u0261', '!', '\u028c', 't', '\u025b', '5', 'j', 'k', 'r', 'V', 'd', 'o', 'R', 'J', 'g', '.'}
+INFO:root:>>> Starting Training <<<
+ERROR:root:An error occurred during training.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1504, in train_epoch
+    outputs, _ = self.train_step(batch, batch_num_steps, cur_step, loader_start_time)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1471, in train_step
+    self.update_training_dashboard_logger(batch=batch, outputs=outputs)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\utils\distributed.py", line 35, in wrapped_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1971, in update_training_dashboard_logger
+    self.model.train_log(
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1366, in train_log
+    figures, audios = self._log(self.ap, batch, outputs, "train")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1336, in _log
+    figures = plot_results(y_hat, y, ap, name_prefix)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\vocoder\utils\generic_utils.py", line 48, in plot_results
+    y_hat = y_hat[0].squeeze().detach().cpu().numpy()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Got unsupported ScalarType BFloat16
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 367, in main
+    trainer.fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-14-2025_10+52PM-1117294\\trainer_0_log.txt'
+INFO:root:Processed y_hat: [[0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ ...
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]]
+INFO:root:Processed x_hat: [[0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ ...
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]
+ [0. 0. 0. ... 0. 0. 0.]]
