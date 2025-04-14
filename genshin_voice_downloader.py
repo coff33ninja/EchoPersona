@@ -758,9 +758,20 @@ def main_gui():
         # 2. Transcribe if processing was successful (or folder exists)
         if character_folder_path and os.path.isdir(character_folder_path):
             transcribe_character_audio(character_folder_path, status_label)
+
+            # Run the retrainer after transcription
+            try:
+                retrainer_command = (
+                    f"python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
+                )
+                subprocess.run(retrainer_command, shell=True, check=True)
+                status_label.config(text=f"Retraining completed for {character}.")
+            except subprocess.CalledProcessError as e:
+                status_label.config(text=f"Retraining failed: {e}")
+                logging.error(f"Retraining failed for {character}: {e}")
         else:
-            status_label.config(text=f"Skipping transcription due to previous errors.")
-            logging.warning("Skipping transcription due to download/folder errors.")
+            status_label.config(text=f"Skipping transcription and retraining due to previous errors.")
+            logging.warning("Skipping transcription and retraining due to download/folder errors.")
 
         # Re-enable button
         download_button.config(state="normal")
