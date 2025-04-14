@@ -160,6 +160,11 @@ Use `--character <Name>` with all actions:
 ```bash
 python voice_trainer_cli.py --character "Amber" --action train
 ```
+or
+
+```bash
+python voice_clone_train.py --character "Amber" --action train --config_path "configs/amber_config.json"
+```
 
 Output lands in `trained_models/Amber/`. Training may take hours, coffee recommended.
 

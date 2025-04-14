@@ -11,6 +11,9 @@ from TTS.utils.audio import AudioProcessor
 # --- Constants ---
 METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset folder
 
+# Configure logging
+logging.basicConfig(filename="training.log", level=logging.INFO)
+
 # --- Custom Formatter ---
 def custom_formatter(root_path, meta_file, **kwargs):
     """

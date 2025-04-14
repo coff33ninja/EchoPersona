@@ -1,0 +1,111 @@
+INFO:root:Output path: trained_models\arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\arlecchino
+INFO:root:Loaded 171 training samples.
+INFO:root:Loaded 1 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:>>> Starting Training <<<
+ERROR:root:An error occurred during training.
+Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1503, in train_epoch
+    for cur_step, batch in enumerate(self.train_loader):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\_utils.py", line 721, in reraise
+    raise RuntimeError(msg) from None
+RuntimeError: Caught UnicodeEncodeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 617, in compute_or_load
+    ids = np.load(cache_path)
+          ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\numpy\lib\npyio.py", line 427, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models\\arlecchino\\phoneme_cache\\I1ZPIEFybGVjY2hpbm8gQ2xpbWJpbmcgMDE=_phoneme.npy'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\characters.py", line 300, in char_to_id
+    return self._char_to_id[char]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: '\u0361'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 70, in encode
+    idx = self.characters.char_to_id(char)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\characters.py", line 302, in char_to_id
+    raise KeyError(f" [!] {repr(char)} is not in the vocabulary.") from e
+KeyError: " [!] '\u0361' is not in the vocabulary."
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 273, in __getitem__
+    token_ids = self.get_token_ids(idx, item["text"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 240, in get_token_ids
+    token_ids = self.get_phonemes(idx, text)["token_ids"]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 217, in get_phonemes
+    out_dict = self.phoneme_dataset[idx]
+               ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 602, in __getitem__
+    ids = self.compute_or_load(string2filename(item["audio_unique_name"]), item["text"], item["language"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 619, in compute_or_load
+    ids = self.tokenizer.text_to_ids(text, language=language)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 111, in text_to_ids
+    text = self.encode(text)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 76, in encode
+    print(text)
+  File "C:\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u026a' in position 1: character maps to <undefined>
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\voice_clone_train.py", line 295, in main
+    trainer.fit()
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "C:\Users\USER\Documents\GitHub\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:/Users/USER/Documents/GitHub/EchoPersona/trained_models/arlecchino/run-April-14-2025_04+03PM-e0e6e1b\\trainer_0_log.txt'
