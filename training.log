@@ -671,3 +671,57 @@ Traceback (most recent call last):
   File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
     os.unlink(fullname)
 PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-15-2025_01+03AM-ad2c136\\trainer_0_log.txt'
+INFO:root:Output path: trained_models\Arlecchino
+INFO:root:Tokenizer configuration should be handled separately if required.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:>>> Starting Training <<<
+ERROR:root:PermissionError occurred during training.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1504, in train_epoch
+    outputs, _ = self.train_step(batch, batch_num_steps, cur_step, loader_start_time)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1471, in train_step
+    self.update_training_dashboard_logger(batch=batch, outputs=outputs)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\utils\distributed.py", line 35, in wrapped_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1971, in update_training_dashboard_logger
+    self.model.train_log(
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1366, in train_log
+    figures, audios = self._log(self.ap, batch, outputs, "train")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 476, in <lambda>
+    trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
+                                                                            ~~~~~~~^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 500, in main
+    trainer.fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-15-2025_01+08AM-b291651\\trainer_0_log.txt'

@@ -425,7 +425,21 @@ def main():
             training_assets={"audio_processor": ap},
         )
         logging.info("Trainer initialized successfully.")
+
+        # --- Resolve File Locking Issue ---
+        def safe_remove_experiment_folder(path):
+            """Safely remove experiment folder, handling file locks."""
+            for attempt in range(5):  # Retry up to 5 times
+                try:
+                    shutil.rmtree(path, ignore_errors=False)
+                    return
+                except PermissionError as e:
+                    logging.warning(f"PermissionError during cleanup: {e}. Retrying in 1 second...")
+                    time.sleep(1)
+            logging.error(f"Failed to remove experiment folder after multiple attempts: {path}")
+
         trainer.remove_experiment_folder = safe_remove_experiment_folder
+
     except Exception as e:
         logging.error(f"Failed to initialize Trainer: {e}", exc_info=True)
         return
