@@ -6027,6 +6027,15 @@
         "documentation": {}
     },
     {
+        "label": "plot_results",
+        "kind": 2,
+        "importPath": "voice_clone_train",
+        "description": "voice_clone_train",
+        "peekOfCode": "def plot_results(y_hat, y, ap, name_prefix):\n    \"\"\"Plots and saves spectrogram results for predicted and ground truth audio.\"\"\"\n    try:\n        # Convert predicted and ground truth audio to spectrograms\n        y_hat_spec = ap.mel_spectrogram(y_hat)\n        y_spec = ap.mel_spectrogram(y)\n        # Create a figure with two subplots\n        fig, axes = plt.subplots(2, 1, figsize=(10, 8))\n        # Plot predicted spectrogram\n        axes[0].imshow(y_hat_spec, aspect=\"auto\", origin=\"lower\", interpolation=\"none\")",
+        "detail": "voice_clone_train",
+        "documentation": {}
+    },
+    {
         "label": "parse_arguments",
         "kind": 2,
         "importPath": "voice_clone_train",

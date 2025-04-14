@@ -4,6 +4,8 @@ import logging
 import time
 import shutil
 import torch
+import matplotlib.pyplot as plt
+import numpy as np
 from trainer import Trainer, TrainerArgs
 from TTS.config import BaseAudioConfig, BaseDatasetConfig
 from TTS.tts.configs.vits_config import VitsConfig
@@ -129,6 +131,39 @@ def safe_file_operation(operation, file_path, retries=5, delay=2):
                 time.sleep(delay)
             else:
                 raise e
+
+# Function to plot and save spectrogram results
+def plot_results(y_hat, y, ap, name_prefix):
+    """Plots and saves spectrogram results for predicted and ground truth audio."""
+    try:
+        # Convert predicted and ground truth audio to spectrograms
+        y_hat_spec = ap.mel_spectrogram(y_hat)
+        y_spec = ap.mel_spectrogram(y)
+
+        # Create a figure with two subplots
+        fig, axes = plt.subplots(2, 1, figsize=(10, 8))
+
+        # Plot predicted spectrogram
+        axes[0].imshow(y_hat_spec, aspect="auto", origin="lower", interpolation="none")
+        axes[0].set_title("Predicted Spectrogram")
+        axes[0].set_xlabel("Time")
+        axes[0].set_ylabel("Frequency")
+
+        # Plot ground truth spectrogram
+        axes[1].imshow(y_spec, aspect="auto", origin="lower", interpolation="none")
+        axes[1].set_title("Ground Truth Spectrogram")
+        axes[1].set_xlabel("Time")
+        axes[1].set_ylabel("Frequency")
+
+        # Save the figure
+        plot_path = f"{name_prefix}_spectrogram.png"
+        plt.tight_layout()
+        plt.savefig(plot_path)
+        plt.close(fig)
+
+        logging.info(f"Spectrogram plots saved to: {plot_path}")
+    except Exception as e:
+        logging.error(f"Error while plotting results: {e}", exc_info=True)
 
 # --- Argument Parser ---
 def parse_arguments():
@@ -407,10 +442,39 @@ def main():
                 logging.info(f"Character '{character}' added to tokenizer vocabulary.")
             else:
                 logging.info(f"Character '{character}' already exists in tokenizer vocabulary.")
-        except TypeError:
-            logging.warning("tokenizer.characters is not iterable, cannot check membership.")
-        except AttributeError:
-            logging.warning("tokenizer.characters does not support add(), cannot add character.")
+        except (TypeError, AttributeError):
+            logging.warning("Tokenizer does not support dynamic vocabulary updates.")
+
+    # Add missing character '\u0361' to the vocabulary
+    ensure_character_in_vocabulary(trainer.model.tokenizer, '\u0361')
+
+    # --- Ensure Phoneme Cache File Creation ---
+    phoneme_cache_dir = os.path.join(args.output_path, 'phoneme_cache')
+    os.makedirs(phoneme_cache_dir, exist_ok=True)
+
+    # --- Fix Tensor Type Issue ---
+    def safe_plot_results(y_hat, y, ap, name_prefix):
+        """Safely process tensors for plotting."""
+        try:
+            y_hat = y_hat[0].squeeze().detach().cpu().float().numpy()
+            y = y[0].squeeze().detach().cpu().float().numpy()
+            return plot_results(y_hat, y, ap, name_prefix)
+        except Exception as e:
+            logging.error(f"Error during plotting: {e}", exc_info=True)
+            return None
+
+    # Replace plot_results calls with safe_plot_results
+    trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
+
+    # --- Resolve File Locking Issue ---
+    def safe_remove_experiment_folder(path):
+        """Safely remove experiment folder, handling file locks."""
+        try:
+            shutil.rmtree(path, ignore_errors=False)
+        except PermissionError as e:
+            logging.warning(f"PermissionError during cleanup: {e}")
+
+    trainer.remove_experiment_folder = safe_remove_experiment_folder
 
     # Add debug logging to confirm the vocabulary update.
     logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
