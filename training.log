@@ -174,3 +174,49 @@ INFO:root:Trainer initialized successfully.
 INFO:root:Vocabulary updated successfully.
 INFO:root:Updated vocabulary with comprehensive characters: {'z', 'D', 'H', '2', 't', 'æ', '\u025b', 'n', '\u026a', 'x', 'k', 'Y', 'U', ':', 'E', '8', 'c', 'y', 'Q', 'p', '\u0251', '7', 'ð', ';', ',', 'f', 'b', 's', 'W', '\u027e', 'K', 'l', '?', '(', 'I', '\u028a', '\u014b', 'T', 'Z', '!', 'g', ' ', '-', 'C', '\u0283', '\u025d', '0', 'u', '\u026b', 'F', 'S', '1', 'V', 'd', '6', 'j', 'P', '\u0292', ')', 'N', '\u0361', "'", 'B', '3', '5', 'w', '9', '"', 'q', '\u028c', '4', 'r', 'v', 'h', 'o', 'A', 'M', 'i', '\u025a', '\u0261', '\u0254', 'J', 'a', 'm', 'e', 'O', 'L', 'X', 'R', '.', '\u0279', 'G'}
 INFO:root:>>> Starting Training <<<
+ERROR:root:An error occurred during training.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1504, in train_epoch
+    outputs, _ = self.train_step(batch, batch_num_steps, cur_step, loader_start_time)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1471, in train_step
+    self.update_training_dashboard_logger(batch=batch, outputs=outputs)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\utils\distributed.py", line 35, in wrapped_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1971, in update_training_dashboard_logger
+    self.model.train_log(
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1366, in train_log
+    figures, audios = self._log(self.ap, batch, outputs, "train")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1336, in _log
+    figures = plot_results(y_hat, y, ap, name_prefix)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\vocoder\utils\generic_utils.py", line 48, in plot_results
+    y_hat = y_hat[0].squeeze().detach().cpu().numpy()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Got unsupported ScalarType BFloat16
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 342, in main
+    trainer.fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-14-2025_10+09PM-6fe7886\\trainer_0_log.txt'
