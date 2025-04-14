@@ -677,6 +677,15 @@
         "documentation": {}
     },
     {
+        "label": "soundfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "soundfile",
+        "description": "soundfile",
+        "detail": "soundfile",
+        "documentation": {}
+    },
+    {
         "label": "speech_recognition",
         "kind": 6,
         "isExtraImport": true,
@@ -808,15 +817,6 @@
         "importPath": "noisereduce",
         "description": "noisereduce",
         "detail": "noisereduce",
-        "documentation": {}
-    },
-    {
-        "label": "soundfile",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "soundfile",
-        "description": "soundfile",
-        "detail": "soundfile",
         "documentation": {}
     },
     {
@@ -4406,7 +4406,7 @@
         "kind": 6,
         "importPath": "test_voice_tools",
         "description": "test_voice_tools",
-        "peekOfCode": "class TestVoiceTrainer(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Set up a temporary dataset directory for testing.\"\"\"\n        self.dataset_path = \"test_dataset\"\n        self.trainer = VoiceTrainer(dataset_path=self.dataset_path)\n        os.makedirs(self.dataset_path, exist_ok=True)\n    def tearDown(self):\n        \"\"\"Clean up the temporary dataset directory.\"\"\"\n        for root, dirs, files in os.walk(self.dataset_path, topdown=False):\n            for name in files:",
+        "peekOfCode": "class TestVoiceTrainer(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Set up a temporary dataset directory for testing.\"\"\"\n        self.character_name = \"TestCharacter\"\n        self.trainer = VoiceTrainer(character_name=self.character_name)\n        os.makedirs(self.trainer.dataset_path, exist_ok=True)\n        os.makedirs(self.trainer.output_path, exist_ok=True)\n        # Create a valid test audio file\n        self.test_audio_path = os.path.join(self.trainer.dataset_path, \"test.wav\")\n        sample_rate = 22050",
         "detail": "test_voice_tools",
         "documentation": {}
     },

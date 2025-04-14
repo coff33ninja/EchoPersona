@@ -1049,6 +1049,7 @@ class VoiceTrainer:
     def augment_audio(self, relative_file_path, noise_file="background_noise.mp3"):
         """ Applies random augmentation (pitch, speed, noise) to a WAV file within the character's dataset. """
         full_file_path = os.path.join(self.dataset_path, relative_file_path)
+        print(f"Debug: Full file path for augmentation: {full_file_path}")
         if not os.path.exists(full_file_path):
              print(f"Error: Audio file for augmentation not found: {full_file_path}")
              logging.error(f"Audio file not found for augmentation: {full_file_path}")

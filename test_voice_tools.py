@@ -1,47 +1,57 @@
 import unittest
 from voice_tools import VoiceTrainer
 import os
+import numpy as np
+import soundfile as sf
 
 class TestVoiceTrainer(unittest.TestCase):
 
     def setUp(self):
         """Set up a temporary dataset directory for testing."""
-        self.dataset_path = "test_dataset"
-        self.trainer = VoiceTrainer(dataset_path=self.dataset_path)
-        os.makedirs(self.dataset_path, exist_ok=True)
+        self.character_name = "TestCharacter"
+        self.trainer = VoiceTrainer(character_name=self.character_name)
+        os.makedirs(self.trainer.dataset_path, exist_ok=True)
+        os.makedirs(self.trainer.output_path, exist_ok=True)
+
+        # Create a valid test audio file
+        self.test_audio_path = os.path.join(self.trainer.dataset_path, "test.wav")
+        sample_rate = 22050
+        duration = 1  # 1 second
+        t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+        audio_data = (0.5 * np.sin(2 * np.pi * 440 * t)).astype(np.float32)  # Generate a sine wave
+        sf.write(self.test_audio_path, audio_data, sample_rate)
 
     def tearDown(self):
         """Clean up the temporary dataset directory."""
-        for root, dirs, files in os.walk(self.dataset_path, topdown=False):
+        for root, dirs, files in os.walk(self.trainer.dataset_path, topdown=False):
             for name in files:
                 os.remove(os.path.join(root, name))
             for name in dirs:
                 os.rmdir(os.path.join(root, name))
-        os.rmdir(self.dataset_path)
+        os.rmdir(self.trainer.dataset_path)
+
+        for root, dirs, files in os.walk(self.trainer.output_path, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+        os.rmdir(self.trainer.output_path)
 
     def test_augment_audio(self):
         """Test the audio augmentation method."""
-        test_file = os.path.join(self.dataset_path, "test.wav")
-        with open(test_file, "wb") as f:
-            f.write(b"dummy audio data")
-
-        self.trainer.augment_audio(test_file)
-        augmented_file = test_file.replace(".wav", "_augmented.wav")
+        self.trainer.augment_audio(self.test_audio_path)
+        augmented_file = self.test_audio_path.replace(".wav", "_augmented.wav")
         self.assertTrue(os.path.exists(augmented_file))
 
     def test_trim_silence(self):
         """Test the silence trimming method."""
-        test_file = os.path.join(self.dataset_path, "test.wav")
-        with open(test_file, "wb") as f:
-            f.write(b"dummy audio data")
-
-        self.trainer.trim_silence(test_file)
-        trimmed_file = test_file.replace(".wav", "_trimmed.wav")
+        self.trainer.trim_silence(self.test_audio_path)
+        trimmed_file = self.test_audio_path.replace(".wav", "_trimmed.wav")
         self.assertTrue(os.path.exists(trimmed_file))
 
     def test_validate_metadata(self):
         """Test the metadata validation method."""
-        metadata_file = os.path.join(self.dataset_path, "metadata.csv")
+        metadata_file = os.path.join(self.trainer.dataset_path, "metadata.csv")
         with open(metadata_file, "w") as f:
             f.write("missing_file.wav|Some text\n")
 
@@ -52,22 +62,14 @@ class TestVoiceTrainer(unittest.TestCase):
 
     def test_check_audio_quality(self):
         """Test the audio quality check method."""
-        test_file = os.path.join(self.dataset_path, "test.wav")
-        with open(test_file, "wb") as f:
-            f.write(b"dummy audio data")
-
         # This is a placeholder test; actual implementation would require real audio data
-        self.trainer.check_audio_quality(test_file)
+        self.trainer.check_audio_quality(self.test_audio_path)
 
     def test_dataset_statistics(self):
         """Test the dataset statistics method."""
-        metadata_file = os.path.join(self.dataset_path, "metadata.csv")
+        metadata_file = os.path.join(self.trainer.dataset_path, "metadata.csv")
         with open(metadata_file, "w") as f:
             f.write("test.wav|Some text\n")
-
-        test_file = os.path.join(self.dataset_path, "test.wav")
-        with open(test_file, "wb") as f:
-            f.write(b"dummy audio data")
 
         self.trainer.dataset_statistics()
 
