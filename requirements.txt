@@ -1,0 +1,29 @@
+# Core Libraries
+TTS==0.22.0
+torch~=2.2.0  # Or torch==2.2.0 if you prefer exact
+torchaudio~=2.2.0 # Or torchaudio==2.2.0
+
+# Numerical and Scientific Computing
+numpy==1.26.4  # Back to recent version < 2.0 (compatible with gruut)
+scipy==1.12.0  # More recent than 1.4.1, compatible with numpy 1.26
+numba==0.61.2  # More recent than 0.48.0
+
+# Audio Processing
+librosa==0.11.0 # More recent than 0.9.2
+decorator==5.2.1 # More recent than 4.4.2
+audioread>=3.0.0 # Allow newer patch versions
+pooch>=1.6.0 # Allow newer patch versions
+packaging>=23.1 # Allow newer patch versions
+
+# Text-to-Speech and Speech Recognition
+simpleaudio
+pyttsx3
+gTTS
+SpeechRecognition
+pydub
+sounddevice
+noisereduce
+soundfile
+openai-whisper
+vosk
+# pocketsphinx (optional)
