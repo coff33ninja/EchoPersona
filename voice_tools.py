@@ -840,8 +840,8 @@ class VoiceTrainer:
             print(f"An error occurred during recording: {e}")
 
 
-    def train_voice(self):
-        """ Triggers the voice cloning training script for the current character. """
+    def train_voice(self, epochs=100, batch_size=16, learning_rate=0.001):
+        """ Triggers the voice cloning training script for the current character with customizable parameters. """
         # Ensure the training script exists
         train_script = "voice_clone_train.py"
         if not os.path.exists(train_script):
@@ -850,11 +850,11 @@ class VoiceTrainer:
             return
 
         # Check if dataset has enough data (basic check)
-        if not os.path.exists(self.metadata_path) or os.path.getsize(self.metadata_path) < 50: # Arbitrary small size
-             print(f"Error: Metadata file for character '{self.character_name}' is missing or seems empty.")
-             print(f"Please record or add voice samples first: {self.metadata_path}")
-             logging.error(f"Metadata file missing or empty for character '{self.character_name}'.")
-             return
+        if not os.path.exists(self.metadata_path) or os.path.getsize(self.metadata_path) < 50:  # Arbitrary small size
+            print(f"Error: Metadata file for character '{self.character_name}' is missing or seems empty.")
+            print(f"Please record or add voice samples first: {self.metadata_path}")
+            logging.error(f"Metadata file missing or empty for character '{self.character_name}'.")
+            return
 
         print(f"\n--- Starting Training for Character: {self.character_name} ---")
         print(f"Using training script: '{train_script}'")
@@ -874,8 +874,9 @@ class VoiceTrainer:
             train_script,
             '--dataset_path', self.dataset_path,
             '--output_path', self.output_path,
-            # Add other necessary arguments for voice_clone_train.py here
-            # e.g., --epochs 500 --batch_size 16 etc.
+            '--epochs', str(epochs),
+            '--batch_size', str(batch_size),
+            '--learning_rate', str(learning_rate),
         ]
         logging.info(f"Running training command: {' '.join(command)}")
 
@@ -890,20 +891,20 @@ class VoiceTrainer:
                 if output == '' and process.poll() is not None:
                     break
                 if output:
-                    print(output.strip()) # Print training progress to console
-            rc = process.poll() # Get the return code
+                    print(output.strip())  # Print training progress to console
+            rc = process.poll()  # Get the return code
 
             if rc == 0:
                 print(f"\nTraining script finished successfully for '{self.character_name}'.")
                 print(f"Check the '{self.output_path}' directory for trained models and logs.")
                 logging.info(f"Training successful for character '{self.character_name}'.")
             else:
-                 print(f"\nTraining script failed for '{self.character_name}' with return code {rc}.")
-                 logging.error(f"Training failed for character '{self.character_name}' (return code: {rc}).")
+                print(f"\nTraining script failed for '{self.character_name}' with return code {rc}.")
+                logging.error(f"Training failed for character '{self.character_name}' (return code: {rc}).")
 
         except FileNotFoundError:
-             print("Error: 'python' command not found. Make sure Python is in your system PATH.")
-             logging.error("'python' command not found during training attempt.")
+            print("Error: 'python' command not found. Make sure Python is in your system PATH.")
+            logging.error("'python' command not found during training attempt.")
         except Exception as e:
             logging.error(f"Error running training script for '{self.character_name}': {e}", exc_info=True)
             print(f"An error occurred while running the training script: {e}")
