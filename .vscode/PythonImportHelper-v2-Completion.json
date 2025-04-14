@@ -756,6 +756,14 @@
         "documentation": {}
     },
     {
+        "label": "SpeechToText",
+        "importPath": "voice_tools",
+        "description": "voice_tools",
+        "isExtraImport": true,
+        "detail": "voice_tools",
+        "documentation": {}
+    },
+    {
         "label": "VoiceTrainer",
         "importPath": "voice_tools",
         "description": "voice_tools",
@@ -4565,6 +4573,15 @@
         "description": "genshin_voice_downloader",
         "peekOfCode": "window = None  # Global variable for main window (needed for update_idletasks)\ndef main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    # --- Configuration Frame ---\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    # Language Selection\n    language_label = ttk.Label(config_frame, text=\"Select Language (for Wiki):\")",
         "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "Retranscriber",
+        "kind": 6,
+        "importPath": "retranscriber",
+        "description": "retranscriber",
+        "peekOfCode": "class Retranscriber:\n    def __init__(self, character_output_dir):\n        self.character_output_dir = character_output_dir\n        self.metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n        self.voiceless_dir = os.path.join(character_output_dir, \"voiceless\")\n        os.makedirs(self.voiceless_dir, exist_ok=True)\n    def reattempt_transcription(self):\n        if not os.path.exists(self.metadata_path):\n            logging.warning(f\"Metadata file does not exist: {self.metadata_path}\")\n            return",
+        "detail": "retranscriber",
         "documentation": {}
     },
     {
