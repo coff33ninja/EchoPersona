@@ -86,6 +86,26 @@ def main():
         help=f"Base directory containing all trained character models (default: {BASE_MODEL_DIR})",
     )
 
+    # Add training-specific arguments
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=100,
+        help="Number of epochs for training (default: 100).",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=16,
+        help="Batch size for training (default: 16).",
+    )
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        default=0.001,
+        help="Learning rate for training (default: 0.001).",
+    )
+
     args = parser.parse_args()
 
     # --- Input Validation based on Action ---
@@ -192,7 +212,11 @@ def main():
             trainer.check_audio_quality(args.file)  # Requires relative path
 
         elif args.action == "train":
-            trainer.train_voice()
+            trainer.train_voice(
+                epochs=args.epochs,
+                batch_size=args.batch_size,
+                learning_rate=args.learning_rate
+            )
 
         elif args.action == "test":
             trainer.test_trained_voice(args.text)  # Text required
