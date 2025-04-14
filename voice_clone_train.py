@@ -46,6 +46,34 @@ def custom_formatter(root_path, meta_file, **kwargs):
             )
     return items
 
+# Add a vocabulary update function to include missing characters
+def update_vocabulary(vocabulary_path, new_characters):
+    """
+    Update the vocabulary file to include new characters.
+
+    Args:
+        vocabulary_path (str): Path to the vocabulary file.
+        new_characters (set): Set of characters to add to the vocabulary.
+    """
+    try:
+        # Read existing vocabulary
+        if os.path.exists(vocabulary_path):
+            with open(vocabulary_path, "r", encoding="utf-8") as f:
+                existing_vocab = set(f.read().strip())
+        else:
+            existing_vocab = set()
+
+        # Add new characters
+        updated_vocab = existing_vocab.union(new_characters)
+
+        # Write updated vocabulary back to file
+        with open(vocabulary_path, "w", encoding="utf-8") as f:
+            f.write("".join(sorted(updated_vocab)))
+
+        logging.info("Vocabulary updated successfully.")
+    except Exception as e:
+        logging.error(f"Failed to update vocabulary: {e}", exc_info=True)
+
 # --- Argument Parser ---
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -286,6 +314,18 @@ def main():
     except Exception as e:
         logging.error(f"Failed to initialize Trainer: {e}", exc_info=True)
         return
+
+    # Define the path to the vocabulary file
+    vocabulary_path = os.path.join(args.output_path, "vocabulary.log")
+
+    # Define the missing characters to add
+    missing_characters = {"͡"}
+
+    # Update the vocabulary
+    update_vocabulary(vocabulary_path, missing_characters)
+
+    # Log the vocabulary update
+    logging.info(f"Updated vocabulary with missing characters: {missing_characters}")
 
     # --- Start Training ---
     try:
