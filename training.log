@@ -300,3 +300,106 @@ INFO:root:Trainer initialized successfully.
 INFO:root:Vocabulary updated successfully.
 INFO:root:Updated vocabulary with comprehensive characters: {'\u0361', '\u0292', 'U', 'r', '\u0279', '-', '3', '\u0283', 'J', '6', 'R', '\u025a', 'f', ' ', 'x', 'v', 'C', 'A', '?', '\u028c', '4', 'q', 'z', '0', 'V', '\u025d', 'M', 'b', '!', 'Z', '\u026b', '"', 'p', 'h', 'y', 'B', 'T', '(', 'n', 'i', 'w', '9', 'm', 'H', '\u026a', 'F', 'O', 'K', 'g', '\u025b', 'o', 'I', '1', "'", 'ð', '\u0251', '\u027e', 'j', ',', '\u014b', 'G', 'a', '.', ')', 'D', 'E', 'S', '2', '\u028a', 'l', '8', 'u', 'c', 'W', '\u0261', 'd', '7', '\u0254', '5', 'æ', ':', 'Y', 'N', 't', 'X', 'Q', 'P', 'L', 's', 'e', 'k', ';'}
 INFO:root:>>> Starting Training <<<
+ERROR:root:An error occurred during training.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1503, in train_epoch
+    for cur_step, batch in enumerate(self.train_loader):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\_utils.py", line 721, in reraise
+    raise RuntimeError(msg) from None
+RuntimeError: Caught UnicodeEncodeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 617, in compute_or_load
+    ids = np.load(cache_path)
+          ^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\numpy\lib\npyio.py", line 427, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models\\Arlecchino\\phoneme_cache\\I1ZPIEFybGVjY2hpbm8gQWxseSBhdCBMb3cgSFAgMDI=_phoneme.npy'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\characters.py", line 300, in char_to_id
+    return self._char_to_id[char]
+           ~~~~~~~~~~~~~~~~^^^^^^
+KeyError: '\u0361'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 70, in encode
+    idx = self.characters.char_to_id(char)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\characters.py", line 302, in char_to_id
+    raise KeyError(f" [!] {repr(char)} is not in the vocabulary.") from e
+KeyError: " [!] '\u0361' is not in the vocabulary."
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 273, in __getitem__
+    token_ids = self.get_token_ids(idx, item["text"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 240, in get_token_ids
+    token_ids = self.get_phonemes(idx, text)["token_ids"]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 217, in get_phonemes
+    out_dict = self.phoneme_dataset[idx]
+               ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 602, in __getitem__
+    ids = self.compute_or_load(string2filename(item["audio_unique_name"]), item["text"], item["language"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\dataset.py", line 619, in compute_or_load
+    ids = self.tokenizer.text_to_ids(text, language=language)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 111, in text_to_ids
+    text = self.encode(text)
+           ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\utils\text\tokenizer.py", line 76, in encode
+    print(text)
+  File "C:\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u0279' in position 6: character maps to <undefined>
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 379, in main
+    trainer.fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-14-2025_11+19PM-910ebb0\\trainer_0_log.txt'
