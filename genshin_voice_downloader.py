@@ -367,14 +367,10 @@ def transcribe_character_audio(character_output_dir, status_label=None):
                         f"Found existing metadata file with {len(lines)-1} entries. Will append new transcriptions."
                     )
                     for line in lines[1:]:  # Skip header
-                        parts = line.strip().split("|")
-                        if len(parts) >= 3 and "Validation Needed" in parts[1]:
-                            file_name = parts[0]
-                            if not file_name.lower().endswith(".wav"):
-                                logging.warning(f"Skipping non-WAV file in metadata: {file_name}")
-                                updated_lines.append(line)
-                                continue
-                            wav_path = os.path.join(character_output_dir, file_name)
+                        # Use pipe delimiter consistent with LJSpeech format
+                        parts = line.strip().split("|", 1)
+                        if len(parts) == 2:
+                            existing_files.add(parts[0])
         except Exception as e:
             logging.error(f"Error reading existing metadata file {metadata_path}: {e}")
             # Proceed assuming no existing data or overwrite
