@@ -1,0 +1,52 @@
+2025-04-15 01:12:32,875 - INFO - Output path: trained_models\Arlecchino
+2025-04-15 01:12:32,876 - INFO - Tokenizer configuration should be handled separately if required.
+2025-04-15 01:12:32,882 - INFO - AudioProcessor initialized successfully.
+2025-04-15 01:12:32,882 - INFO - Loading dataset samples from: voice_datasets\Arlecchino
+2025-04-15 01:12:33,781 - INFO - Loaded 199 training samples.
+2025-04-15 01:12:33,781 - INFO - Loaded 2 evaluation samples.
+2025-04-15 01:12:34,576 - INFO - VITS model initialized successfully.
+2025-04-15 01:12:37,497 - INFO - Trainer initialized successfully.
+2025-04-15 01:12:37,500 - INFO - >>> Starting Training <<<
+2025-04-15 01:13:51,811 - ERROR - PermissionError occurred during training.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1833, in fit
+    self._fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1785, in _fit
+    self.train_epoch()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1504, in train_epoch
+    outputs, _ = self.train_step(batch, batch_num_steps, cur_step, loader_start_time)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1471, in train_step
+    self.update_training_dashboard_logger(batch=batch, outputs=outputs)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\utils\distributed.py", line 35, in wrapped_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1971, in update_training_dashboard_logger
+    self.model.train_log(
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\vits.py", line 1366, in train_log
+    figures, audios = self._log(self.ap, batch, outputs, "train")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 513, in <lambda>
+    trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
+                                                                            ~~~~~~~^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\voice_clone_train.py", line 537, in main
+    trainer.fit()
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 1860, in fit
+    remove_experiment_folder(self.output_path)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\generic_utils.py", line 77, in remove_experiment_folder
+    fs.rm(experiment_path, recursive=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\fsspec\implementations\local.py", line 189, in rm
+    shutil.rmtree(p)
+  File "C:\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Python311\Lib\shutil.py", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/trained_models/Arlecchino/run-April-15-2025_01+12AM-c2b5cf2\\trainer_0_log.txt'

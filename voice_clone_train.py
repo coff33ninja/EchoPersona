@@ -16,8 +16,28 @@ from TTS.utils.audio import AudioProcessor
 # --- Constants ---
 METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset folder
 
-# Configure logging
-logging.basicConfig(filename="training.log", level=logging.INFO)
+# Ensure a logs directory exists
+LOGS_DIR = "logs"
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Function to create a logger for a specific function
+def create_function_logger(function_name):
+    logger = logging.getLogger(function_name)
+    logger.setLevel(logging.INFO)
+
+    # Create a file handler for the function
+    log_file = os.path.join(LOGS_DIR, f"{function_name}.log")
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setLevel(logging.INFO)
+
+    # Create a formatter and set it for the handler
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+
+    # Add the handler to the logger
+    logger.addHandler(file_handler)
+
+    return logger
 
 # --- Custom Formatter ---
 def custom_formatter(root_path, meta_file, **kwargs):
@@ -33,6 +53,7 @@ def custom_formatter(root_path, meta_file, **kwargs):
     Returns:
         list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.
     """
+    function_logger = create_function_logger("custom_formatter")
     items = []
     with open(os.path.join(root_path, meta_file), "r", encoding="utf-8") as f:
         for line in f:
@@ -49,13 +70,17 @@ def custom_formatter(root_path, meta_file, **kwargs):
                     "root_path": root_path,
                 }
             )
+    function_logger.info(f"Loaded {len(items)} items from metadata.")
     return items
 
 # Fix for UnicodeEncodeError: Add a preprocessing step to clean unsupported characters.
 def clean_text(text):
     """Removes unsupported characters from the text."""
+    function_logger = create_function_logger("clean_text")
     supported_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?-'")
-    return ''.join(c for c in text if c in supported_chars)
+    cleaned_text = ''.join(c for c in text if c in supported_chars)
+    function_logger.info(f"Cleaned text: {cleaned_text}")
+    return cleaned_text
 
 # Add a vocabulary update function to include missing characters
 def update_vocabulary(vocabulary_path, new_characters):
@@ -66,6 +91,7 @@ def update_vocabulary(vocabulary_path, new_characters):
         vocabulary_path (str): Path to the vocabulary file.
         new_characters (set): Set of characters to add to the vocabulary.
     """
+    function_logger = create_function_logger("update_vocabulary")
     try:
         # Read existing vocabulary
         if os.path.exists(vocabulary_path):
@@ -81,13 +107,14 @@ def update_vocabulary(vocabulary_path, new_characters):
         with open(vocabulary_path, "w", encoding="utf-8") as f:
             f.write("".join(sorted(updated_vocab)))
 
-        logging.info("Vocabulary updated successfully.")
+        function_logger.info("Vocabulary updated successfully.")
     except Exception as e:
-        logging.error(f"Failed to update vocabulary: {e}", exc_info=True)
+        function_logger.error(f"Failed to update vocabulary: {e}", exc_info=True)
 
 # Update the vocabulary dynamically to include missing characters.
 def update_vocabulary_dynamically(vocabulary_path, missing_characters):
     """Adds missing characters to the vocabulary dynamically."""
+    function_logger = create_function_logger("update_vocabulary_dynamically")
     try:
         # Read existing vocabulary
         if os.path.exists(vocabulary_path):
@@ -103,38 +130,45 @@ def update_vocabulary_dynamically(vocabulary_path, missing_characters):
         with open(vocabulary_path, "w", encoding="utf-8") as f:
             f.write("".join(sorted(updated_vocab)))
 
-        logging.info("Vocabulary dynamically updated successfully.")
+        function_logger.info("Vocabulary dynamically updated successfully.")
     except Exception as e:
-        logging.error(f"Failed to dynamically update vocabulary: {e}", exc_info=True)
+        function_logger.error(f"Failed to dynamically update vocabulary: {e}", exc_info=True)
 
 # Fix for PermissionError: Retry file deletion with a delay.
 
 # Custom function to retry file deletion.
 def safe_delete(file_path, retries=3, delay=1):
+    function_logger = create_function_logger("safe_delete")
     for _ in range(retries):
         try:
             os.unlink(file_path)
+            function_logger.info(f"Deleted file: {file_path}")
             return
         except PermissionError:
             time.sleep(delay)
+    function_logger.error(f"Could not delete file: {file_path}")
     raise PermissionError(f"Could not delete file: {file_path}")
 
 # Custom function to retry file operations.
 def safe_file_operation(operation, file_path, retries=5, delay=2):
     """Retries a file operation to handle temporary locks."""
+    function_logger = create_function_logger("safe_file_operation")
     for attempt in range(retries):
         try:
             operation(file_path)
+            function_logger.info(f"Operation succeeded on file: {file_path}")
             return
         except PermissionError as e:
             if attempt < retries - 1:
                 time.sleep(delay)
             else:
+                function_logger.error(f"Operation failed on file: {file_path}", exc_info=True)
                 raise e
 
 # Function to plot and save spectrogram results
 def plot_results(y_hat, y, ap, name_prefix):
     """Plots and saves spectrogram results for predicted and ground truth audio."""
+    function_logger = create_function_logger("plot_results")
     try:
         # Normalize spectrograms for better visualization
         y_hat_spec = np.log1p(np.abs(ap.mel_spectrogram(y_hat)))
@@ -161,12 +195,13 @@ def plot_results(y_hat, y, ap, name_prefix):
         plt.savefig(plot_path)
         plt.close(fig)
 
-        logging.info(f"Spectrogram plots saved to: {plot_path}")
+        function_logger.info(f"Spectrogram plots saved to: {plot_path}")
     except Exception as e:
-        logging.error(f"Error while plotting results: {e}", exc_info=True)
+        function_logger.error(f"Error while plotting results: {e}", exc_info=True)
 
 # --- Argument Parser ---
 def parse_arguments():
+    function_logger = create_function_logger("parse_arguments")
     parser = argparse.ArgumentParser(
         description="Train a VITS TTS model for a specific character."
     )
@@ -263,24 +298,26 @@ def parse_arguments():
         default=None,
         help="Path to a previous training output directory to continue from."
     )
+    function_logger.info("Arguments parsed successfully.")
     return parser.parse_args()
 
 # --- Main Training Function ---
 def main():
+    function_logger = create_function_logger("main")
     args = parse_arguments()
 
     # --- Validate Paths ---
     if not os.path.isdir(args.dataset_path):
-        logging.error(f"Dataset path not found or is not a directory: {args.dataset_path}")
+        function_logger.error(f"Dataset path not found or is not a directory: {args.dataset_path}")
         return
     metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)
     if not os.path.isfile(metadata_path):
-        logging.error(f"Metadata file not found in dataset path: {metadata_path}")
+        function_logger.error(f"Metadata file not found in dataset path: {metadata_path}")
         return
 
     # Ensure output path exists
     os.makedirs(args.output_path, exist_ok=True)
-    logging.info(f"Output path: {args.output_path}")
+    function_logger.info(f"Output path: {args.output_path}")
 
     # --- Configure Logging ---
     logging.basicConfig(
@@ -342,32 +379,32 @@ def main():
     config.mixed_precision = False
     config.precision = "float32"
 
-    logging.info("Tokenizer configuration should be handled separately if required.")
+    function_logger.info("Tokenizer configuration should be handled separately if required.")
 
     def safe_remove_experiment_folder(path):
         """Safely remove experiment folder, handling file locks."""
         try:
             shutil.rmtree(path, ignore_errors=False)
         except PermissionError as e:
-            logging.warning(f"PermissionError during cleanup: {e}")
+            function_logger.warning(f"PermissionError during cleanup: {e}")
             time.sleep(1)
             shutil.rmtree(path, ignore_errors=True)
 
     # This line is moved to after the trainer is initialized
 
     # Add debug logging to confirm the vocabulary update.
-    logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
+    function_logger.info("Checking if character '͡' is in the tokenizer vocabulary...")
     # --- Initialize AudioProcessor ---
     try:
         ap = AudioProcessor.init_from_config(config)
-        logging.info("AudioProcessor initialized successfully.")
+        function_logger.info("AudioProcessor initialized successfully.")
     except Exception as e:
-        logging.error(f"Failed to initialize AudioProcessor: {e}", exc_info=True)
+        function_logger.error(f"Failed to initialize AudioProcessor: {e}", exc_info=True)
         return
 
     # --- Load Dataset Samples ---
     try:
-        logging.info(f"Loading dataset samples from: {args.dataset_path}")
+        function_logger.info(f"Loading dataset samples from: {args.dataset_path}")
         train_samples, eval_samples = load_tts_samples(
             datasets=[dataset_config],
             eval_split=True,
@@ -375,13 +412,13 @@ def main():
             formatter=custom_formatter,  # Use custom formatter
         )
         if not train_samples:
-            logging.error("No training samples loaded. Check metadata file format and content.")
+            function_logger.error("No training samples loaded. Check metadata file format and content.")
             return
-        logging.info(f"Loaded {len(train_samples)} training samples.")
+        function_logger.info(f"Loaded {len(train_samples)} training samples.")
         if eval_samples:
-            logging.info(f"Loaded {len(eval_samples)} evaluation samples.")
+            function_logger.info(f"Loaded {len(eval_samples)} evaluation samples.")
         else:
-            logging.warning("No evaluation samples loaded. Evaluation might be skipped.")
+            function_logger.warning("No evaluation samples loaded. Evaluation might be skipped.")
 
         # Filter out failed transcriptions
         train_samples = [sample for sample in train_samples if sample.get('text') != '<transcription_failed>']
@@ -391,22 +428,22 @@ def main():
         all_samples = train_samples + eval_samples
         for sample in all_samples:
             if not sample["audio_file"].lower().endswith(".wav"):
-                logging.error(f"Non-WAV file found in dataset: {sample['audio_file']}")
+                function_logger.error(f"Non-WAV file found in dataset: {sample['audio_file']}")
                 return
             if not os.path.isfile(sample["audio_file"]):
-                logging.error(f"Missing audio file: {sample['audio_file']}")
+                function_logger.error(f"Missing audio file: {sample['audio_file']}")
                 return
 
     except Exception as e:
-        logging.error(f"Failed to load dataset samples: {e}", exc_info=True)
+        function_logger.error(f"Failed to load dataset samples: {e}", exc_info=True)
         return
 
     # --- Initialize Model ---
     try:
         model = Vits.init_from_config(config)
-        logging.info("VITS model initialized successfully.")
+        function_logger.info("VITS model initialized successfully.")
     except Exception as e:
-        logging.error(f"Failed to initialize VITS model: {e}", exc_info=True)
+        function_logger.error(f"Failed to initialize VITS model: {e}", exc_info=True)
         return
 
     # Ensure the phoneme cache directory is created before training.
@@ -424,7 +461,7 @@ def main():
             eval_samples=eval_samples,
             training_assets={"audio_processor": ap},
         )
-        logging.info("Trainer initialized successfully.")
+        function_logger.info("Trainer initialized successfully.")
 
         # --- Resolve File Locking Issue ---
         def safe_remove_experiment_folder(path):
@@ -434,14 +471,14 @@ def main():
                     shutil.rmtree(path, ignore_errors=False)
                     return
                 except PermissionError as e:
-                    logging.warning(f"PermissionError during cleanup: {e}. Retrying in 1 second...")
+                    function_logger.warning(f"PermissionError during cleanup: {e}. Retrying in 1 second...")
                     time.sleep(1)
-            logging.error(f"Failed to remove experiment folder after multiple attempts: {path}")
+            function_logger.error(f"Failed to remove experiment folder after multiple attempts: {path}")
 
         trainer.remove_experiment_folder = safe_remove_experiment_folder
 
     except Exception as e:
-        logging.error(f"Failed to initialize Trainer: {e}", exc_info=True)
+        function_logger.error(f"Failed to initialize Trainer: {e}", exc_info=True)
         return
 
     # Update the vocabulary with a comprehensive set of characters
@@ -470,7 +507,7 @@ def main():
             y = y[0].squeeze().detach().cpu().float().numpy()
             return plot_results(y_hat, y, ap, name_prefix)
         except Exception as e:
-            logging.error(f"Error during plotting: {e}", exc_info=True)
+            function_logger.error(f"Error during plotting: {e}", exc_info=True)
             return None
 
     trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
@@ -480,7 +517,7 @@ def main():
         try:
             shutil.rmtree(path, ignore_errors=False)
         except PermissionError as e:
-            logging.warning(f"PermissionError during cleanup: {e}")
+            function_logger.warning(f"PermissionError during cleanup: {e}")
             time.sleep(1)
             shutil.rmtree(path, ignore_errors=True)
 
@@ -494,19 +531,19 @@ def main():
 
     # --- Start Training ---
     try:
-        logging.info(">>> Starting Training <<<")
+        function_logger.info(">>> Starting Training <<<")
         if args.continue_path:
-            logging.info(f"Continuing training from: {args.continue_path}")
+            function_logger.info(f"Continuing training from: {args.continue_path}")
         trainer.fit()
-        logging.info(">>> Training Finished <<<")
+        function_logger.info(">>> Training Finished <<<")
         print(f"\nTraining complete. Model files saved in: {args.output_path}")
     except PermissionError as e:
-        logging.error("PermissionError occurred during training.", exc_info=True)
+        function_logger.error("PermissionError occurred during training.", exc_info=True)
         print(f"A PermissionError occurred: {e}")
         print("Ensure no other processes are accessing the training files and retry.")
         exit(1)
     except Exception as e:
-        logging.error("An error occurred during training.", exc_info=True)
+        function_logger.error("An error occurred during training.", exc_info=True)
         print(f"An error occurred during training: {e}")
         print("Training did not complete successfully. Please check the logs for details.")
         exit(1)
@@ -518,15 +555,15 @@ def main():
 
         # Save the model state dictionary
         torch.save(model.state_dict(), model_save_path)
-        logging.info(f"Model saved successfully to: {model_save_path}")
+        function_logger.info(f"Model saved successfully to: {model_save_path}")
 
         # Save the model configuration
         with open(config_save_path, "w", encoding="utf-8") as config_file:
             config_file.write(config.to_json())
-        logging.info(f"Configuration saved successfully to: {config_save_path}")
+        function_logger.info(f"Configuration saved successfully to: {config_save_path}")
 
     except Exception as e:
-        logging.error(f"Failed to save model or configuration: {e}", exc_info=True)
+        function_logger.error(f"Failed to save model or configuration: {e}", exc_info=True)
         print(f"Error saving model: {e}")
 
     # Fix for TypeError: Cast tensors to float32 before plotting.
@@ -539,8 +576,8 @@ def main():
     x_hat = x_hat[0].squeeze().detach().cpu().float().numpy()  # Cast to float32
 
     # Use `y_hat` and `x_hat` in a meaningful way, e.g., logging or further processing
-    logging.info(f"Processed y_hat: {y_hat}")
-    logging.info(f"Processed x_hat: {x_hat}")
+    function_logger.info(f"Processed y_hat: {y_hat}")
+    function_logger.info(f"Processed x_hat: {x_hat}")
 
     # Example usage of `shutil` to ensure it is utilized
     # Clean up temporary directories after training
