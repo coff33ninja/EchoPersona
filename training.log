@@ -606,3 +606,14 @@ INFO:root:Updated vocabulary with comprehensive characters: {'j', '\u025d', 'L',
 INFO:root:Vocabulary dynamically updated successfully.
 WARNING:root:Tokenizer does not support dynamic vocabulary updates.
 INFO:root:>>> Starting Training <<<
+INFO:root:Output path: trained_models\Arlecchino
+INFO:root:Tokenizer configuration should be handled separately if required.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:>>> Starting Training <<<

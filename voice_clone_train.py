@@ -430,48 +430,23 @@ def main():
     # Define the path to the vocabulary file
     vocabulary_path = os.path.join(args.output_path, "vocabulary.log")
 
-    # Define a comprehensive set of characters for the vocabulary
+    # --- Fix Missing Characters in Vocabulary ---
     comprehensive_characters = set(
         "abcdefghijklmnopqrstuvwxyz"  # Lowercase letters
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # Uppercase letters
         "0123456789"                  # Numbers
-        ".,?!'\":;-()"               # Punctuation
+        ".,?!'\":;()-"               # Punctuation
         "ðʃʒŋæɔɪʊɛɑʌɚɝɹɾɫɡ͡ "         # Phonetic symbols and space
+        "\u0361"                      # Missing character
     )
-
-    # Update the vocabulary
     update_vocabulary(vocabulary_path, comprehensive_characters)
 
-    # Log the vocabulary update
-    logging.info(f"Updated vocabulary with comprehensive characters: {comprehensive_characters}")
-
-    # Add the missing character '͡' to the vocabulary dynamically.
-    missing_characters = {'͡'}
-    update_vocabulary_dynamically(vocabulary_path, missing_characters)
-
-    # Ensure the missing character is explicitly added to the tokenizer's vocabulary.
-    def ensure_character_in_vocabulary(tokenizer, character):
-        """Ensures a specific character is in the tokenizer's vocabulary."""
-        try:
-            if character not in tokenizer.characters:
-                tokenizer.characters.add(character)
-                logging.info(f"Character '{character}' added to tokenizer vocabulary.")
-            else:
-                logging.info(f"Character '{character}' already exists in tokenizer vocabulary.")
-        except (TypeError, AttributeError):
-            logging.warning("Tokenizer does not support dynamic vocabulary updates.")
-
-    # Add missing character '\u0361' to the vocabulary
-    if 'trainer' in locals():
-        ensure_character_in_vocabulary(trainer.model.tokenizer, '\u0361')
-
-    # --- Ensure Phoneme Cache File Creation ---
+    # --- Handle Phoneme Cache Creation ---
     phoneme_cache_dir = os.path.join(args.output_path, 'phoneme_cache')
     os.makedirs(phoneme_cache_dir, exist_ok=True)
 
     # --- Fix Tensor Type Issue ---
     def safe_plot_results(y_hat, y, ap, name_prefix):
-        """Safely process tensors for plotting."""
         try:
             y_hat = y_hat[0].squeeze().detach().cpu().float().numpy()
             y = y[0].squeeze().detach().cpu().float().numpy()
@@ -480,18 +455,24 @@ def main():
             logging.error(f"Error during plotting: {e}", exc_info=True)
             return None
 
-    # Replace plot_results calls with safe_plot_results
     trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
 
-    # --- Resolve File Locking Issue ---
+    # --- Resolve File Locking ---
     def safe_remove_experiment_folder(path):
-        """Safely remove experiment folder, handling file locks."""
         try:
             shutil.rmtree(path, ignore_errors=False)
         except PermissionError as e:
             logging.warning(f"PermissionError during cleanup: {e}")
+            time.sleep(1)
+            shutil.rmtree(path, ignore_errors=True)
 
+    trainer.remove_experiment_folder = safe_remove_experiment_folder
 
+    # --- Update Deprecated Function Usage ---
+    def safe_stft(input, n_fft, hop_length, win_length, window):
+        return torch.stft(input, n_fft, hop_length, win_length, window, return_complex=True).real
+
+    ap.mel_spectrogram = lambda x: safe_stft(x, ap.fft_size, ap.hop_length, ap.win_length, ap.window)
 
     # --- Start Training ---
     try:

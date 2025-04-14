@@ -680,6 +680,38 @@
         "documentation": {}
     },
     {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAudioConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseDatasetConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
         "label": "BaseAudioConfig",
         "importPath": "TTS.config",
         "description": "TTS.config",
@@ -1088,6 +1120,22 @@
         "documentation": {}
     },
     {
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.vits_config",
+        "documentation": {}
+    },
+    {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
         "label": "load_tts_samples",
         "importPath": "TTS.tts.datasets",
         "description": "TTS.tts.datasets",
@@ -1357,6 +1405,22 @@
         "description": "TTS.tts.models.vits",
         "isExtraImport": true,
         "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
+        "label": "AudioProcessor",
+        "importPath": "TTS.utils.audio",
+        "description": "TTS.utils.audio",
+        "isExtraImport": true,
+        "detail": "TTS.utils.audio",
         "documentation": {}
     },
     {
@@ -6261,6 +6325,96 @@
         "description": "trained_models.Arlecchino.run-April-15-2025_12+47AM-1be79b2.voice_clone_train",
         "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# Configure logging\nlogging.basicConfig(filename=\"training.log\", level=logging.INFO)\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.",
         "detail": "trained_models.Arlecchino.run-April-15-2025_12+47AM-1be79b2.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "custom_formatter",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "clean_text",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def clean_text(text):\n    \"\"\"Removes unsupported characters from the text.\"\"\"\n    supported_chars = set(\"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?-'\")\n    return ''.join(c for c in text if c in supported_chars)\n# Add a vocabulary update function to include missing characters\ndef update_vocabulary(vocabulary_path, new_characters):\n    \"\"\"\n    Update the vocabulary file to include new characters.\n    Args:\n        vocabulary_path (str): Path to the vocabulary file.",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "update_vocabulary",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def update_vocabulary(vocabulary_path, new_characters):\n    \"\"\"\n    Update the vocabulary file to include new characters.\n    Args:\n        vocabulary_path (str): Path to the vocabulary file.\n        new_characters (set): Set of characters to add to the vocabulary.\n    \"\"\"\n    try:\n        # Read existing vocabulary\n        if os.path.exists(vocabulary_path):",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "update_vocabulary_dynamically",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def update_vocabulary_dynamically(vocabulary_path, missing_characters):\n    \"\"\"Adds missing characters to the vocabulary dynamically.\"\"\"\n    try:\n        # Read existing vocabulary\n        if os.path.exists(vocabulary_path):\n            with open(vocabulary_path, \"r\", encoding=\"utf-8\") as f:\n                existing_vocab = set(f.read().strip())\n        else:\n            existing_vocab = set()\n        # Add missing characters",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "safe_delete",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def safe_delete(file_path, retries=3, delay=1):\n    for _ in range(retries):\n        try:\n            os.unlink(file_path)\n            return\n        except PermissionError:\n            time.sleep(delay)\n    raise PermissionError(f\"Could not delete file: {file_path}\")\n# Custom function to retry file operations.\ndef safe_file_operation(operation, file_path, retries=5, delay=2):",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "safe_file_operation",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def safe_file_operation(operation, file_path, retries=5, delay=2):\n    \"\"\"Retries a file operation to handle temporary locks.\"\"\"\n    for attempt in range(retries):\n        try:\n            operation(file_path)\n            return\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "plot_results",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def plot_results(y_hat, y, ap, name_prefix):\n    \"\"\"Plots and saves spectrogram results for predicted and ground truth audio.\"\"\"\n    try:\n        # Normalize spectrograms for better visualization\n        y_hat_spec = np.log1p(np.abs(ap.mel_spectrogram(y_hat)))\n        y_spec = np.log1p(np.abs(ap.mel_spectrogram(y)))\n        # Create a figure with two subplots\n        fig, axes = plt.subplots(2, 1, figsize=(10, 8))\n        # Plot predicted spectrogram\n        axes[0].imshow(y_hat_spec, aspect=\"auto\", origin=\"lower\", interpolation=\"none\")",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "parse_arguments",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,\n        help=\"Path to the character's dataset directory (containing metadata.csv and wav files).\",\n    )",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "METADATA_FILENAME",
+        "kind": 5,
+        "importPath": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "description": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# Configure logging\nlogging.basicConfig(filename=\"training.log\", level=logging.INFO)\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.",
+        "detail": "trained_models.Arlecchino.run-April-15-2025_12+52AM-f50859f.voice_clone_train",
         "documentation": {}
     },
     {
