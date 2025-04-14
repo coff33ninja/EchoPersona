@@ -48,8 +48,10 @@ def main():
     else:
         # If user specified a path, use it directly
         output_path = output_filename
-        # Ensure the directory for the custom output path exists
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        # Ensure the directory for the custom output path exists, if applicable
+        output_dir = os.path.dirname(output_path)
+        if output_dir:  # Only create the directory if it is not empty
+            os.makedirs(output_dir, exist_ok=True)
 
 
     # --- Check if Model Files Exist ---
