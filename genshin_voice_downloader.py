@@ -519,7 +519,7 @@ def validate_metadata_existence(character_output_dir):
     return True
 
 
-# Add a function to validate the layout of the metadata file
+# Update the validate_metadata_layout function to handle optional speaker_id column
 def validate_metadata_layout(metadata_path):
     """
     Validate the layout of the metadata file to ensure it meets the requirements of voice_tools and trainers.
@@ -542,14 +542,15 @@ def validate_metadata_layout(metadata_path):
         # Validate the header
         header = lines[0].strip()
         expected_header = "audio_file|text|normalized_text"
-        if header != expected_header:
-            logging.error(f"Metadata file {metadata_path} has an invalid header. Expected: '{expected_header}', Found: '{header}'")
+        optional_header = "audio_file|text|normalized_text|speaker_id"
+        if header not in [expected_header, optional_header]:
+            logging.error(f"Metadata file {metadata_path} has an invalid header. Expected: '{expected_header}' or '{optional_header}', Found: '{header}'")
             return False
 
         # Validate each data line
         for line_number, line in enumerate(lines[1:], start=2):
             parts = line.strip().split("|")
-            if len(parts) != 3:
+            if len(parts) < 3 or len(parts) > 4:
                 logging.error(f"Invalid layout in metadata file {metadata_path} at line {line_number}: {line.strip()}")
                 return False
 
