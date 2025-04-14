@@ -2,24 +2,46 @@ import os
 import argparse
 import logging
 from trainer import Trainer, TrainerArgs
-
-# Removed CharactersConfig from this import as it's likely moved/unused
 from TTS.config import BaseAudioConfig, BaseDatasetConfig
-
-# Removed BaseTTSConfig import
 from TTS.tts.configs.vits_config import VitsConfig
 from TTS.tts.datasets import load_tts_samples
-
-# Removed VitsArgs import
 from TTS.tts.models.vits import Vits
 from TTS.utils.audio import AudioProcessor
-
-# Removed ModelManager import as it wasn't used for training setup
-# from TTS.utils.manage import ModelManager # Keep if needed elsewhere, but not for this core logic
 
 # --- Constants ---
 METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset folder
 
+# --- Custom Formatter ---
+def custom_formatter(root_path, meta_file, **kwargs):
+    """
+    Custom formatter to load dataset samples where audio filenames in metadata.csv
+    include the .wav extension and are located directly in the dataset directory.
+
+    Args:
+        root_path (str): Path to the dataset directory.
+        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').
+        **kwargs: Additional arguments (ignored).
+
+    Returns:
+        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.
+    """
+    items = []
+    with open(os.path.join(root_path, meta_file), "r", encoding="utf-8") as f:
+        for line in f:
+            parts = line.strip().split("|")
+            if len(parts) < 2 or parts[0] == "audio_file":  # Skip header or malformed lines
+                continue
+            audio_file = os.path.join(root_path, parts[0])  # Full filename from metadata
+            text = parts[1]  # Transcription
+            items.append(
+                {
+                    "text": text,
+                    "audio_file": audio_file,
+                    "speaker_name": "speaker1",
+                    "root_path": root_path,
+                }
+            )
+    return items
 
 # --- Argument Parser ---
 def parse_arguments():
@@ -38,7 +60,6 @@ def parse_arguments():
         required=True,
         help="Path to save the trained model, logs, and other outputs for this character.",
     )
-    # Add other training parameters as needed (e.g., epochs, batch_size, learning_rate)
     parser.add_argument(
         "--epochs", type=int, default=1000, help="Number of training epochs."
     )
@@ -52,11 +73,11 @@ def parse_arguments():
         "--num_loader_workers",
         type=int,
         default=4,
-        help="Number of workers for data loading.",
+        help="Number of workers for data loading."
     )
     parser.add_argument(
         "--learning_rate", type=float, default=0.0002, help="Initial learning rate."
-    )  # VITS default lr
+    )
     parser.add_argument(
         "--language",
         type=str,
@@ -67,25 +88,25 @@ def parse_arguments():
         "--text_cleaner",
         type=str,
         default="english_cleaners",
-        help="Text cleaner to use.",
+        help="Text cleaner to use."
     )
     parser.add_argument(
         "--use_phonemes",
         action="store_true",
         default=True,
-        help="Use phonemes for training.",
-    )  # Default to True for VITS
+        help="Use phonemes for training."
+    )
     parser.add_argument(
         "--no_phonemes",
         action="store_false",
         dest="use_phonemes",
-        help="Do not use phonemes for training.",
+        help="Do not use phonemes for training."
     )
     parser.add_argument(
         "--phoneme_language",
         type=str,
         default="en-us",
-        help="Phoneme language (if using phonemes).",
+        help="Phoneme language (if using phonemes)."
     )
     parser.add_argument(
         "--sample_rate", type=int, default=22050, help="Target sample rate."
@@ -94,35 +115,33 @@ def parse_arguments():
         "--run_eval",
         action="store_true",
         default=True,
-        help="Run evaluation during training.",
+        help="Run evaluation during training."
     )
     parser.add_argument(
         "--no_eval",
         action="store_false",
         dest="run_eval",
-        help="Do not run evaluation during training.",
+        help="Do not run evaluation during training."
     )
     parser.add_argument(
         "--mixed_precision",
         action="store_true",
         default=True,
-        help="Use mixed precision training.",
+        help="Use mixed precision training."
     )
     parser.add_argument(
         "--no_mixed_precision",
         action="store_false",
         dest="mixed_precision",
-        help="Do not use mixed precision training.",
+        help="Do not use mixed precision training."
     )
     parser.add_argument(
         "--continue_path",
         type=str,
         default=None,
-        help="Path to a previous training output directory to continue from.",
+        help="Path to a previous training output directory to continue from."
     )
-
     return parser.parse_args()
-
 
 # --- Main Training Function ---
 def main():
@@ -130,9 +149,7 @@ def main():
 
     # --- Validate Paths ---
     if not os.path.isdir(args.dataset_path):
-        logging.error(
-            f"Dataset path not found or is not a directory: {args.dataset_path}"
-        )
+        logging.error(f"Dataset path not found or is not a directory: {args.dataset_path}")
         return
     metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)
     if not os.path.isfile(metadata_path):
@@ -143,10 +160,7 @@ def main():
     os.makedirs(args.output_path, exist_ok=True)
     logging.info(f"Output path: {args.output_path}")
 
-    # --- Configuration ---
-    # Use arguments passed from CLI
-
-    # Update logging to use a structured format
+    # --- Configure Logging ---
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
@@ -156,77 +170,53 @@ def main():
         ]
     )
 
-    # Audio Configuration (Adjust defaults if needed)
+    # --- Audio Configuration ---
     audio_config = BaseAudioConfig(
         sample_rate=args.sample_rate,
-        resample=False,  # Assume data is already at target sample rate
-        num_mels=80,  # VITS default
+        resample=False,
+        num_mels=80,
         log_func="np.log10",
         min_level_db=-100,
-        frame_shift_ms=None,
-        frame_length_ms=None,
         ref_level_db=20,
-        fft_size=1024,  # VITS default
-        power=1.5,  # VITS default
-        preemphasis=0.97,  # VITS default
-        hop_length=256,  # VITS default
-        win_length=1024,  # VITS default
+        fft_size=1024,
+        power=1.5,
+        preemphasis=0.97,
+        hop_length=256,
+        win_length=1024,
     )
 
-    # Dataset Configuration
-    # Ensure dataset path uses the character folder directly
+    # --- Dataset Configuration ---
     dataset_config = BaseDatasetConfig(
-        formatter="ljspeech",
-        meta_file_train=METADATA_FILENAME,  # Use the standard filename relative to dataset_path
-        path=args.dataset_path,  # Use character folder directly
+        formatter="ljspeech",  # Overridden by custom_formatter below
+        meta_file_train=METADATA_FILENAME,
+        path=args.dataset_path,
         language=args.language,
     )
 
-    # --- REMOVED Unused Config Definitions ---
-    # characters_config = CharactersConfig(...) # Removed - parameters set in VitsConfig
-    # base_tts_config = BaseTTSConfig(...) # Removed - parameters set in VitsConfig
-
-    # VITS Model Configuration
-    # Adapt based on Coqui TTS library version and VITS requirements
+    # --- VITS Model Configuration ---
     config = VitsConfig(
         audio=audio_config,
         batch_size=args.batch_size,
         eval_batch_size=args.eval_batch_size,
         num_loader_workers=args.num_loader_workers,
-        num_eval_loader_workers=args.num_loader_workers,  # Can be same or different
+        num_eval_loader_workers=args.num_loader_workers,
         run_eval=args.run_eval,
-        test_delay_epochs=-1,  # Start eval immediately
+        test_delay_epochs=-1,
         epochs=args.epochs,
         text_cleaner=args.text_cleaner,
         use_phonemes=args.use_phonemes,
         phoneme_language=args.phoneme_language,
-        phoneme_cache_path=os.path.join(
-            args.output_path, "phoneme_cache"
-        ),  # Cache in output dir
-        compute_input_seq_cache=True,  # Cache text processing results
-        print_step=50,  # Log training step every 50 steps
-        print_eval=True,  # Print evaluation results
+        phoneme_cache_path=os.path.join(args.output_path, "phoneme_cache"),
+        compute_input_seq_cache=True,
+        print_step=50,
+        print_eval=True,
         mixed_precision=args.mixed_precision,
-        output_path=args.output_path,  # CRITICAL: Use the provided output path
-        datasets=[dataset_config],  # Pass the configured dataset
+        output_path=args.output_path,
+        datasets=[dataset_config],
         lr=args.learning_rate,
-        # Add other VITS specific parameters if needed:
-        # use_speaker_embedding=False, # Usually False for single speaker finetuning
-        # num_speakers=0, # Set to 0 for single speaker
     )
 
-    # --- REMOVED Unused VitsArgs definition ---
-    # vits_args = VitsArgs(...) # Removed - parameters should be in VitsConfig if needed
-
-    # --- Preprocessing Steps (Moved from original script - Handled by VoiceTrainer now) ---
-    # trainer = VoiceTrainer() # VoiceTrainer is now handled by the CLI script
-    # print("Validating metadata...")
-    # trainer.validate_metadata()
-    # print("Preprocessing dataset...")
-    # ... (augmentation/trimming logic removed as it's done via CLI before training) ...
-
     # --- Initialize AudioProcessor ---
-    # Used for text processing (tokenization, phonemization) based on config
     try:
         ap = AudioProcessor.init_from_config(config)
         logging.info("AudioProcessor initialized successfully.")
@@ -237,31 +227,28 @@ def main():
     # --- Load Dataset Samples ---
     try:
         logging.info(f"Loading dataset samples from: {args.dataset_path}")
-        # eval_split_size can be adjusted, e.g., 0.01 for 1% evaluation data
         train_samples, eval_samples = load_tts_samples(
-            datasets=[dataset_config],  # Pass the dataset configuration as a list
-            eval_split=True,  # Enable evaluation split
-            eval_split_size=0.01  # Use 1% of the dataset for evaluation
+            datasets=[dataset_config],
+            eval_split=True,
+            eval_split_size=0.01,
+            formatter=custom_formatter,  # Use custom formatter
         )
         if not train_samples:
-            logging.error(
-                "No training samples loaded. Check metadata file format and content."
-            )
+            logging.error("No training samples loaded. Check metadata file format and content.")
             return
         logging.info(f"Loaded {len(train_samples)} training samples.")
         if eval_samples:
             logging.info(f"Loaded {len(eval_samples)} evaluation samples.")
         else:
-            logging.warning(
-                "No evaluation samples loaded. Evaluation might be skipped."
-            )
+            logging.warning("No evaluation samples loaded. Evaluation might be skipped.")
 
-        # Filter out entries with failed transcriptions
+        # Filter out failed transcriptions
         train_samples = [sample for sample in train_samples if sample.get('text') != '<transcription_failed>']
         eval_samples = [sample for sample in eval_samples if sample.get('text') != '<transcription_failed>']
 
-        # Validate dataset paths
-        for sample in train_samples:
+        # Validate all samples
+        all_samples = train_samples + eval_samples
+        for sample in all_samples:
             if not sample["audio_file"].lower().endswith(".wav"):
                 logging.error(f"Non-WAV file found in dataset: {sample['audio_file']}")
                 return
@@ -273,13 +260,7 @@ def main():
         logging.error(f"Failed to load dataset samples: {e}", exc_info=True)
         return
 
-    # --- REMOVED Unused ModelManager implementation ---
-    # model_manager = ModelManager()
-    # model_path = model_manager.download_model(...)
-    # print(f"Model downloaded to: {model_path}")
-
     # --- Initialize Model ---
-    # Initialize VITS model from the configuration
     try:
         model = Vits.init_from_config(config)
         logging.info("VITS model initialized successfully.")
@@ -289,20 +270,14 @@ def main():
 
     # --- Initialize Trainer ---
     try:
-        # TrainerArgs can be used for fine-grained control over optimizer, scheduler etc.
-        # Using default TrainerArgs() for now.
         trainer = Trainer(
-            args=TrainerArgs(
-                continue_path=args.continue_path
-            ),  # Pass continue_path if provided
+            args=TrainerArgs(continue_path=args.continue_path),
             config=config,
-            output_path=args.output_path,  # Pass output path again
+            output_path=args.output_path,
             model=model,
             train_samples=train_samples,
             eval_samples=eval_samples,
-            training_assets={
-                "audio_processor": ap
-            },  # Pass the initialized AudioProcessor
+            training_assets={"audio_processor": ap},
         )
         logging.info("Trainer initialized successfully.")
     except Exception as e:
@@ -313,19 +288,13 @@ def main():
     try:
         logging.info(">>> Starting Training <<<")
         if args.continue_path:
-            logging.info(
-                f"Attempting to continue training from checkpoint specified in TrainerArgs: {args.continue_path}"
-            )
-        # Trainer's `fit` method handles finding the latest checkpoint in output_path
-        # or the one specified via continue_path in TrainerArgs.
+            logging.info(f"Continuing training from: {args.continue_path}")
         trainer.fit()
         logging.info(">>> Training Finished <<<")
         print(f"\nTraining complete. Model files saved in: {args.output_path}")
-
     except Exception as e:
         logging.error("An error occurred during training.", exc_info=True)
         print(f"An error occurred during training: {e}")
-
 
 if __name__ == "__main__":
     main()

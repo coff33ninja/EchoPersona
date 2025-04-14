@@ -399,6 +399,207 @@
         "documentation": {}
     },
     {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAudioConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseDatasetConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAudioConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseDatasetConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseAudioConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseDatasetConfig",
+        "importPath": "TTS.config",
+        "description": "TTS.config",
+        "isExtraImport": true,
+        "detail": "TTS.config",
+        "documentation": {}
+    },
+    {
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.vits_config",
+        "documentation": {}
+    },
+    {
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.vits_config",
+        "documentation": {}
+    },
+    {
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.vits_config",
+        "documentation": {}
+    },
+    {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
+        "label": "AudioProcessor",
+        "importPath": "TTS.utils.audio",
+        "description": "TTS.utils.audio",
+        "isExtraImport": true,
+        "detail": "TTS.utils.audio",
+        "documentation": {}
+    },
+    {
+        "label": "AudioProcessor",
+        "importPath": "TTS.utils.audio",
+        "description": "TTS.utils.audio",
+        "isExtraImport": true,
+        "detail": "TTS.utils.audio",
+        "documentation": {}
+    },
+    {
+        "label": "AudioProcessor",
+        "importPath": "TTS.utils.audio",
+        "description": "TTS.utils.audio",
+        "isExtraImport": true,
+        "detail": "TTS.utils.audio",
+        "documentation": {}
+    },
+    {
         "label": "tkinter",
         "kind": 6,
         "isExtraImport": true,
@@ -439,15 +640,6 @@
         "importPath": "json",
         "description": "json",
         "detail": "json",
-        "documentation": {}
-    },
-    {
-        "label": "logging",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "logging",
-        "description": "logging",
-        "detail": "logging",
         "documentation": {}
     },
     {
@@ -499,70 +691,6 @@
         "importPath": "soundfile",
         "description": "soundfile",
         "detail": "soundfile",
-        "documentation": {}
-    },
-    {
-        "label": "Trainer",
-        "importPath": "trainer",
-        "description": "trainer",
-        "isExtraImport": true,
-        "detail": "trainer",
-        "documentation": {}
-    },
-    {
-        "label": "TrainerArgs",
-        "importPath": "trainer",
-        "description": "trainer",
-        "isExtraImport": true,
-        "detail": "trainer",
-        "documentation": {}
-    },
-    {
-        "label": "BaseAudioConfig",
-        "importPath": "TTS.config",
-        "description": "TTS.config",
-        "isExtraImport": true,
-        "detail": "TTS.config",
-        "documentation": {}
-    },
-    {
-        "label": "BaseDatasetConfig",
-        "importPath": "TTS.config",
-        "description": "TTS.config",
-        "isExtraImport": true,
-        "detail": "TTS.config",
-        "documentation": {}
-    },
-    {
-        "label": "VitsConfig",
-        "importPath": "TTS.tts.configs.vits_config",
-        "description": "TTS.tts.configs.vits_config",
-        "isExtraImport": true,
-        "detail": "TTS.tts.configs.vits_config",
-        "documentation": {}
-    },
-    {
-        "label": "load_tts_samples",
-        "importPath": "TTS.tts.datasets",
-        "description": "TTS.tts.datasets",
-        "isExtraImport": true,
-        "detail": "TTS.tts.datasets",
-        "documentation": {}
-    },
-    {
-        "label": "Vits",
-        "importPath": "TTS.tts.models.vits",
-        "description": "TTS.tts.models.vits",
-        "isExtraImport": true,
-        "detail": "TTS.tts.models.vits",
-        "documentation": {}
-    },
-    {
-        "label": "AudioProcessor",
-        "importPath": "TTS.utils.audio",
-        "description": "TTS.utils.audio",
-        "isExtraImport": true,
-        "detail": "TTS.utils.audio",
         "documentation": {}
     },
     {
@@ -4102,6 +4230,78 @@
         "documentation": {}
     },
     {
+        "label": "custom_formatter",
+        "kind": 2,
+        "importPath": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "description": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
+        "detail": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "parse_arguments",
+        "kind": 2,
+        "importPath": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "description": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,\n        help=\"Path to the character's dataset directory (containing metadata.csv and wav files).\",\n    )",
+        "detail": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "description": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
+        "detail": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "METADATA_FILENAME",
+        "kind": 5,
+        "importPath": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "description": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).",
+        "detail": "output.arlecchino_model.run-April-14-2025_03+46PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "custom_formatter",
+        "kind": 2,
+        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
+        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "parse_arguments",
+        "kind": 2,
+        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,\n        help=\"Path to the character's dataset directory (containing metadata.csv and wav files).\",\n    )",
+        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
+        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "METADATA_FILENAME",
+        "kind": 5,
+        "importPath": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "description": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).",
+        "detail": "trained_models.arlecchino.run-April-14-2025_03+45PM-d7f853a.voice_clone_train",
+        "documentation": {}
+    },
+    {
         "label": "get_category_files",
         "kind": 2,
         "importPath": "genshin_voice_downloader",
@@ -4246,6 +4446,15 @@
         "documentation": {}
     },
     {
+        "label": "custom_formatter",
+        "kind": 2,
+        "importPath": "voice_clone_train",
+        "description": "voice_clone_train",
+        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).\n    Returns:\n        list: List of dictionaries containing 'text', 'audio_file', and 'speaker_name'.",
+        "detail": "voice_clone_train",
+        "documentation": {}
+    },
+    {
         "label": "parse_arguments",
         "kind": 2,
         "importPath": "voice_clone_train",
@@ -4259,7 +4468,7 @@
         "kind": 2,
         "importPath": "voice_clone_train",
         "description": "voice_clone_train",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(\n            f\"Dataset path not found or is not a directory: {args.dataset_path}\"\n        )\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Validate Paths ---\n    if not os.path.isdir(args.dataset_path):\n        logging.error(f\"Dataset path not found or is not a directory: {args.dataset_path}\")\n        return\n    metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)\n    if not os.path.isfile(metadata_path):\n        logging.error(f\"Metadata file not found in dataset path: {metadata_path}\")\n        return",
         "detail": "voice_clone_train",
         "documentation": {}
     },
@@ -4268,7 +4477,7 @@
         "kind": 5,
         "importPath": "voice_clone_train",
         "description": "voice_clone_train",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Argument Parser ---\ndef parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\",\n        type=str,\n        required=True,",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    Args:\n        root_path (str): Path to the dataset directory.\n        meta_file (str): Name of the metadata file (e.g., 'metadata.csv').\n        **kwargs: Additional arguments (ignored).",
         "detail": "voice_clone_train",
         "documentation": {}
     },
