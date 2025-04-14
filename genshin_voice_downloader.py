@@ -770,7 +770,7 @@ def main_gui():
                 status_label.config(text=f"Retraining failed: {e}")
                 logging.error(f"Retraining failed for {character}: {e}")
         else:
-            status_label.config(text=f"Skipping transcription and retraining due to previous errors.")
+            status_label.config(text="Skipping transcription and retraining due to previous errors.")
             logging.warning("Skipping transcription and retraining due to download/folder errors.")
 
         # Re-enable button
