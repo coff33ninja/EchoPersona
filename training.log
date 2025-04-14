@@ -516,3 +516,17 @@ INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
 WARNING:root:tokenizer.characters is not iterable, cannot check membership.
 INFO:root:Vocabulary check complete.
 INFO:root:>>> Starting Training <<<
+INFO:root:Output path: trained_models/Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'X', ',', '4', 'H', '\u0279', '\u028c', '\u025a', '!', 'S', 'D', 'u', 'j', 'T', 'æ', '\u028a', '\u0361', '.', ';', 'a', 'p', 'I', 'U', 'v', 'Y', 'k', 'L', 'r', 't', 'Z', '\u014b', 'V', 'o', '(', '\u025d', 'd', '0', 'y', '?', 'c', 'J', "'", 'n', 'N', '3', '\u026b', 'E', ')', '\u0251', 'g', 'R', '1', '\u025b', 'K', '9', 'w', '2', '6', 'b', '"', '\u026a', 'x', 'f', 'Q', '\u0261', 'W', '7', ':', 'P', '5', 'A', 'm', '8', ' ', 'M', 'e', 's', 'C', 'z', 'ð', '\u027e', '\u0254', 'h', 'O', 'i', 'B', 'q', '\u0292', '-', 'G', 'F', '\u0283', 'l'}
+INFO:root:Vocabulary dynamically updated successfully.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+WARNING:root:tokenizer.characters is not iterable, cannot check membership.
+INFO:root:Vocabulary check complete.
+INFO:root:>>> Starting Training <<<
