@@ -136,9 +136,9 @@ def safe_file_operation(operation, file_path, retries=5, delay=2):
 def plot_results(y_hat, y, ap, name_prefix):
     """Plots and saves spectrogram results for predicted and ground truth audio."""
     try:
-        # Convert predicted and ground truth audio to spectrograms
-        y_hat_spec = ap.mel_spectrogram(y_hat)
-        y_spec = ap.mel_spectrogram(y)
+        # Normalize spectrograms for better visualization
+        y_hat_spec = np.log1p(np.abs(ap.mel_spectrogram(y_hat)))
+        y_spec = np.log1p(np.abs(ap.mel_spectrogram(y)))
 
         # Create a figure with two subplots
         fig, axes = plt.subplots(2, 1, figsize=(10, 8))
@@ -338,6 +338,35 @@ def main():
         lr=args.learning_rate,
     )
 
+    # Predefine the vocabulary with all required characters
+    predefined_vocabulary = set(
+        "abcdefghijklmnopqrstuvwxyz"  # Lowercase letters
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # Uppercase letters
+        "0123456789"                  # Numbers
+        ".,?!'\":;()-"               # Punctuation
+        "ðʃʒŋæɔɪʊɛɑʌɚɝɹɾɫɡ͡ "         # Phonetic symbols and space
+        "\u0361"                      # Missing character
+    )
+
+    # Update the tokenizer configuration to include the predefined vocabulary
+    config.tokenizer.characters = predefined_vocabulary
+    logging.info(f"Tokenizer initialized with predefined vocabulary: {predefined_vocabulary}")
+    def safe_remove_experiment_folder(path):
+        """Safely remove experiment folder, handling file locks."""
+        try:
+            shutil.rmtree(path, ignore_errors=False)
+        except PermissionError as e:
+            logging.warning(f"PermissionError during cleanup: {e}")
+            time.sleep(1)
+            shutil.rmtree(path, ignore_errors=True)
+
+    # This line is moved to after the trainer is initialized
+
+    # Add debug logging to confirm the vocabulary update.
+    logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
+    ensure_character_in_vocabulary(trainer.model.tokenizer, '͡')
+    logging.info("Vocabulary check complete.")
+    
     # --- Initialize AudioProcessor ---
     try:
         ap = AudioProcessor.init_from_config(config)
@@ -406,6 +435,7 @@ def main():
             training_assets={"audio_processor": ap},
         )
         logging.info("Trainer initialized successfully.")
+        trainer.remove_experiment_folder = safe_remove_experiment_folder
     except Exception as e:
         logging.error(f"Failed to initialize Trainer: {e}", exc_info=True)
         return
@@ -474,12 +504,7 @@ def main():
         except PermissionError as e:
             logging.warning(f"PermissionError during cleanup: {e}")
 
-    trainer.remove_experiment_folder = safe_remove_experiment_folder
 
-    # Add debug logging to confirm the vocabulary update.
-    logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
-    ensure_character_in_vocabulary(trainer.model.tokenizer, '͡')
-    logging.info("Vocabulary check complete.")
 
     # --- Start Training ---
     try:
