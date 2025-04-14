@@ -544,7 +544,10 @@ def validate_metadata_layout(metadata_path):
         expected_header = "audio_file|text|normalized_text"
         optional_header = "audio_file|text|normalized_text|speaker_id"
         if header not in [expected_header, optional_header]:
-            logging.error(f"Metadata file {metadata_path} has an invalid header. Expected: '{expected_header}' or '{optional_header}', Found: '{header}'")
+            if header == "audio_file|text|speaker_id":
+                logging.error(f"Metadata file {metadata_path} has an invalid header. It seems to be missing the 'normalized_text' column. Found: '{header}'")
+            else:
+                logging.error(f"Metadata file {metadata_path} has an invalid header. Expected: '{expected_header}' or '{optional_header}', Found: '{header}'")
             return False
 
         # Validate each data line
