@@ -3,6 +3,7 @@ import logging
 import argparse
 from voice_tools import SpeechToText
 import shutil
+import csv
 
 
 def reattempt_transcription(character_output_dir):
@@ -66,6 +67,35 @@ def reattempt_transcription(character_output_dir):
 
     except Exception as e:
         logging.error(f"Error reading metadata file for re-transcription: {e}")
+
+
+def validate_metadata(metadata_path):
+    """
+    Validate the metadata file for placeholder text and log warnings.
+
+    Args:
+        metadata_path (str): Path to the metadata file.
+    """
+    warnings = []
+    try:
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            reader = csv.reader(f, delimiter="|")
+            for line_number, row in enumerate(reader, start=1):
+                if len(row) < 2 or row[1].strip() == "<transcription_failed>":
+                    warnings.append((line_number, row[0]))
+
+        if warnings:
+            print("[Warning] The following entries in the metadata file contain placeholder text:")
+            for line_number, audio_file in warnings:
+                print(f"  [Line {line_number}] {audio_file} ('<transcription_failed>')")
+            print("Please reprocess or manually fix these entries.")
+        else:
+            print("Metadata validation complete. No placeholder text found.")
+
+    except FileNotFoundError:
+        print(f"Error: Metadata file not found at {metadata_path}.")
+    except Exception as e:
+        print(f"Error validating metadata: {e}")
 
 
 if __name__ == "__main__":

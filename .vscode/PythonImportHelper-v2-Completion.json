@@ -755,6 +755,15 @@
         "documentation": {}
     },
     {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
         "label": "torch",
         "kind": 6,
         "isExtraImport": true,
@@ -921,15 +930,6 @@
         "importPath": "noisereduce",
         "description": "noisereduce",
         "detail": "noisereduce",
-        "documentation": {}
-    },
-    {
-        "label": "csv",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "csv",
-        "description": "csv",
-        "detail": "csv",
         "documentation": {}
     },
     {
@@ -4553,6 +4553,15 @@
         "importPath": "genshin_voice_retranscriber",
         "description": "genshin_voice_retranscriber",
         "peekOfCode": "def reattempt_transcription(character_output_dir):\n    \"\"\"\n    Re-attempts transcription for audio files marked as 'Validation Needed' in the metadata.\n    Args:\n        character_output_dir: The directory containing the character's audio files.\n    \"\"\"\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    voiceless_dir = os.path.join(character_output_dir, \"voiceless\")\n    if not os.path.exists(metadata_path):\n        logging.warning(f\"Metadata file does not exist: {metadata_path}\")",
+        "detail": "genshin_voice_retranscriber",
+        "documentation": {}
+    },
+    {
+        "label": "validate_metadata",
+        "kind": 2,
+        "importPath": "genshin_voice_retranscriber",
+        "description": "genshin_voice_retranscriber",
+        "peekOfCode": "def validate_metadata(metadata_path):\n    \"\"\"\n    Validate the metadata file for placeholder text and log warnings.\n    Args:\n        metadata_path (str): Path to the metadata file.\n    \"\"\"\n    warnings = []\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            reader = csv.reader(f, delimiter=\"|\")",
         "detail": "genshin_voice_retranscriber",
         "documentation": {}
     },
