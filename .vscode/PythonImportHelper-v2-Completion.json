@@ -764,14 +764,6 @@
         "documentation": {}
     },
     {
-        "label": "SpeechToText",
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "isExtraImport": true,
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
         "label": "VoiceTrainer",
         "importPath": "voice_tools",
         "description": "voice_tools",
@@ -4599,15 +4591,6 @@
         "description": "genshin_voice_retranscriber",
         "peekOfCode": "def validate_metadata(metadata_path):\n    \"\"\"\n    Validate the metadata file for placeholder text and log warnings.\n    Args:\n        metadata_path (str): Path to the metadata file.\n    \"\"\"\n    warnings = []\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            reader = csv.reader(f, delimiter=\"|\")",
         "detail": "genshin_voice_retranscriber",
-        "documentation": {}
-    },
-    {
-        "label": "Retranscriber",
-        "kind": 6,
-        "importPath": "retranscriber",
-        "description": "retranscriber",
-        "peekOfCode": "class Retranscriber:\n    def __init__(self, character_output_dir):\n        self.character_output_dir = character_output_dir\n        self.metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n        self.voiceless_dir = os.path.join(character_output_dir, \"voiceless\")\n        os.makedirs(self.voiceless_dir, exist_ok=True)\n    def reattempt_transcription(self):\n        if not os.path.exists(self.metadata_path):\n            logging.warning(f\"Metadata file does not exist: {self.metadata_path}\")\n            return",
-        "detail": "retranscriber",
         "documentation": {}
     },
     {
