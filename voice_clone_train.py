@@ -398,6 +398,20 @@ def main():
     missing_characters = {'͡'}
     update_vocabulary_dynamically(vocabulary_path, missing_characters)
 
+    # Ensure the missing character is explicitly added to the tokenizer's vocabulary.
+    def ensure_character_in_vocabulary(tokenizer, character):
+        """Ensures a specific character is in the tokenizer's vocabulary."""
+        if character not in tokenizer.characters:
+            tokenizer.characters.add(character)
+            logging.info(f"Character '{character}' added to tokenizer vocabulary.")
+        else:
+            logging.info(f"Character '{character}' already exists in tokenizer vocabulary.")
+
+    # Add debug logging to confirm the vocabulary update.
+    logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
+    ensure_character_in_vocabulary(trainer.model.tokenizer, '͡')
+    logging.info("Vocabulary check complete.")
+
     # --- Start Training ---
     try:
         logging.info(">>> Starting Training <<<")

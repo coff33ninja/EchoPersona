@@ -480,3 +480,14 @@ INFO:root:Vocabulary updated successfully.
 INFO:root:Updated vocabulary with comprehensive characters: {'n', 'H', 't', 'v', 'X', '\u025a', '1', '7', '\u0261', 'x', '3', 'D', 'S', '6', '\u028c', 'T', 'd', 'u', 'V', 'F', 'a', 'æ', 'E', 'W', '\u0361', '?', ',', '\u028a', 'z', 'p', '\u0251', '\u0292', ':', '\u014b', 'A', 'k', 'c', 'J', 'q', '"', 's', ')', '\u026b', '2', '9', '\u0254', 'i', 'ð', '\u025d', '\u0283', '4', 'B', ' ', 'g', 'K', 'h', '5', '-', ';', '(', '\u0279', 'Q', "'", 'o', 'r', 'm', '\u026a', 'C', 'b', 'O', 'R', 'P', 'U', '\u025b', 'N', 'f', 'M', '\u027e', 'y', 'I', '.', 'Y', '!', '8', '0', 'G', 'l', 'e', 'w', 'L', 'Z', 'j'}
 INFO:root:Vocabulary dynamically updated successfully.
 INFO:root:>>> Starting Training <<<
+INFO:root:Output path: trained_models/Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets/Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'Z', 'k', 'H', '\u025d', 'o', '?', 'æ', '\u027e', 'W', 'x', '.', 'J', 'q', '\u014b', 'E', 'Q', '\u028c', ';', 'U', 's', ',', '\u0251', '\u026b', 'R', 'M', 'T', 'A', '0', 'w', '3', 'L', '8', 'n', 'S', '\u0261', 'i', 'm', 'C', 'G', '6', 'v', 'D', 'I', '7', 'ð', '"', 'X', '-', 'g', '\u025a', 'r', '!', 'j', 'O', 'f', '\u026a', 'h', 'V', '\u0292', 'z', '\u028a', 'N', '\u0283', 't', "'", '(', ')', '\u0361', '\u025b', 'y', 'l', ' ', 'a', '1', '2', ':', 'F', '4', '\u0254', 'e', '5', '\u0279', 'B', 'd', '9', 'p', 'b', 'c', 'P', 'K', 'u', 'Y'}
+INFO:root:Vocabulary dynamically updated successfully.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
