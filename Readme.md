@@ -1,4 +1,3 @@
-
 ---
 
 # 🎙️ EchoPersona
@@ -52,6 +51,19 @@ Use XTTSv2 and other tools to clone voices from reference samples.
 
 ---
 
+## 🎵 Audio Playback
+- Play audio files using `pydub` or `simpleaudio`.
+- Supports WAV and MP3 formats.
+
+---
+
+## 🎛️ Audio Preprocessing
+- Trim silence from audio files.
+- Augment audio with background noise or pitch/speed adjustments.
+- Validate audio quality for consistency.
+
+---
+
 ## 🛠️ Installation
 
 ```bash
@@ -68,7 +80,7 @@ pip install -r requirements.txt
 
 ---
 
-## 📁 Folder Structure (Example)
+## 📁 Folder Structure
 
 ```
 Your-Project-Directory/
@@ -87,8 +99,10 @@ Your-Project-Directory/
 ├── voice_tools.py
 ├── voice_clone_train.py
 ├── test_trained_model.py
+├── test_voice_tools.py
 ├── requirements.txt
-└── background_noise.mp3
+├── background_noise.mp3
+└── logo.png
 ```
 
 ---
@@ -189,6 +203,15 @@ This script gives you a guided, menu-driven experience—train, test, clone, tra
 
 ---
 
+## 🧪 Testing
+- Run unit tests using `unittest` to validate functionality.
+- Example:
+  ```bash
+  python -m unittest discover -s tests
+  ```
+
+---
+
 ## 🧾 Dependencies (see `requirements.txt`)
 
 Key packages:
@@ -214,6 +237,7 @@ Use at your own risk. This project:
 - ❌ Does **not endorse** copyright infringement.
 - ✅ Supports **personal, educational, non-commercial** use under fair use.
 - 📦 Ships **no pre-trained models** derived from such sources.
+- ⚠️ Augmented audio should not be used to misrepresent or impersonate individuals.
 
 ---
 
