@@ -519,6 +519,51 @@ def validate_metadata_existence(character_output_dir):
     return True
 
 
+# Add a function to validate the layout of the metadata file
+def validate_metadata_layout(metadata_path):
+    """
+    Validate the layout of the metadata file to ensure it meets the requirements of voice_tools and trainers.
+
+    Args:
+        metadata_path (str): Path to the metadata file.
+
+    Returns:
+        bool: True if the layout is valid, False otherwise.
+    """
+    try:
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        # Check if the file has a header and at least one data line
+        if len(lines) < 2:
+            logging.error(f"Metadata file {metadata_path} is empty or missing data lines.")
+            return False
+
+        # Validate the header
+        header = lines[0].strip()
+        expected_header = "audio_file|text|normalized_text"
+        if header != expected_header:
+            logging.error(f"Metadata file {metadata_path} has an invalid header. Expected: '{expected_header}', Found: '{header}'")
+            return False
+
+        # Validate each data line
+        for line_number, line in enumerate(lines[1:], start=2):
+            parts = line.strip().split("|")
+            if len(parts) != 3:
+                logging.error(f"Invalid layout in metadata file {metadata_path} at line {line_number}: {line.strip()}")
+                return False
+
+        logging.info(f"Metadata file {metadata_path} has a valid layout.")
+        return True
+
+    except FileNotFoundError:
+        logging.error(f"Metadata file not found: {metadata_path}")
+        return False
+    except Exception as e:
+        logging.error(f"Error validating metadata layout: {e}")
+        return False
+
+
 def process_character_voices(
     character, language, base_output_dir, download_wiki_audio=True, status_label=None
 ):
@@ -877,6 +922,13 @@ def main_gui():
             if not validate_metadata_existence(character_folder_path):
                 status_label.config(text=f"Metadata file missing for {character}. Please check transcription.")
                 logging.error(f"Metadata file missing for {character} after transcription.")
+                return
+
+            # Validate metadata layout
+            metadata_path = os.path.join(character_folder_path, "metadata.csv")
+            if not validate_metadata_layout(metadata_path):
+                status_label.config(text=f"Invalid metadata layout for {character}. Please check the metadata file.")
+                logging.error(f"Invalid metadata layout for {character}.")
                 return
 
             # Run the retrainer after transcription

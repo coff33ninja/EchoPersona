@@ -4487,6 +4487,15 @@
         "documentation": {}
     },
     {
+        "label": "validate_metadata_layout",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    \"\"\"\n    Validate the layout of the metadata file to ensure it meets the requirements of voice_tools and trainers.\n    Args:\n        metadata_path (str): Path to the metadata file.\n    Returns:\n        bool: True if the layout is valid, False otherwise.\n    \"\"\"\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
         "label": "process_character_voices",
         "kind": 2,
         "importPath": "genshin_voice_downloader",
