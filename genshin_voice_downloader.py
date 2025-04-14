@@ -935,16 +935,8 @@ def main_gui():
                 logging.error(f"Invalid metadata layout for {character}.")
                 return
 
-            # Run the retrainer after transcription
-            try:
-                retrainer_command = (
-                    f"python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
-                )
-                subprocess.run(retrainer_command, shell=True, check=True)
-                status_label.config(text=f"Retraining completed for {character}.")
-            except subprocess.CalledProcessError as e:
-                status_label.config(text=f"Retraining failed: {e}")
-                logging.error(f"Retraining failed for {character}: {e}")
+            # Retranscription is now integrated
+            logging.info(f"Retranscription is now integrated. Skipping external script call for {character}.")
         else:
             status_label.config(text="Skipping transcription and retraining due to previous errors.")
             logging.warning("Skipping transcription and retraining due to download/folder errors.")
