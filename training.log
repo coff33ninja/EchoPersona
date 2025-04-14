@@ -592,3 +592,17 @@ Traceback (most recent call last):
   File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 38, in split_dataset
     eval_split_size > 0
 AssertionError:  [!] You do not have enough samples for the evaluation set. You can work around this setting the 'eval_split_size' parameter to a minimum of 0.05
+INFO:root:Output path: trained_models\Arlecchino
+INFO:root:Tokenizer configuration should be handled separately if required.
+INFO:root:Checking if character '\u0361' is in the tokenizer vocabulary...
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'j', '\u025d', 'L', 'B', '?', 'y', '8', 'S', '(', '\u025a', 'g', 'c', 'f', 's', 'u', 'F', ',', 'G', ' ', 'a', 'Y', 'A', ':', 'R', 'k', '!', 'Z', 'E', '\u026b', 'r', 'D', 'M', 'T', 'W', '\u014b', 'p', 'w', 'n', '3', 'Q', 'z', 'V', '1', 'b', 'i', '\u0279', 'æ', 'h', 'e', 'q', '\u027e', 'x', '\u028c', '\u026a', 'J', 'O', 'N', 'U', 'ð', 'C', '7', '0', '\u028a', '9', '"', 'I', '5', '\u025b', "'", '\u0254', 'l', 'X', 'H', '4', '\u0261', 'm', ')', 'o', 'P', '6', '2', '\u0292', ';', '\u0361', 't', '\u0251', '\u0283', 'd', 'v', 'K', '-', '.'}
+INFO:root:Vocabulary dynamically updated successfully.
+WARNING:root:Tokenizer does not support dynamic vocabulary updates.
+INFO:root:>>> Starting Training <<<
