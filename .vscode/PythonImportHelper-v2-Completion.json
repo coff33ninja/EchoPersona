@@ -739,6 +739,23 @@
         "documentation": {}
     },
     {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
+        "label": "SpeechToText",
+        "importPath": "voice_tools",
+        "description": "voice_tools",
+        "isExtraImport": true,
+        "detail": "voice_tools",
+        "documentation": {}
+    },
+    {
         "label": "SpeechToText",
         "importPath": "voice_tools",
         "description": "voice_tools",
@@ -752,15 +769,6 @@
         "description": "voice_tools",
         "isExtraImport": true,
         "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "csv",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "csv",
-        "description": "csv",
-        "detail": "csv",
         "documentation": {}
     },
     {
@@ -4483,6 +4491,24 @@
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
         "peekOfCode": "def process_character_voices(\n    character, language, base_output_dir, download_wiki_audio=True, status_label=None\n):\n    \"\"\"\n    Downloads and converts audio files for a specific character into their dedicated folder.\n    Args:\n        character: The name of the character.\n        language: The language (used for Wiki category, e.g., \"English\").\n        base_output_dir: The base directory where all character folders will be created.\n        download_wiki_audio: Whether to download audio files from the Wiki.",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "reattempt_transcription",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def reattempt_transcription(character_output_dir):\n    \"\"\"\n    Re-attempts transcription for audio files marked as 'Validation Needed' in the metadata.\n    Args:\n        character_output_dir: The directory containing the character's audio files.\n    \"\"\"\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    voiceless_dir = os.path.join(character_output_dir, \"voiceless\")\n    if not os.path.exists(metadata_path):\n        logging.warning(f\"Metadata file does not exist: {metadata_path}\")",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "validate_metadata",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def validate_metadata(metadata_path):\n    \"\"\"\n    Validate the metadata file for placeholder text and log warnings.\n    Args:\n        metadata_path (str): Path to the metadata file.\n    \"\"\"\n    warnings = []\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            reader = csv.reader(f, delimiter=\"|\")",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
