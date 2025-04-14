@@ -96,7 +96,8 @@ def safe_delete(file_path, retries=3, delay=1):
     raise PermissionError(f"Could not delete file: {file_path}")
 
 # Custom function to retry file operations.
-def safe_file_operation(operation, file_path, retries=3, delay=1):
+def safe_file_operation(operation, file_path, retries=5, delay=2):
+    """Retries a file operation to handle temporary locks."""
     for attempt in range(retries):
         try:
             operation(file_path)
@@ -379,6 +380,11 @@ def main():
         trainer.fit()
         logging.info(">>> Training Finished <<<")
         print(f"\nTraining complete. Model files saved in: {args.output_path}")
+    except PermissionError as e:
+        logging.error("PermissionError occurred during training.", exc_info=True)
+        print(f"A PermissionError occurred: {e}")
+        print("Ensure no other processes are accessing the training files and retry.")
+        exit(1)
     except Exception as e:
         logging.error("An error occurred during training.", exc_info=True)
         print(f"An error occurred during training: {e}")
