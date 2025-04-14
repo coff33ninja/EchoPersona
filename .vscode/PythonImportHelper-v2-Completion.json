@@ -5020,7 +5020,16 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "start_button = ttk.Button(parameters_frame, text=\"Start Training\", command=on_start_training)\nstart_button.grid(row=7, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI",
+        "peekOfCode": "start_button = ttk.Button(parameters_frame, text=\"Start Training\", command=on_start_training)\nstart_button.grid(row=7, column=0, columnspan=3, pady=10)\n# Add a stop button and functionality to jump to CLI output\nstop_button = ttk.Button(parameters_frame, text=\"Stop Training\", command=None)  # Placeholder for stop functionality\nstop_button.grid(row=8, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "stop_button",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "stop_button = ttk.Button(parameters_frame, text=\"Stop Training\", command=None)  # Placeholder for stop functionality\nstop_button.grid(row=8, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },

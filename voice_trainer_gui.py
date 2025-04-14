@@ -215,8 +215,15 @@ def on_start_training():
     else:
         start_training(character, action, epochs, batch_size, learning_rate)
 
+    # Switch to the CLI output tab
+    notebook.select(output_frame)
+
 start_button = ttk.Button(parameters_frame, text="Start Training", command=on_start_training)
 start_button.grid(row=7, column=0, columnspan=3, pady=10)
+
+# Add a stop button and functionality to jump to CLI output
+stop_button = ttk.Button(parameters_frame, text="Stop Training", command=None)  # Placeholder for stop functionality
+stop_button.grid(row=8, column=0, columnspan=3, pady=10)
 
 # CLI Output Section
 ttk.Label(output_frame, text="CLI Output:").pack(anchor="w", padx=5, pady=5)
