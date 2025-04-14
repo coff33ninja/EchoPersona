@@ -290,3 +290,13 @@ INFO:root:Processed x_hat: [[0. 0. 0. ... 0. 0. 0.]
  [0. 0. 0. ... 0. 0. 0.]
  [0. 0. 0. ... 0. 0. 0.]
  [0. 0. 0. ... 0. 0. 0.]]
+INFO:root:Output path: trained_models\Arlecchino
+INFO:root:AudioProcessor initialized successfully.
+INFO:root:Loading dataset samples from: voice_datasets\Arlecchino
+INFO:root:Loaded 199 training samples.
+INFO:root:Loaded 2 evaluation samples.
+INFO:root:VITS model initialized successfully.
+INFO:root:Trainer initialized successfully.
+INFO:root:Vocabulary updated successfully.
+INFO:root:Updated vocabulary with comprehensive characters: {'\u0361', '\u0292', 'U', 'r', '\u0279', '-', '3', '\u0283', 'J', '6', 'R', '\u025a', 'f', ' ', 'x', 'v', 'C', 'A', '?', '\u028c', '4', 'q', 'z', '0', 'V', '\u025d', 'M', 'b', '!', 'Z', '\u026b', '"', 'p', 'h', 'y', 'B', 'T', '(', 'n', 'i', 'w', '9', 'm', 'H', '\u026a', 'F', 'O', 'K', 'g', '\u025b', 'o', 'I', '1', "'", 'ð', '\u0251', '\u027e', 'j', ',', '\u014b', 'G', 'a', '.', ')', 'D', 'E', 'S', '2', '\u028a', 'l', '8', 'u', 'c', 'W', '\u0261', 'd', '7', '\u0254', '5', 'æ', ':', 'Y', 'N', 't', 'X', 'Q', 'P', 'L', 's', 'e', 'k', ';'}
+INFO:root:>>> Starting Training <<<
