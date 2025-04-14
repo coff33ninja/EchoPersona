@@ -364,9 +364,6 @@ def main():
 
     # Add debug logging to confirm the vocabulary update.
     logging.info("Checking if character '͡' is in the tokenizer vocabulary...")
-    ensure_character_in_vocabulary(trainer.model.tokenizer, '͡')
-    logging.info("Vocabulary check complete.")
-    
     # --- Initialize AudioProcessor ---
     try:
         ap = AudioProcessor.init_from_config(config)
@@ -476,7 +473,8 @@ def main():
             logging.warning("Tokenizer does not support dynamic vocabulary updates.")
 
     # Add missing character '\u0361' to the vocabulary
-    ensure_character_in_vocabulary(trainer.model.tokenizer, '\u0361')
+    if 'trainer' in locals():
+        ensure_character_in_vocabulary(trainer.model.tokenizer, '\u0361')
 
     # --- Ensure Phoneme Cache File Creation ---
     phoneme_cache_dir = os.path.join(args.output_path, 'phoneme_cache')
