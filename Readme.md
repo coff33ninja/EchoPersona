@@ -1,5 +1,3 @@
----
-
 # 🎙️ EchoPersona
 **Proof of Concept: Custom TTS/STT with Character Voices**
 
@@ -238,8 +236,6 @@ Use at your own risk. This project:
 - ✅ Supports **personal, educational, non-commercial** use under fair use.
 - 📦 Ships **no pre-trained models** derived from such sources.
 - ⚠️ Augmented audio should not be used to misrepresent or impersonate individuals.
-
----
 
 ## 📝 License
 
