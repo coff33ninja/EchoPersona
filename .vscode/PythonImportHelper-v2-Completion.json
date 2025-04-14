@@ -4871,7 +4871,16 @@
         "kind": 2,
         "importPath": "voice_clone_train",
         "description": "voice_clone_train",
-        "peekOfCode": "def safe_delete(file_path, retries=3, delay=1):\n    for _ in range(retries):\n        try:\n            os.unlink(file_path)\n            return\n        except PermissionError:\n            time.sleep(delay)\n    raise PermissionError(f\"Could not delete file: {file_path}\")\n# --- Argument Parser ---\ndef parse_arguments():",
+        "peekOfCode": "def safe_delete(file_path, retries=3, delay=1):\n    for _ in range(retries):\n        try:\n            os.unlink(file_path)\n            return\n        except PermissionError:\n            time.sleep(delay)\n    raise PermissionError(f\"Could not delete file: {file_path}\")\n# Custom function to retry file operations.\ndef safe_file_operation(operation, file_path, retries=3, delay=1):",
+        "detail": "voice_clone_train",
+        "documentation": {}
+    },
+    {
+        "label": "safe_file_operation",
+        "kind": 2,
+        "importPath": "voice_clone_train",
+        "description": "voice_clone_train",
+        "peekOfCode": "def safe_file_operation(operation, file_path, retries=3, delay=1):\n    for attempt in range(retries):\n        try:\n            operation(file_path)\n            return\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:\n                raise e",
         "detail": "voice_clone_train",
         "documentation": {}
     },

@@ -95,6 +95,18 @@ def safe_delete(file_path, retries=3, delay=1):
             time.sleep(delay)
     raise PermissionError(f"Could not delete file: {file_path}")
 
+# Custom function to retry file operations.
+def safe_file_operation(operation, file_path, retries=3, delay=1):
+    for attempt in range(retries):
+        try:
+            operation(file_path)
+            return
+        except PermissionError as e:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise e
+
 # --- Argument Parser ---
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -370,6 +382,8 @@ def main():
     except Exception as e:
         logging.error("An error occurred during training.", exc_info=True)
         print(f"An error occurred during training: {e}")
+        print("Training did not complete successfully. Please check the logs for details.")
+        exit(1)
 
     # Fix for TypeError: Cast tensors to float32 before plotting.
     # Ensure `y_hat` and `x_hat` are defined before usage.
