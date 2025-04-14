@@ -4868,7 +4868,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\nLabel(root, text=\"Batch Size:\").pack(pady=5)\nbatch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
+        "peekOfCode": "epochs_scale = Scale(root, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.pack(pady=5)\nLabel(root, text=\"Batch Size:\").pack(pady=5)\nbatch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4877,7 +4877,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)",
+        "peekOfCode": "batch_size_scale = Scale(root, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.pack(pady=5)\nLabel(root, text=\"Learning Rate:\").pack(pady=5)\nlearning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4886,7 +4886,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "learning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():",
+        "peekOfCode": "learning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.pack(pady=5)\n# Add a text widget to display CLI output\noutput_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },

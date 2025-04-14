@@ -101,7 +101,7 @@ batch_size_scale.set(16)
 batch_size_scale.pack(pady=5)
 
 Label(root, text="Learning Rate:").pack(pady=5)
-learning_rate_scale = Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)
+learning_rate_scale = tk.Scale(root, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)
 learning_rate_scale.set(0.0002)
 learning_rate_scale.pack(pady=5)
 
