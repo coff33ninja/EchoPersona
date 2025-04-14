@@ -216,6 +216,35 @@ This script gives you a guided, menu-driven experience—train, test, clone, tra
 
 ---
 
+## 🔄 Recent Updates
+
+### 🆕 New CLI Arguments
+The `voice_trainer_cli.py` script now supports the following arguments for the `train` action:
+- `--epochs`: Number of training epochs (default: 100).
+- `--batch_size`: Batch size for training (default: 16).
+- `--learning_rate`: Learning rate for training (default: 0.001).
+
+These arguments allow for greater customization of the training process. Example usage:
+```bash
+python voice_trainer_cli.py --character "Amber" --action train --epochs 200 --batch_size 32 --learning_rate 0.0005
+```
+
+### 🖥️ GUI Enhancements
+The `voice_trainer_gui.py` script now includes sliders for `epochs`, `batch_size`, and `learning_rate`. These values are passed to the CLI during training. Ensure that the values are integers for `epochs` and `batch_size` to avoid errors.
+
+### 🛠️ Enhanced `train_voice` Method
+The `train_voice` method in the `VoiceTrainer` class has been updated to accept `epochs`, `batch_size`, and `learning_rate` as arguments. These parameters are passed to the training script, enabling customizable training configurations.
+
+---
+
+## ⚠️ Notes and Best Practices
+
+- **Integer Values**: Ensure that `epochs` and `batch_size` are integers when using the GUI or CLI to avoid compatibility issues.
+- **Training Parameters**: Adjust `epochs`, `batch_size`, and `learning_rate` based on your dataset size and hardware capabilities.
+- **Error Handling**: If you encounter errors during training, check the logs in the `trained_models/<Character>/` directory for details.
+
+---
+
 ## 🧪 Testing
 - Run unit tests using `unittest` to validate functionality.
 - Example:
