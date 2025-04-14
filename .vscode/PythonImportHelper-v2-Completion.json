@@ -705,6 +705,14 @@
         "documentation": {}
     },
     {
+        "label": "simpledialog",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "requests",
         "kind": 6,
         "isExtraImport": true,
@@ -4796,7 +4804,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def start_training(character, epochs, batch_size, learning_rate):\n    \"\"\"\n    Start the training process with the provided parameters and display output in the GUI.\n    Args:\n        character (str): Character name.\n        epochs (int): Number of training epochs.\n        batch_size (int): Batch size for training.\n        learning_rate (float): Learning rate for training.\n    \"\"\"\n    dataset_path = f\"voice_datasets/{character}\"",
+        "peekOfCode": "def start_training(character, action, epochs, batch_size, learning_rate, text=None, file=None):\n    \"\"\"\n    Start the training or dataset management process with the provided parameters and display output in the GUI.\n    Args:\n        character (str): Character name.\n        action (str): Action to perform.\n        epochs (int): Number of training epochs (for training).\n        batch_size (int): Batch size for training.\n        learning_rate (float): Learning rate for training.\n        text (str, optional): Text for 'test' or 'use' actions.",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4814,7 +4822,7 @@
         "kind": 2,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")\n        return\n    start_training(character, epochs, batch_size, learning_rate)\nButton(root, text=\"Start Training\", command=on_start_training).pack(pady=20)",
+        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")\n        return\n    if action in [\"test\", \"use\"]:",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4832,7 +4840,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)",
+        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4841,7 +4849,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")",
+        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\ncharacter_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)\nactions = [",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4850,7 +4858,34 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "character_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)\noutput_path_label = Label(root, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.pack(pady=5, fill=tk.X)",
+        "peekOfCode": "character_dropdown = tk.OptionMenu(root, character_var, *character_list)\ncharacter_dropdown.pack(pady=5)\n# Add a dropdown menu for selecting actions\nLabel(root, text=\"Select Action:\").pack(pady=5)\nactions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "actions",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "actions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",\n    \"trim\",\n    \"quality\",\n    \"train\",\n    \"test\",",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "action_var",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "action_var = tk.StringVar(root)\naction_var.set(actions[0])  # Default to the first action\naction_dropdown = tk.OptionMenu(root, action_var, *actions)\naction_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)",
+        "detail": "voice_trainer_gui",
+        "documentation": {}
+    },
+    {
+        "label": "action_dropdown",
+        "kind": 5,
+        "importPath": "voice_trainer_gui",
+        "description": "voice_trainer_gui",
+        "peekOfCode": "action_dropdown = tk.OptionMenu(root, action_var, *actions)\naction_dropdown.pack(pady=5)\n# Dataset Path Display\nLabel(root, text=\"Dataset Path (Default):\").pack(pady=5)\ndataset_path_label = Label(root, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.pack(pady=5, fill=tk.X)\n# Output Path Display\nLabel(root, text=\"Output Path (Default):\").pack(pady=5)\noutput_path_label = Label(root, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.pack(pady=5, fill=tk.X)",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4904,7 +4939,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()",
+        "peekOfCode": "output_label = Label(root, text=\"CLI Output:\")\noutput_label.pack(pady=5)\noutput_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()",
         "detail": "voice_trainer_gui",
         "documentation": {}
     },
@@ -4913,7 +4948,7 @@
         "kind": 5,
         "importPath": "voice_trainer_gui",
         "description": "voice_trainer_gui",
-        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")",
+        "peekOfCode": "output_text = tk.Text(root, height=10, width=60)\noutput_text.pack(pady=5)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    epochs = epochs_scale.get()\n    batch_size = batch_size_scale.get()\n    learning_rate = learning_rate_scale.get()\n    if not character:",
         "detail": "voice_trainer_gui",
         "documentation": {}
     }

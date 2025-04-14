@@ -3,7 +3,7 @@
 # The GUI also provides a button to start the training process and displays the output in a text widget.
 # Import necessary libraries
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, simpledialog
 from tkinter.ttk import Label, Button, Scale, Entry
 import threading
 import subprocess
@@ -32,29 +32,38 @@ def run_command_with_output(command, output_text_widget):
     thread.start()
 
 # Function to start the training process
-def start_training(character, epochs, batch_size, learning_rate):
+def start_training(character, action, epochs, batch_size, learning_rate, text=None, file=None):
     """
-    Start the training process with the provided parameters and display output in the GUI.
+    Start the training or dataset management process with the provided parameters and display output in the GUI.
 
     Args:
         character (str): Character name.
-        epochs (int): Number of training epochs.
+        action (str): Action to perform.
+        epochs (int): Number of training epochs (for training).
         batch_size (int): Batch size for training.
         learning_rate (float): Learning rate for training.
+        text (str, optional): Text for 'test' or 'use' actions.
+        file (str, optional): File path for actions like 'provide', 'augment', 'trim', 'quality'.
     """
     dataset_path = f"voice_datasets/{character}"
     output_path = f"trained_models/{character}"
 
     try:
         command = (
-            f"python voice_clone_train.py --dataset_path \"{dataset_path}\" "
-            f"--output_path \"{output_path}\" --epochs {epochs} "
-            f"--batch_size {batch_size} --learning_rate {learning_rate}"
+            f"python voice_trainer_cli.py --character \"{character}\" --action \"{action}\" "
         )
+
+        if action in ["train"]:
+            command += f"--epochs {epochs} --batch_size {batch_size} --learning_rate {learning_rate} "
+        if action in ["test", "use"] and text:
+            command += f"--text \"{text}\" "
+        if action in ["provide", "augment", "trim", "quality"] and file:
+            command += f"--file \"{file}\" "
+
         run_command_with_output(command, output_text)
-        messagebox.showinfo("Training", f"Training for {character} started successfully!")
+        messagebox.showinfo("Action", f"Action '{action}' for {character} started successfully!")
     except Exception as e:
-        messagebox.showerror("Error", f"Failed to start training: {e}")
+        messagebox.showerror("Error", f"Failed to start action '{action}': {e}")
 
 # Function to dynamically fetch character names from the voice_datasets directory
 def fetch_character_list():
@@ -90,6 +99,25 @@ else:
     character_var.set("No characters found")
 character_dropdown = tk.OptionMenu(root, character_var, *character_list)
 character_dropdown.pack(pady=5)
+
+# Add a dropdown menu for selecting actions
+Label(root, text="Select Action:").pack(pady=5)
+actions = [
+    "record",
+    "provide",
+    "validate",
+    "stats",
+    "augment",
+    "trim",
+    "quality",
+    "train",
+    "test",
+    "use",
+]
+action_var = tk.StringVar(root)
+action_var.set(actions[0])  # Default to the first action
+action_dropdown = tk.OptionMenu(root, action_var, *actions)
+action_dropdown.pack(pady=5)
 
 # Dataset Path Display
 Label(root, text="Dataset Path (Default):").pack(pady=5)
@@ -129,6 +157,7 @@ output_text.pack(pady=5)
 # Start Training Button
 def on_start_training():
     character = character_var.get()
+    action = action_var.get()
     epochs = epochs_scale.get()
     batch_size = batch_size_scale.get()
     learning_rate = learning_rate_scale.get()
@@ -137,7 +166,20 @@ def on_start_training():
         messagebox.showerror("Error", "Please select a character.")
         return
 
-    start_training(character, epochs, batch_size, learning_rate)
+    if action in ["test", "use"]:
+        text = simpledialog.askstring("Input", "Enter text for the action:")
+        if not text:
+            messagebox.showerror("Error", "Text is required for this action.")
+            return
+        start_training(character, action, epochs, batch_size, learning_rate, text=text)
+    elif action in ["provide", "augment", "trim", "quality"]:
+        file = filedialog.askopenfilename(title="Select a file for the action")
+        if not file:
+            messagebox.showerror("Error", "File is required for this action.")
+            return
+        start_training(character, action, epochs, batch_size, learning_rate, file=file)
+    else:
+        start_training(character, action, epochs, batch_size, learning_rate)
 
 Button(root, text="Start Training", command=on_start_training).pack(pady=20)
 
