@@ -338,6 +338,10 @@ def main():
         lr=args.learning_rate,
     )
 
+    # --- Disable Mixed Precision by Default ---
+    config.mixed_precision = False
+    config.precision = "float32"
+
     logging.info("Tokenizer configuration should be handled separately if required.")
 
     def safe_remove_experiment_folder(path):
