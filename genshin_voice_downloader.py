@@ -762,7 +762,7 @@ def main_gui():
             # Run the retrainer after transcription
             try:
                 retrainer_command = (
-                    "python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
+                    f"python genshin_voice_retranscriber.py --character_output_dir \"{character_folder_path}\""
                 )
                 subprocess.run(retrainer_command, shell=True, check=True)
                 status_label.config(text=f"Retraining completed for {character}.")
