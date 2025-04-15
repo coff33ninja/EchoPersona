@@ -20,14 +20,14 @@ METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset fold
 LOGS_DIR = "logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-# Function to create a logger for a specific function
+# --- Configure Logging to Use UTF-8 Encoding ---
 def create_function_logger(function_name):
     logger = logging.getLogger(function_name)
     logger.setLevel(logging.INFO)
 
     # Create a file handler for the function
     log_file = os.path.join(LOGS_DIR, f"{function_name}.log")
-    file_handler = logging.FileHandler(log_file)
+    file_handler = logging.FileHandler(log_file, encoding="utf-8")  # Use UTF-8 encoding
     file_handler.setLevel(logging.INFO)
 
     # Create a formatter and set it for the handler
@@ -383,12 +383,14 @@ def main():
 
     def safe_remove_experiment_folder(path):
         """Safely remove experiment folder, handling file locks."""
-        try:
-            shutil.rmtree(path, ignore_errors=False)
-        except PermissionError as e:
-            function_logger.warning(f"PermissionError during cleanup: {e}")
-            time.sleep(1)
-            shutil.rmtree(path, ignore_errors=True)
+        for attempt in range(5):  # Retry up to 5 times
+            try:
+                shutil.rmtree(path, ignore_errors=False)
+                return
+            except PermissionError as e:
+                function_logger.warning(f"PermissionError during cleanup: {e}. Retrying...")
+                time.sleep(1)
+        logging.error(f"Failed to remove experiment folder after multiple attempts: {path}")
 
     # This line is moved to after the trainer is initialized
 
@@ -464,17 +466,6 @@ def main():
         function_logger.info("Trainer initialized successfully.")
 
         # --- Resolve File Locking Issue ---
-        def safe_remove_experiment_folder(path):
-            """Safely remove experiment folder, handling file locks."""
-            for attempt in range(5):  # Retry up to 5 times
-                try:
-                    shutil.rmtree(path, ignore_errors=False)
-                    return
-                except PermissionError as e:
-                    function_logger.warning(f"PermissionError during cleanup: {e}. Retrying in 1 second...")
-                    time.sleep(1)
-            function_logger.error(f"Failed to remove experiment folder after multiple attempts: {path}")
-
         trainer.remove_experiment_folder = safe_remove_experiment_folder
 
     except Exception as e:
@@ -510,7 +501,25 @@ def main():
             function_logger.error(f"Error during plotting: {e}", exc_info=True)
             return None
 
-    trainer.model._log = lambda ap, batch, outputs, mode: safe_plot_results(outputs["y_hat"], outputs["y"], ap, mode)
+    def safe_log(ap, batch, outputs, mode):
+        try:
+            # Check if outputs is a dict with keys "y_hat" and "y"
+            if isinstance(outputs, dict) and "y_hat" in outputs and "y" in outputs:
+                y_hat = outputs["y_hat"]
+                y = outputs["y"]
+            # If outputs is a list or tuple, assume first two elements are y_hat and y
+            elif isinstance(outputs, (list, tuple)) and len(outputs) >= 2:
+                y_hat = outputs[0]
+                y = outputs[1]
+            else:
+                function_logger.error("Unexpected outputs format in safe_log.")
+                return None
+            return safe_plot_results(y_hat, y, ap, mode)
+        except Exception as e:
+            function_logger.error(f"Error in safe_log: {e}", exc_info=True)
+            return None
+
+    trainer.model._log = safe_log
 
     # --- Resolve File Locking ---
     def safe_remove_experiment_folder(path):
