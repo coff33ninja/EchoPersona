@@ -1,6 +1,7 @@
 # voice_clone_train.py (Modified for enhanced_logger)
 
 import os
+import logging
 import argparse
 # Removed 'logging' import here, will get logger from enhanced_logger
 import time
@@ -23,21 +24,17 @@ except ImportError:
     print("Error: enhanced_logger.py not found. Logging will not work correctly.")
     # Fallback to basic logging if module not found
     import logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    # Define a dummy get_logger if needed elsewhere, or handle missing logger
-    def get_logger(name): return logging.getLogger(name)
+import os
+import logging
+import shutil
+import torch
+import numpy as np
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    # Define a dummy get_logger if needed elsewhere, or handle missing loggerdef get_logger(name): return logging.getLogger(name)
     # No setup_logger available in fallback
 
 # --- Constants ---
 METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset folder
-
-# --- Removed Logging Setup Here ---
-# Removed LOGS_DIR constant and os.makedirs
-# Removed create_function_logger function
-
-# --- Get Logger Instance for this module ---
-# Note: setup_logger needs to be called first from main()
-logger = get_logger(__name__) # Use module name for logger
 
 # --- Custom Formatter ---
 def custom_formatter(root_path, meta_file, **kwargs):
@@ -330,13 +327,12 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
-    # --- Setup Logging USING enhanced_logger ---
+    # --- Setup Logging USING enhanced_logger
     log_level_map = {
         "DEBUG": logging.DEBUG,
         "INFO": logging.INFO,
         "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL
+        "ERROR": logging.ERROR,    "CRITICAL": logging.CRITICAL
     }
     log_level = log_level_map.get(args.log_level.upper(), logging.INFO)
     log_file = os.path.join(args.output_path, "training.log") # Central log file
@@ -350,15 +346,8 @@ def main():
          return # Cannot proceed without output directory
 
     # Now setup the logger using the function from enhanced_logger
-    try:
-        setup_logger(log_file_path=log_file, level=log_level)
-    except NameError:
-        # Fallback already handled within enhanced_logger import
-        logger.error("enhanced_logger module not found, using basic logging.")
-    except Exception as log_setup_e:
-        # Catch other potential setup errors
-        logger.exception(f"Failed during logger setup: {log_setup_e}")
-        return
+    setup_logger(log_file_path=log_file, level=log_level)
+    logger = get_logger(__name__)
 
 
     # --- Validate Paths ---
@@ -594,15 +583,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # --- Matplotlib Backend ---
-    # Try to set a non-GUI backend for Matplotlib to avoid issues on headless servers
-    try:
-        import matplotlib
-        matplotlib.use('Agg') # Use Agg backend which doesn't require a display
-        logger.debug("Set Matplotlib backend to Agg.")
-    except ImportError:
-        logger.warning("Matplotlib not found. Plotting will be disabled.")
-    except Exception as e:
-        logger.warning(f"Could not set Matplotlib backend: {e}. Plotting might fail on headless systems.")
-
     main()

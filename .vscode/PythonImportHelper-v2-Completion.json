@@ -4716,7 +4716,7 @@
         "kind": 2,
         "importPath": "voice_clone_train",
         "description": "voice_clone_train",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Setup Logging USING enhanced_logger ---\n    log_level_map = {\n        \"DEBUG\": logging.DEBUG,\n        \"INFO\": logging.INFO,\n        \"WARNING\": logging.WARNING,\n        \"ERROR\": logging.ERROR,\n        \"CRITICAL\": logging.CRITICAL\n    }",
+        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Setup Logging USING enhanced_logger\n    log_level_map = {\n        \"DEBUG\": logging.DEBUG,\n        \"INFO\": logging.INFO,\n        \"WARNING\": logging.WARNING,\n        \"ERROR\": logging.ERROR,    \"CRITICAL\": logging.CRITICAL\n    }\n    log_level = log_level_map.get(args.log_level.upper(), logging.INFO)",
         "detail": "voice_clone_train",
         "documentation": {}
     },
@@ -4725,16 +4725,7 @@
         "kind": 5,
         "importPath": "voice_clone_train",
         "description": "voice_clone_train",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Removed Logging Setup Here ---\n# Removed LOGS_DIR constant and os.makedirs\n# Removed create_function_logger function\n# --- Get Logger Instance for this module ---\n# Note: setup_logger needs to be called first from main()\nlogger = get_logger(__name__) # Use module name for logger\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "logger",
-        "kind": 5,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "logger = get_logger(__name__) # Use module name for logger\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    (Logging calls changed to use logger)\n    \"\"\"\n    # logger = get_logger('custom_formatter') # Or use module logger directly\n    items = []",
+        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Expected metadata filename in dataset folder\n# --- Custom Formatter ---\ndef custom_formatter(root_path, meta_file, **kwargs):\n    \"\"\"\n    Custom formatter to load dataset samples where audio filenames in metadata.csv\n    include the .wav extension and are located directly in the dataset directory.\n    (Logging calls changed to use logger)\n    \"\"\"\n    # logger = get_logger('custom_formatter') # Or use module logger directly\n    items = []",
         "detail": "voice_clone_train",
         "documentation": {}
     },
