@@ -521,6 +521,7 @@ def main():
     # --- Start Training ---
     try:
         logger.info(">>> Starting Training <<<")
+        logger.warning("On Windows, file locking issues may occur. Close other programs that might access training files to avoid PermissionErrors.")
         if args.continue_path:
             logger.info(f"Attempting to continue training from: {args.continue_path}")
         trainer.fit()
@@ -535,18 +536,14 @@ def main():
     except RuntimeError as e:
          # Catch common GPU errors
          if "CUDA out of memory" in str(e):
-              logger.exception(f"CUDA out of memory: {e}")
               print("\nCUDA out of memory. Try reducing --batch_size.")
               print("If using mixed precision (--mixed_precision), ensure your GPU supports it well.")
               print("Check the log file for more details:", log_file)
          elif "cuDNN error" in str(e):
-              logger.exception(f"cuDNN error: {e}")
               print("\nA cuDNN error occurred. This often indicates an issue with your CUDA/cuDNN installation or GPU driver compatibility.")
               print("Ensure PyTorch, CUDA, and cuDNN versions are compatible.")
               print("Check the log file for more details:", log_file)
          else:
-              # Re-raise other RuntimeErrors
-              logger.exception(f"A RuntimeError occurred during training: {e}")
               print(f"\nA RuntimeError occurred during training: {e}")
               print("Check the log file for more details:", log_file)
          # exit(1) # Optional: exit with error code
@@ -560,27 +557,20 @@ def main():
         print("Check the log file for details:", log_file)
         # exit(1) # Optional: exit with error code
 
-    # --- Save Model Explicitly (Optional - Trainer usually saves best/last) ---
-    # The Trainer typically saves the best model and checkpoints automatically.
-    # Explicit saving might be redundant unless you want to force-save the *very* final state.
-    # try:
-    #     final_model_save_path = os.path.join(args.output_path, "final_model.pth")
-    #     final_config_save_path = os.path.join(args.output_path, "final_config.json") # Use final_ if different from trainer's config.json
-    #
     #     # Save the model state dictionary
-    #     if trainer.model: # Check if model exists
-    #         torch.save(trainer.model.state_dict(), final_model_save_path)
-    #         logger.info(f"Final model state saved explicitly to: {final_model_save_path}")
-    #     else:
-    #          logger.warning("Trainer model object not found, cannot save final model state explicitly.")
+        if trainer.model: # Check if model exists
+            torch.save(trainer.model.state_dict(), final_model_save_path)
+            logger.info(f"Final model state saved explicitly to: {final_model_save_path}")
+        else:
+            logger.warning("Trainer model object not found, cannot save final model state explicitly.")
     #
     #     # Save the model configuration (usually same as trainer's config.json)
-    #     # config.save_json(final_config_save_path) # Use the config object's save method
-    #     # logger.info(f"Final configuration saved explicitly to: {final_config_save_path}")
-    #
-    # except Exception as e:
-    #     logger.exception(f"Failed during explicit final model/config saving: {e}")
-    #     print(f"Error during explicit final save: {e}")
+            config.save_json(final_config_save_path) # Use the config object's save method
+            logger.info(f"Final configuration saved explicitly to: {final_config_save_path}")
+
+    except Exception as e:
+        logger.exception(f"Failed during explicit final model/config saving: {e}")
+        print(f"Error during explicit final save: {e}")
 
 
 if __name__ == "__main__":
