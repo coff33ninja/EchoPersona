@@ -30,6 +30,8 @@ import shutil
 import torch
 import numpy as np
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Initialize module-level logger for use in functions before main()
+logger = get_logger(__name__)
     # Define a dummy get_logger if needed elsewhere, or handle missing loggerdef get_logger(name): return logging.getLogger(name)
     # No setup_logger available in fallback
 
@@ -228,7 +230,7 @@ def plot_results(y_hat, y, ap, name_prefix):
 
 # --- Argument Parser ---
 def parse_arguments():
-    # logger = get_logger('parse_arguments') # Or use module logger directly
+
     parser = argparse.ArgumentParser(
         description="Train a VITS TTS model for a specific character."
     )
@@ -320,13 +322,12 @@ def parse_arguments():
     if args.use_phonemes and not args.phoneme_language:
         parser.error("--phoneme_language is required when --use_phonemes is enabled.")
 
-    logger.info("Arguments parsed successfully.")
+
+    # logger.info("Arguments parsed successfully.")
     return args
 
-# --- Main Training Function ---
 def main():
     args = parse_arguments()
-
     # --- Setup Logging USING enhanced_logger
     log_level_map = {
         "DEBUG": logging.DEBUG,
@@ -483,7 +484,7 @@ def main():
     # --- Initialize Model ---
     try:
         # This will also initialize the tokenizer based on config (phonemes, language, etc.)
-        model = Vits.init_from_config(config, ap=ap) # Pass ap if needed by VITS init
+        model = Vits.init_from_config(config) # Removed ap argument as it is not accepted
         logger.info("VITS model initialized successfully.")
     except Exception as e:
         logger.exception(f"Failed to initialize VITS model: {e}")
