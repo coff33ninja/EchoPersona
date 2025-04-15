@@ -1,15 +1,10 @@
 import argparse
 import os
-import re  # Keep re import here as it's used for sanitizing before calling VoiceTrainer
-import logging  # Added for consistency
+import re
+import logging
 
-# Ensure voice_tools.py is in the same directory or Python path
 try:
-    from voice_tools import (
-        VoiceTrainer,
-        BASE_DATASET_DIR,
-        BASE_MODEL_DIR,
-    )  # Import constants too
+    from voice_tools import VoiceTrainer, BASE_DATASET_DIR, BASE_MODEL_DIR
 except ImportError:
     print("Error: voice_tools.py not found. Make sure it's in the same directory.")
     logging.error("Failed to import from voice_tools.py")
@@ -19,18 +14,16 @@ except ImportError:
 def main():
     parser = argparse.ArgumentParser(
         description="Voice Trainer CLI Tool - Manages datasets and training for specific characters.",
-        formatter_class=argparse.RawTextHelpFormatter,  # Preserve newline formatting in help
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
-    # --- Required Argument ---
+    # Required Arguments
     parser.add_argument(
         "--character",
         type=str,
         required=True,
         help="Name of the character to work with. This determines the dataset and model paths.",
     )
-
-    # --- Action Argument ---
     parser.add_argument(
         "--action",
         type=str,
@@ -42,10 +35,10 @@ def main():
             "stats",
             "augment",
             "trim",
-            "quality",  # Dataset actions
+            "quality",
             "train",
             "test",
-            "use",  # Model actions
+            "use",
         ],
         help="""Action to perform:
     --- Dataset Management ---
@@ -63,7 +56,7 @@ def main():
 """,
     )
 
-    # --- Optional Arguments ---
+    # Optional Arguments
     parser.add_argument("--text", type=str, help="Text for 'test' or 'use' actions.")
     parser.add_argument(
         "--file",
@@ -72,7 +65,6 @@ def main():
         "  provide: Full path to the source WAV/MP3 file.\n"
         "  augment, trim, quality: RELATIVE path within the character's dataset (e.g., 'sample_char_time.wav').",
     )
-    # Add arguments for base directories if needed, otherwise use defaults from voice_tools
     parser.add_argument(
         "--base_dataset_dir",
         type=str,
@@ -86,7 +78,7 @@ def main():
         help=f"Base directory containing all trained character models (default: {BASE_MODEL_DIR})",
     )
 
-    # Add training-specific arguments
+    # Training-specific Arguments
     parser.add_argument(
         "--epochs",
         type=int,
@@ -105,26 +97,57 @@ def main():
         default=0.001,
         help="Learning rate for training (default: 0.001).",
     )
+    parser.add_argument(
+        "--continue_path",
+        type=str,
+        default=None,
+        help="Path to a previous checkpoint to continue training from (e.g., path/to/run-XXX).",
+    )
+    # Optional: Add more parameters for flexibility
+    parser.add_argument(
+        "--sample_rate",
+        type=int,
+        default=22050,
+        help="Target sample rate for training (default: 22050).",
+    )
+    parser.add_argument(
+        "--use_phonemes",
+        type=str,
+        default="true",
+        choices=["true", "false"],
+        help="Use phonemes for training (default: true).",
+    )
+    parser.add_argument(
+        "--phoneme_language",
+        type=str,
+        default="en-us",
+        help="Phoneme language if phonemes are used (default: en-us).",
+    )
+    parser.add_argument(
+        "--mixed_precision",
+        type=str,
+        default="false",
+        choices=["true", "false"],
+        help="Use mixed precision training (default: false).",
+    )
 
     args = parser.parse_args()
 
-    # --- Input Validation based on Action ---
+    # Input Validation
     if args.action in ["test", "use"] and not args.text:
         parser.error(f"--text is required for action '{args.action}'.")
     if args.action in ["provide", "augment", "trim", "quality"] and not args.file:
         parser.error(f"--file is required for action '{args.action}'.")
+    if args.use_phonemes == "true" and not args.phoneme_language:
+        parser.error("--phoneme_language is required when --use_phonemes is true.")
 
-    # --- Initialize Trainer ---
-    trainer = None  # Initialize trainer variable
+    # Initialize Trainer
     try:
-        # Sanitize character name slightly for safety, VoiceTrainer handles more robustly
         safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", args.character)
         if safe_character_name != args.character:
             print(
                 f"Warning: Character name sanitized to '{safe_character_name}' for path usage."
             )
-
-        # Initialize trainer - this will create directories if they don't exist
         print(f"Initializing trainer for character: '{safe_character_name}'...")
         trainer = VoiceTrainer(
             character_name=safe_character_name,
@@ -136,16 +159,15 @@ def main():
         exit(1)
     except Exception as e:
         print(f"An unexpected error occurred during trainer initialization: {e}")
-        logging.exception("Trainer initialization failed.")  # Log full traceback
+        logging.exception("Trainer initialization failed.")
         exit(1)
 
-    # --- Perform Action ---
+    # Perform Action
     print(
         f"\nPerforming action '{args.action}' for character '{trainer.character_name}'..."
     )
 
-    # --- Action-Specific Pre-checks (Optional but recommended) ---
-    # Check if dataset exists for actions that require it
+    # Pre-checks
     actions_requiring_dataset = [
         "validate",
         "stats",
@@ -163,10 +185,8 @@ def main():
         print("Please use 'record' or 'provide' first to create the dataset.")
         exit(1)
 
-    # Check if model exists for actions that require it
     actions_requiring_model = ["test", "use"]
     if args.action in actions_requiring_model:
-        # Check specifically for model/config files within the output path
         model_file = os.path.join(trainer.output_path, "best_model.pth")
         config_file = os.path.join(trainer.output_path, "config.json")
         if not os.path.exists(model_file) or not os.path.exists(config_file):
@@ -178,7 +198,6 @@ def main():
             )
             exit(1)
 
-    # Check if specific file exists for actions operating on one file
     actions_requiring_file_in_dataset = ["augment", "trim", "quality"]
     if args.action in actions_requiring_file_in_dataset:
         target_file_path = os.path.join(trainer.dataset_path, args.file)
@@ -188,56 +207,48 @@ def main():
             )
             exit(1)
 
-    # --- Execute Action ---
+    # Execute Action
     try:
         if args.action == "record":
-            trainer.record_training_sample()  # Text is handled internally
-
+            trainer.record_training_sample()
         elif args.action == "provide":
-            trainer.provide_voice_data(args.file)  # Requires full path to source
-
+            trainer.provide_voice_data(args.file)
         elif args.action == "validate":
             trainer.validate_metadata()
-
         elif args.action == "stats":
             trainer.dataset_statistics()
-
         elif args.action == "augment":
-            trainer.augment_audio(args.file)  # Requires relative path
-
+            trainer.augment_audio(args.file)
         elif args.action == "trim":
-            trainer.trim_silence(args.file)  # Requires relative path
-
+            trainer.trim_silence(args.file)
         elif args.action == "quality":
-            trainer.check_audio_quality(args.file)  # Requires relative path
-
+            trainer.check_audio_quality(args.file)
         elif args.action == "train":
             trainer.train_voice(
                 epochs=args.epochs,
                 batch_size=args.batch_size,
-                learning_rate=args.learning_rate
+                learning_rate=args.learning_rate,
+                continue_path=args.continue_path,
+                sample_rate=args.sample_rate,
+                use_phonemes=args.use_phonemes.lower() == "true",
+                phoneme_language=args.phoneme_language,
+                mixed_precision=args.mixed_precision.lower() == "true",
             )
-
         elif args.action == "test":
-            trainer.test_trained_voice(args.text)  # Text required
-
+            trainer.test_trained_voice(args.text)
         elif args.action == "use":
-            trainer.use_trained_voice(args.text)  # Text required
-
+            trainer.use_trained_voice(args.text)
         else:
-            # This case should not be reachable due to 'choices' in parser
             print(f"Error: Unknown action '{args.action}'.")
-
         print(
             f"\nAction '{args.action}' completed successfully for character '{trainer.character_name}'."
         )
-
     except FileNotFoundError as fnf_error:
         print(f"\nError: File not found during action '{args.action}': {fnf_error}")
         logging.error(f"FileNotFoundError during action {args.action}: {fnf_error}")
     except Exception as e:
         print(f"\nAn unexpected error occurred during action '{args.action}': {e}")
-        logging.exception(f"Error during action {args.action}")  # Log full traceback
+        logging.exception(f"Error during action {args.action}")
 
 
 if __name__ == "__main__":

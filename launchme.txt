@@ -1,0 +1,5 @@
+python voice_trainer_cli.py --character "Arlecchino" --action train --epochs 500 --batch_size 8 --learning_rate 0.0001 --base_dataset_dir "C:\Users\USER\Documents\GitHub\EchoPersona\voice_datasets" --base_model_dir "C:\Users\USER\Documents\GitHub\EchoPersona\trained_models" --continue_path "C:\Users\USER\Documents\GitHub\EchoPersona\trained_models\Arlecchino\run-20250415" --sample_rate 22050 --use_phonemes true --phoneme_language en-us
+
+or:
+
+python voice_trainer_cli.py --character "Arlecchino" --action train --epochs 500 --batch_size 8 --learning_rate 0.0001

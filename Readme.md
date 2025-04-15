@@ -1,8 +1,3 @@
-Okay, I understand. You want to adjust the language in the `Readme.md` to be more cautious about the downloader component, frame it as a proof-of-concept, and acknowledge the data sources used.
-
-Here is the revised `Readme.md` reflecting those changes:
-
-```markdown
 # 🎙️ EchoPersona
 **Proof of Concept: Custom TTS/STT with Character Voices**
 
@@ -11,8 +6,8 @@ This project is a full-stack playground for Text-to-Speech (TTS) and Speech-to-T
 
 - 🎧 **Structure Voice Data**: Includes a **proof-of-concept** custom downloader (`genshin_voice_downloader.py`) to fetch and structure character voice data from publicly available web sources¹. This component may be removed in future versions.
 - 🗂️ **Manage Datasets**: Organize and preprocess voice data per character.
-- 🧠 **Train Custom TTS Models**: Build a personalized TTS model for each character using their voice samples.
-- 🗣️ **Generate Speech**: Use trained models to synthesize dialogue in that character’s voice.
+- 🧠 **Train Custom TTS Models**: Build personalized TTS models for each character using their voice samples, with options to resume training from checkpoints.
+- 🗣️ **Generate Speech**: Use trained models to synthesize dialogue in a character’s voice.
 - 🛠️ **Standard Tools Built-In**: Includes classic TTS (pyttsx3, gTTS), STT (Whisper, Google), and voice cloning (XTTS).
 
 ---
@@ -21,27 +16,31 @@ This project is a full-stack playground for Text-to-Speech (TTS) and Speech-to-T
 
 **Character**: Represents a unique voice persona. All associated audio, metadata, and models live in folders named after them.
 **Base Directories**:
-- `voice_datasets/` – Raw audio data per character
-- `trained_models/` – Output from model training
+- `voice_datasets/` – Raw audio data per character (e.g., `voice_datasets/Arlecchino/`).
+- `trained_models/` – Output from model training (e.g., `trained_models/Arlecchino/`).
 
 ---
 
 ## 🌟 Features
 
 ### 🔁 Character-Specific Workflow
-- Manage, and train voice models per character.
-- Includes the aforementioned proof-of-concept downloader to help structure initial data.
+- Manage and train voice models per character.
+- Includes the proof-of-concept downloader to help structure initial data.
 
 ### 🧰 Dataset Management (`voice_trainer_cli.py`)
-- Record new samples
-- Add/annotate existing WAV/MP3 files
-- Validate dataset metadata
-- View stats: duration, sample count, format consistency
-- Augment audio (pitch, speed, noise)
-- Trim silence and check audio quality
+- Record new samples.
+- Add/annotate existing WAV/MP3 files.
+- Validate dataset metadata.
+- View stats: duration, sample count, format consistency.
+- Augment audio (pitch, speed, noise).
+- Trim silence and check audio quality.
 
 ### 🎓 Model Training
-Train VITS-based models with `voice_clone_train.py` via the CLI or GUI.
+Train VITS-based models with `voice_clone_train.py` via the CLI or GUI. Supports:
+- Custom epochs, batch size, learning rate.
+- Resuming from checkpoints (`--continue_path`).
+- Phoneme-based training (`--use_phonemes`, `--phoneme_language`).
+- Adjustable sample rate (`--sample_rate`).
 
 ### 💬 Generate TTS
 Use trained models to create character-specific speech outputs.
@@ -70,47 +69,52 @@ Use XTTSv2 and other tools to clone voices from reference samples.
 ## 🛠️ Installation
 
 ```bash
-git clone <repository-url>
-cd ECHOPERSONA
+git clone https://github.com/USER/EchoPersona.git
+cd EchoPersona
 pip install -r requirements.txt
 ```
 
 > ⚠️ **Note**:
-- `openai-whisper` needs `ffmpeg` installed and accessible in your system's PATH.
-- Coqui TTS (`TTS` package) may have specific OS/CUDA requirements. Check their documentation.
+- `openai-whisper` requires `ffmpeg` installed and accessible in your system's PATH.
+- Coqui TTS (`TTS` package) may have specific OS/CUDA requirements. Check their [documentation](https://github.com/coqui-ai/TTS).
 - Whisper models download on first use to `~/.cache/whisper`.
-- For Vosk STT, download models manually from the Vosk website.
+- For Vosk STT, download models manually from the [Vosk website](https://alphacephei.com/vosk/models).
 
 ---
 
 ## 📁 Folder Structure
 
 ```
-Your-Project-Directory/
+EchoPersona/
 ├── voice_datasets/
-│   ├── Amber/                # Character dataset folder
-│   │   ├── metadata.csv      # LJSpeech format: audio_file|text|normalized_text
-│   │   ├── sample_Amber_....wav
-│   │   └── VO_Amber_....wav
-├── trained_models/
-│   ├── Amber/                # Character model output folder
-│   │   ├── training.log      # Main training log file
-│   │   ├── best_model.pth    # Trained model weights
-│   │   ├── config.json       # Model configuration
+│   ├── Arlecchino/           # Character dataset folder
+│   │   ├── metadata.csv      # Format: audio_file|text|speaker
+│   │   ├── sample_Arlecchino_001.wav
 │   │   └── ...
-├── logs/                       # Secondary logs (if using separate logger setup)
-│   └── ...
-├── enhanced_logger.py        # Optional separate logging script
+├── trained_models/
+│   ├── Arlecchino/           # Character model output folder
+│   │   ├── training.log      # Training log file
+│   │   ├── best_model.pth    # Trained model weights
+│   │   ├── final_model.pth   # Final model weights
+│   │   ├── config.json       # Model configuration
+│   │   ├── final_config.json # Final configuration
+│   │   ├── run-YYYYMMDD/    # Checkpoint folder (e.g., run-20250415)
+│   │   │   ├── checkpoint.pth
+│   │   │   └── ...
+│   │   └── vocabulary.txt    # Phoneme vocabulary
+├── logs/                      # Secondary logs (if used)
+├── enhanced_logger.py         # Optional logging script
 ├── genshin_voice_downloader.py # Proof-of-concept downloader
-├── voice_trainer_cli.py
-├── voice_trainer_gui.py      # GUI Application
-├── voice_tools.py
-├── voice_clone_train.py      # Core training script
-├── test_trained_model.py
-├── test_voice_tools.py
-├── requirements.txt
-├── background_noise.mp3      # Example noise file for augmentation
-├── Readme.md                 # This file
+├── genshin_voice_retranscriber.py # Optional re-transcription script
+├── voice_trainer_cli.py       # CLI for dataset and training
+├── voice_trainer_gui.py       # GUI application
+├── voice_tools.py             # Core utilities
+├── voice_clone_train.py       # Core training script
+├── test_trained_model.py      # Test script for trained models
+├── test_voice_tools.py        # Unit tests
+├── requirements.txt           # Dependencies
+├── background_noise.mp3       # Example noise for augmentation
+├── Readme.md                  # This file
 └── logo.png
 ```
 
@@ -121,13 +125,13 @@ Your-Project-Directory/
 ### 1. 🔻 Structure Initial Voice Data (Optional)
 
 ```bash
-python genshin_voice_downloader.py --character "Amber" --output_dir voice_datasets
+python genshin_voice_downloader.py --character "Arlecchino" --output_dir voice_datasets
 ```
-> **Note:** This script (`genshin_voice_downloader.py`) is a **proof-of-concept** intended to demonstrate structuring data from web sources¹ and may be removed in the future. Use responsibly.
+> **Note**: `genshin_voice_downloader.py` is a **proof-of-concept** to demonstrate structuring data from web sources¹ and may be removed in the future. Use responsibly.
 
-Creates `voice_datasets/Amber/` with WAVs + `metadata.csv`. The script attempts to transcribe audio using Whisper.
+Creates `voice_datasets/Arlecchino/` with WAVs and `metadata.csv`. The script uses Whisper for transcription.
 
-> You can skip this and directly create your own dataset folder manually, ensuring `metadata.csv` follows the LJSpeech format: `filename.wav|Transcription text|normalized transcription text`.
+> **Alternative**: Manually create `voice_datasets/Arlecchino/` with `metadata.csv` (format: `filename.wav|Transcription text|Arlecchino`) and audio files.
 
 ---
 
@@ -135,179 +139,183 @@ Creates `voice_datasets/Amber/` with WAVs + `metadata.csv`. The script attempts 
 
 Use `--character <Name>` with all `voice_trainer_cli.py` actions:
 
-- **Record New Samples**
+- **Record New Samples**:
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action record
+  python voice_trainer_cli.py --character "Arlecchino" --action record
   ```
 
-- **Add Existing Audio** (Prompts for transcription)
+- **Add Existing Audio** (Prompts for transcription):
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action provide --file "/path/to/audio.wav"
+  python voice_trainer_cli.py --character "Arlecchino" --action provide --file "/path/to/audio.wav"
   ```
 
-- **Validate Metadata** (Checks format & file existence)
+- **Validate Metadata** (Checks format & file existence):
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action validate
+  python voice_trainer_cli.py --character "Arlecchino" --action validate
   ```
 
-- **View Stats** (Total duration, file count, format warnings)
+- **View Stats** (Duration, file count, format warnings):
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action stats
+  python voice_trainer_cli.py --character "Arlecchino" --action stats
   ```
 
-- **Augment File** (Adds pitch/speed variation or noise)
+- **Augment File** (Adds pitch/speed variation or noise):
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action augment --file "relative/path/within/dataset/sample_Amber_001.wav"
+  python voice_trainer_cli.py --character "Arlecchino" --action augment --file "sample_Arlecchino_001.wav"
   ```
 
-- **Trim Silence** (From start/end of file)
+- **Trim Silence**:
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action trim --file "relative/path/within/dataset/VO_Amber_001.wav"
+  python voice_trainer_cli.py --character "Arlecchino" --action trim --file "sample_Arlecchino_001.wav"
   ```
 
 ---
 
 ### 3. 🧠 Train the Model
 
-This uses the `voice_clone_train.py` script internally. You can run training via the CLI or GUI.
+Training uses `voice_clone_train.py` internally. Run via CLI or GUI.
 
-- **Via CLI:**
+- **Via CLI**:
   ```bash
   # Basic command
-  python voice_trainer_cli.py --character "Amber" --action train
+  python voice_trainer_cli.py --character "Arlecchino" --action train
 
-  # With custom parameters (see Guidelines below)
-  python voice_trainer_cli.py --character "Amber" --action train --epochs 500 --batch_size 16 --learning_rate 0.0001
+  # With custom parameters
+  python voice_trainer_cli.py --character "Arlecchino" --action train --epochs 500 --batch_size 8 --learning_rate 0.0001 --base_dataset_dir "voice_datasets" --base_model_dir "trained_models" --sample_rate 22050 --use_phonemes true --phoneme_language en-us
   ```
 
-- **Via GUI (`voice_trainer_gui.py`):**
-  * Select the Character and the `train` action.
-  * Adjust sliders for Epochs, Batch Size, and Learning Rate.
-  * Click "Start Training".
+  - **Resuming Training**:
+    ```bash
+    python voice_trainer_cli.py --character "Arlecchino" --action train --continue_path "trained_models/Arlecchino/run-YYYYMMDD"
+    ```
+    > **Note**: Ensure the `--continue_path` folder (e.g., `run-YYYYMMDD`) exists and contains a valid checkpoint (e.g., `checkpoint.pth`). Check `trained_models/Arlecchino/` for available runs.
 
-Output (model files, config, logs) lands in `trained_models/Amber/`. Training can take a significant amount of time depending on dataset size, hardware, and epochs.
+- **Via GUI (`voice_trainer_gui.py`)**:
+  - Select the character and `train` action.
+  - Adjust sliders for epochs, batch size, learning rate, sample rate.
+  - Specify `--continue_path` if resuming.
+  - Click "Start Training".
 
-#### **Customizing Training Parameters:**
+**Output**: Model files (`best_model.pth`, `final_model.pth`, `config.json`, `final_config.json`), logs (`training.log`), and checkpoints (`run-YYYYMMDD/`) in `trained_models/Arlecchino/`.
 
-You can adjust several parameters to influence the training process, available via both CLI flags (for `voice_trainer_cli.py --action train`) and the GUI sliders:
+#### **Training Parameters**:
+- **`--epochs`** (Default: 100): Number of dataset passes. Higher values improve quality but risk overfitting.
+- **`--batch_size`** (Default: 16): Samples per batch. Reduce (e.g., 8, 4) for memory errors.
+- **`--learning_rate`** (Default: 0.001): Weight adjustment step. Lower (e.g., 0.0001) for stability.
+- **`--base_dataset_dir`** (Default: `voice_datasets`): Path to dataset folder.
+- **`--base_model_dir`** (Default: `trained_models`): Path for model outputs.
+- **`--continue_path`** (Optional): Path to checkpoint folder (e.g., `trained_models/Arlecchino/run-YYYYMMDD`) to resume training.
+- **`--sample_rate`** (Default: 22050): Audio sample rate (Hz). Match your dataset’s rate.
+- **`--use_phonemes`** (Default: true): Use phonemes for better pronunciation.
+- **`--phoneme_language`** (Default: en-us): Language for phonemes (required if `--use_phonemes true`).
 
-* **`--epochs`** (Default: 1000 in `voice_clone_train.py`, 100 in CLI default): Number of passes through the entire dataset. More epochs generally lead to better quality but take longer and risk overfitting. Adjust based on dataset size and observed results in the logs/output directory.
-* **`--batch_size`** (Default: 32 in `voice_clone_train.py`, 16 in CLI default): Number of audio samples processed in one go. **Crucial for memory usage.** If you get "CUDA out of memory" errors or the process crashes, **reduce this value** (e.g., 16, 8, 4). Larger batch sizes can sometimes speed up training if memory allows.
-* **`--learning_rate`** (Default: 0.0002 in `voice_clone_train.py`, 0.001 in CLI default): Controls how much the model weights are adjusted during training. The default is often a good starting point. If training is unstable (loss fluctuates wildly or becomes `NaN` in logs), you might try slightly lowering it (e.g., 0.0001).
-
-You can also edit `voice_clone_train.py` directly for more advanced options:
-
-* **`num_loader_workers`**: Number of parallel processes for loading data. Increase if your CPU is bottlenecking data loading (monitor CPU usage). Decrease (even to 0) if you encounter strange multiprocessing errors during startup or data loading.
-* **`use_phonemes`**: Whether to convert text to phonemes (recommended for better pronunciation). Requires a phonemizer for the specified `phoneme_language`.
-* **`mixed_precision`**: Can speed up training and reduce memory on compatible GPUs, but defaulted to `False` in the current script. Set to `True` to try enabling it.
-
-#### **Troubleshooting Training:**
-
-* **Check Logs:** Always check `trained_models/<Character>/training.log` first for specific error messages.
-* **Validate Data:** Use the `validate` action often.
-* **Reduce Batch Size:** The most common fix for memory-related crashes.
-* **Check Dependencies:** Ensure `requirements.txt` are met, `ffmpeg` is installed, and PyTorch/CUDA versions are compatible.
-* **Try `num_loader_workers 0`:** Helps diagnose data loading issues.
-* **Test on Subset:** Try training on just 5-10 files to ensure the basic pipeline works.
+#### **Troubleshooting Training**:
+- **Error: "No models found in continue path"**:
+  - Verify the `--continue_path` exists (e.g., `trained_models/Arlecchino/run-YYYYMMDD`).
+  - Check for `checkpoint.pth` or similar files in the folder.
+  - If incorrect or missing, remove `--continue_path` to start fresh or use the correct run folder.
+  - Example: List runs with `dir trained_models\Arlecchino\run-*` (Windows).
+- **CUDA Out of Memory**: Reduce `--batch_size` (e.g., 8 or 4).
+- **Metadata Errors**: Run `--action validate` to check `metadata.csv`.
+- **Training Fails**: Check `trained_models/Arlecchino/training.log` for details (e.g., file not found, phoneme issues).
+- **Slow Data Loading**: Set `--num_loader_workers 0` in `voice_clone_train.py`.
+- **Test Subset**: Try `--epochs 10` with a few files to debug.
+- **Dependencies**: Ensure `ffmpeg`, PyTorch, and CUDA (if using GPU) are compatible.
 
 ---
 
 ### 4. 🗣️ Use the Trained Voice
 
-- **Quick Test via CLI**
+- **Quick Test**:
   ```bash
-  python voice_trainer_cli.py --character "Amber" --action use --text "Hello, this is a test."
+  python voice_trainer_cli.py --character "Arlecchino" --action use --text "This is a test."
   ```
 
-- **Manual Test Script**
+- **Manual Test**:
   ```bash
-  python test_trained_model.py --character "Amber" --text "Testing the model directly." --output_file "output.wav"
+  python test_trained_model.py --character "Arlecchino" --text "Testing directly." --output_file "output.wav"
   ```
 
 ---
 
-### 5. 🔄 Re-attempt Transcription (If using Downloader)
+### 5. 🔄 Re-attempt Transcription (Optional)
 
-If the initial download/transcription process left files with `<transcription_failed>`, you can use the `genshin_voice_retranscriber.py` script (if available/updated) or manually provide transcriptions using the `provide` action. The downloader script also attempts to re-transcribe files marked "Validation Needed".
+For files with `<transcription_failed>` in `metadata.csv`:
+- Use `genshin_voice_retranscriber.py` (if available).
+- Or manually edit `metadata.csv` and use `--action provide`.
 
 ---
 
 ### 6. 🔎 General Speech-to-Text (STT)
 
-Use the interactive menu in `voice_tools.py` (Option 11) or adapt the `SpeechToText` class for your own scripts. STT works independently of character models.
-
 ```bash
 python voice_tools.py
-# Choose a character to initialize (needed for structure)
-# Select Option 11 to run STT on any file
+# Select character for structure
+# Choose Option 11 for STT on any file
 ```
 
 ---
 
-### 7. 🧪 Full Interactive Menu
+### 7. 🧪 Interactive Menu
 
 ```bash
 python voice_tools.py
 ```
 
-This script gives you a guided, menu-driven experience—train, test, clone, transcribe—all in one.
+Guided menu for training, testing, cloning, and transcription.
 
 ---
 
 ## ⚠️ Notes and Best Practices
 
-- **Integer Values**: Ensure that `epochs` and `batch_size` are integers when using the GUI or CLI to avoid compatibility issues.
-- **Training Parameters**: Adjust parameters based on your dataset size, observed results (monitor logs/output quality), and hardware capabilities. Start with defaults and tune carefully.
-- **Error Handling**: If you encounter errors, always check the logs in the relevant output directory (`trained_models/<Character>/`) for details.
+- **Paths**: Use absolute paths for `--base_dataset_dir`, `--base_model_dir`, `--continue_path` on Windows (e.g., `C:\Users\USER\Documents\GitHub\EchoPersona\voice_datasets`).
+- **Integers**: Ensure `--epochs`, `--batch_size`, `--sample_rate` are integers.
+- **Logs**: Always check `trained_models/<Character>/training.log` for errors.
+- **Dataset**: Validate `metadata.csv` format (`audio_file|text|speaker`) before training.
+- **Hardware**: Adjust `--batch_size` and `--num_loader_workers` based on your CPU/GPU.
 
 ---
 
 ## 🧪 Testing
-- Run unit tests using `unittest` (if test files like `test_voice_tools.py` are provided and configured).
-- Example:
-  ```bash
-  # If tests are in a 'tests' directory
-  # python -m unittest discover -s tests
 
-  # Or run specific test files
-  python test_voice_tools.py
-  ```
+```bash
+python test_voice_tools.py
+python test_trained_model.py
+```
 
 ---
 
-## 🧾 Dependencies (see `requirements.txt`)
+## 🧾 Dependencies (`requirements.txt`)
 
-Key packages:
 - `TTS` (Coqui TTS)
 - `SpeechRecognition`
 - `openai-whisper`
 - `pydub`, `sounddevice`, `librosa`, `numpy`, `scipy`, `torch`
-- `ffmpeg` (external dependency, must be installed separately)
+- `ffmpeg` (external, install separately)
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome! Feel free to open an issue or fork and experiment.
+Pull requests welcome! Open an issue or fork to experiment.
 
 ---
 
 ## ⚠️ Disclaimer
 
-The included voice data downloader (`genshin_voice_downloader.py`) is provided solely as a **technical proof-of-concept** to demonstrate fetching and structuring data from publicly available web sources¹. It relies on third-party APIs and website structures that may change. This component **may be removed in future updates**.
+The voice data downloader (`genshin_voice_downloader.py`) is a **technical proof-of-concept** to demonstrate fetching and structuring data from publicly available web sources¹. It relies on third-party APIs and website structures that may change and **may be removed in future updates**.
 
-Voice data obtained from external sources **may be subject to copyright**. Users are responsible for ensuring their use complies with relevant licenses and terms of service. This project:
-- ❌ Does **not endorse** activities that infringe on copyright.
-- ✅ Supports **personal, educational, non-commercial** experimentation under fair use principles.
-- 📦 Ships **no pre-trained models** derived directly from data gathered by the proof-of-concept downloader.
-- ⚠️ Audio generated using any tool should not be used to misrepresent or impersonate individuals without explicit consent.
+Voice data from external sources **may be subject to copyright**. Users must comply with relevant licenses and terms. This project:
+- ❌ Does **not endorse** copyright infringement.
+- ✅ Supports **personal, educational, non-commercial** use under fair use.
+- 📦 Ships **no pre-trained models** derived from the downloader.
+- ⚠️ Generated audio should not misrepresent or impersonate without consent.
 
 ---
-¹ The proof-of-concept downloader utilizes data primarily from the Genshin Impact Fandom Wiki (`genshin-impact.fandom.com`) and the `genshin.jmp.blue` API. We thank these communities for making information publicly accessible.
+¹ Data sourced primarily from Genshin Impact Fandom Wiki (`genshin-impact.fandom.com`) and `genshin.jmp.blue` API. Thanks to these communities for public access.
 
 ## 📝 License
 
-MIT License — hack it, build it, remix it. Just don't be evil.
+MIT License — hack, build, remix. Just don’t be evil.
 
 ---
-```

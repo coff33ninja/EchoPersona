@@ -737,8 +737,8 @@ class VoiceTrainer:
             os.makedirs(self.dataset_path, exist_ok=True)
             os.makedirs(self.output_path, exist_ok=True)
         except OSError as e:
-             logging.error(f"Error creating directories for character '{self.character_name}': {e}")
-             # Depending on severity, might want to raise the error
+            logging.error(f"Error creating directories for character '{self.character_name}': {e}")
+            # Depending on severity, might want to raise the error
 
         # Create metadata file with header if it doesn't exist in the character's dataset path
         self._ensure_metadata_header()
@@ -748,23 +748,22 @@ class VoiceTrainer:
         header = "audio_file|text|normalized_text\n"  # LJSpeech format: wav_filename|transcription|normalized_transcription
         try:
             if not os.path.exists(self.metadata_path):
-                 with open(self.metadata_path, "w", encoding="utf-8") as f:
-                      f.write(header)
-                 logging.info(f"Created metadata file: {self.metadata_path}")
+                with open(self.metadata_path, "w", encoding="utf-8") as f:
+                    f.write(header)
+                logging.info(f"Created metadata file: {self.metadata_path}")
             else:
-                 # Check if header exists and is correct
-                 with open(self.metadata_path, "r+", encoding="utf-8") as f:
-                      first_line = f.readline()
-                      if first_line != header:
-                           logging.warning(f"Metadata file {self.metadata_path} has incorrect or missing header. Prepending correct header.")
-                           content = f.read() # Read the rest of the file
-                           f.seek(0) # Go back to the beginning
-                           f.write(header) # Write the correct header
-                           f.write(content) # Write the original content back
-                           f.truncate() # Remove any trailing old content if file shrunk
+                # Check if header exists and is correct
+                with open(self.metadata_path, "r+", encoding="utf-8") as f:
+                    first_line = f.readline()
+                    if first_line != header:
+                        logging.warning(f"Metadata file {self.metadata_path} has incorrect or missing header. Prepending correct header.")
+                        content = f.read() # Read the rest of the file
+                        f.seek(0) # Go back to the beginning
+                        f.write(header) # Write the correct header
+                        f.write(content) # Write the original content back
+                        f.truncate() # Remove any trailing old content if file shrunk
         except IOError as e:
-             logging.error(f"Error ensuring metadata header for {self.metadata_path}: {e}")
-
+            logging.error(f"Error ensuring metadata header for {self.metadata_path}: {e}")
 
     def get_training_text(self):
         """ Provides curated text or allows user input for training samples. """
@@ -799,7 +798,6 @@ class VoiceTrainer:
             else:
                 print("Invalid choice. Please enter 1 or 2.")
 
-
     def record_training_sample(self, sample_duration=10, sample_rate=22050):
         """ Records a training sample with text and saves it to the character's dataset. """
         text = self.get_training_text()
@@ -832,25 +830,32 @@ class VoiceTrainer:
             print(f"Sample and metadata saved successfully for character '{self.character_name}'.")
 
         except sd.PortAudioError as pae:
-             logging.error(f"PortAudio error during recording: {pae}")
-             print("Error: Could not record audio. Check your microphone connection and sound device settings.")
-             get_audio_device_list() # Show available devices to help debug
+            logging.error(f"PortAudio error during recording: {pae}")
+            print("Error: Could not record audio. Check your microphone connection and sound device settings.")
+            get_audio_device_list() # Show available devices to help debug
         except Exception as e:
             logging.error(f"Error during recording or saving sample: {e}", exc_info=True)
             print(f"An error occurred during recording: {e}")
 
-
-    def train_voice(self, epochs=100, batch_size=16, learning_rate=0.001):
-        """ Triggers the voice cloning training script for the current character with customizable parameters. """
-        # Ensure the training script exists
+    def train_voice(
+        self,
+        epochs=100,
+        batch_size=16,
+        learning_rate=0.001,
+        continue_path=None,
+        sample_rate=22050,
+        use_phonemes=True,
+        phoneme_language="en-us",
+        mixed_precision=False
+    ):
+        """Triggers the voice cloning training script for the current character with customizable parameters."""
         train_script = "voice_clone_train.py"
         if not os.path.exists(train_script):
             print(f"Error: Training script '{train_script}' not found in the current directory.")
             logging.error(f"Training script '{train_script}' not found.")
             return
 
-        # Check if dataset has enough data (basic check)
-        if not os.path.exists(self.metadata_path) or os.path.getsize(self.metadata_path) < 50:  # Arbitrary small size
+        if not os.path.exists(self.metadata_path) or os.path.getsize(self.metadata_path) < 50:
             print(f"Error: Metadata file for character '{self.character_name}' is missing or seems empty.")
             print(f"Please record or add voice samples first: {self.metadata_path}")
             logging.error(f"Metadata file missing or empty for character '{self.character_name}'.")
@@ -861,39 +866,56 @@ class VoiceTrainer:
         print("This might take a long time depending on your dataset size and hardware.")
         print(f"Dataset Path: {self.dataset_path}")
         print(f"Output Path: {self.output_path}")
+        if continue_path:
+            print(f"Continuing from: {continue_path}")
         print("Ensure your dataset and configuration are correct.")
 
-        # Determine the Python executable to use
         python_executable = os.path.join(os.getcwd(), '.venv', 'Scripts', 'python.exe')
         if not os.path.exists(python_executable):
-            python_executable = 'python'  # Fallback to system Python if virtual environment is not found
+            python_executable = 'python'
 
-        # Construct the command with arguments
         command = [
-            python_executable,  # Use the virtual environment's Python executable
+            python_executable,
             train_script,
-            '--dataset_path', self.dataset_path,
-            '--output_path', self.output_path,
-            '--epochs', str(epochs),
-            '--batch_size', str(batch_size),
-            '--learning_rate', str(learning_rate),
+            "--dataset_path",
+            self.dataset_path,
+            "--output_path",
+            self.output_path,
+            "--epochs",
+            str(epochs),
+            "--batch_size",
+            str(batch_size),
+            "--learning_rate",
+            str(learning_rate),
+            "--sample_rate",
+            str(sample_rate),
+            "--use_phonemes" if use_phonemes else "--no-use_phonemes",
+            "--phoneme_language",
+            phoneme_language,
+            "--mixed_precision" if mixed_precision else "--no-mixed_precision",
         ]
+        if continue_path:
+            command.extend(['--continue_path', continue_path])
+
         logging.info(f"Running training command: {' '.join(command)}")
 
-        # Execute the training script with character-specific paths
         import subprocess
         try:
-            # Run the script and capture output in real-time
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', bufsize=1)
-
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding='utf-8',
+                bufsize=1
+            )
             while True:
                 output = process.stdout.readline()
                 if output == '' and process.poll() is not None:
                     break
                 if output:
-                    print(output.strip())  # Print training progress to console
-            rc = process.poll()  # Get the return code
-
+                    print(output.strip())
+            rc = process.poll()
             if rc == 0:
                 print(f"\nTraining script finished successfully for '{self.character_name}'.")
                 print(f"Check the '{self.output_path}' directory for trained models and logs.")
@@ -901,7 +923,6 @@ class VoiceTrainer:
             else:
                 print(f"\nTraining script failed for '{self.character_name}' with return code {rc}.")
                 logging.error(f"Training failed for character '{self.character_name}' (return code: {rc}).")
-
         except FileNotFoundError:
             print("Error: 'python' command not found. Make sure Python is in your system PATH.")
             logging.error("'python' command not found during training attempt.")
@@ -909,13 +930,12 @@ class VoiceTrainer:
             logging.error(f"Error running training script for '{self.character_name}': {e}", exc_info=True)
             print(f"An error occurred while running the training script: {e}")
 
-
     def test_trained_voice(self, text, output_file="test_output.wav"):
         """ Tests the trained voice model for the current character. """
         if CoquiTTS is None:
-             print("Cannot test trained voice: TTS library not available.")
-             logging.error("TTS library not available for testing trained voice.")
-             return
+            print("Cannot test trained voice: TTS library not available.")
+            logging.error("TTS library not available for testing trained voice.")
+            return
 
         # Define paths based on the character's output directory
         trained_model_path = os.path.join(self.output_path, "best_model.pth") # Common convention
@@ -943,11 +963,11 @@ class VoiceTrainer:
                 # Optionally play the generated audio
                 play_choice = input("Play the generated audio? (y/n): ").lower()
                 if play_choice == 'y':
-                     play_audio(test_output_path)
+                    play_audio(test_output_path)
 
             except Exception as e:
-                 logging.error(f"Error testing trained model for '{self.character_name}': {e}", exc_info=True)
-                 print(f"An error occurred during testing: {e}")
+                logging.error(f"Error testing trained model for '{self.character_name}': {e}", exc_info=True)
+                print(f"An error occurred during testing: {e}")
         else:
             print(f"\nError: Trained model files not found for character '{self.character_name}' in the output directory.")
             print(f"Expected model: {trained_model_path}")
@@ -992,11 +1012,11 @@ class VoiceTrainer:
                 logging.error(f"Error converting MP3 '{source_file_path}' to WAV: {e}", exc_info=True)
                 return # Stop processing this file
         elif filename.lower().endswith(".wav"):
-             source_to_copy = source_file_path # It's already WAV, copy it
+            source_to_copy = source_file_path # It's already WAV, copy it
         else:
-             print(f"Error: Unsupported file format '{os.path.splitext(filename)[1]}'. Please provide MP3 or WAV.")
-             logging.error(f"Unsupported file format provided: {filename}")
-             return
+            print(f"Error: Unsupported file format '{os.path.splitext(filename)[1]}'. Please provide MP3 or WAV.")
+            logging.error(f"Unsupported file format provided: {filename}")
+            return
 
         # --- Copy WAV if not converted directly ---
         if source_to_copy:
@@ -1029,7 +1049,7 @@ class VoiceTrainer:
             # Get transcription from user
             transcription = input("Enter the exact transcription for this audio file: ").strip()
             if not transcription:
-                 transcription = "<placeholder_transcription>"
+                transcription = "<placeholder_transcription>"
 
             with open(self.metadata_path, "a", encoding="utf-8", newline='') as f:
                 writer = csv.writer(f, delimiter='|', quoting=csv.QUOTE_NONE, escapechar='\\')
@@ -1045,18 +1065,17 @@ class VoiceTrainer:
             # if os.path.exists(destination_full):
             #     os.remove(destination_full)
 
-
     @measure_execution_time
     def augment_audio(self, relative_file_path, noise_file="background_noise.mp3"):
         """ Applies random augmentation (pitch, speed, noise) to a WAV file within the character's dataset. """
         full_file_path = os.path.join(self.dataset_path, relative_file_path)
         if not os.path.exists(full_file_path):
-             print(f"Error: Audio file for augmentation not found: {full_file_path}")
-             logging.error(f"Audio file not found for augmentation: {full_file_path}")
-             return None
+            print(f"Error: Audio file for augmentation not found: {full_file_path}")
+            logging.error(f"Audio file not found for augmentation: {full_file_path}")
+            return None
         if not relative_file_path.lower().endswith(".wav"):
-             print("Error: Augmentation currently supports only WAV files.")
-             return None
+            print("Error: Augmentation currently supports only WAV files.")
+            return None
 
         try:
             print(f"Augmenting audio file: {relative_file_path} for character '{self.character_name}'")
@@ -1080,68 +1099,66 @@ class VoiceTrainer:
                 # Time stretching/compression
                 speed_factor = random.uniform(0.9, 1.1) # Speed up or slow down slightly
                 if abs(speed_factor - 1.0) < 0.01: # Avoid tiny changes
-                     choice = "none" # Treat as no change
-                     augmented_audio = audio
-                     augmentation_type = "None"
+                    choice = "none" # Treat as no change
+                    augmented_audio = audio
+                    augmentation_type = "None"
                 elif speed_factor > 1.0:
-                     augmented_audio = speedup(audio, playback_speed=speed_factor)
-                     augmentation_type = f"Speed change (x{speed_factor:.2f})"
+                    augmented_audio = speedup(audio, playback_speed=speed_factor)
+                    augmentation_type = f"Speed change (x{speed_factor:.2f})"
                 else: # Slow down - use librosa for better quality
-                     print("Slowing down using librosa time_stretch...")
-                     try:
-                         y, sr = librosa.load(full_file_path, sr=None)
-                         y_slow = librosa.effects.time_stretch(y, rate=speed_factor)
-                         # Need to save back to AudioSegment or temp file
-                         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_wav:
-                              sf.write(tmp_wav.name, y_slow, sr)
-                              augmented_audio = AudioSegment.from_wav(tmp_wav.name)
-                         os.remove(tmp_wav.name) # Clean up temp file
-                         augmentation_type = f"Speed change (x{speed_factor:.2f})"
-                     except Exception as librosa_e:
-                          print(f"Librosa time_stretch failed: {librosa_e}. Skipping speed augmentation.")
-                          augmented_audio = audio
-                          augmentation_type = "Speed (slow down failed)"
-
+                    print("Slowing down using librosa time_stretch...")
+                    try:
+                        y, sr = librosa.load(full_file_path, sr=None)
+                        y_slow = librosa.effects.time_stretch(y, rate=speed_factor)
+                        # Need to save back to AudioSegment or temp file
+                        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_wav:
+                            sf.write(tmp_wav.name, y_slow, sr)
+                            augmented_audio = AudioSegment.from_wav(tmp_wav.name)
+                        os.remove(tmp_wav.name) # Clean up temp file
+                        augmentation_type = f"Speed change (x{speed_factor:.2f})"
+                    except Exception as librosa_e:
+                        print(f"Librosa time_stretch failed: {librosa_e}. Skipping speed augmentation.")
+                        augmented_audio = audio
+                        augmentation_type = "Speed (slow down failed)"
 
             elif choice == "noise":
                 # Adding background noise
                 # Look for noise file relative to script or in a known location
                 noise_file_path = noise_file # Assume it's relative or absolute
                 if not os.path.exists(noise_file_path):
-                     # Try looking in the script's directory
-                     script_dir = os.path.dirname(__file__) if '__file__' in locals() else '.' # Handle interactive use
-                     noise_file_path_alt = os.path.join(script_dir, noise_file)
-                     if os.path.exists(noise_file_path_alt):
-                          noise_file_path = noise_file_path_alt
-                     else:
-                          print(f"Warning: Background noise file '{noise_file}' not found. Skipping noise addition.")
-                          logging.warning(f"Background noise file '{noise_file}' not found.")
-                          augmented_audio = audio # No change
-                          augmentation_type = "Noise (skipped - file missing)"
+                    # Try looking in the script's directory
+                    script_dir = os.path.dirname(__file__) if '__file__' in locals() else '.' # Handle interactive use
+                    noise_file_path_alt = os.path.join(script_dir, noise_file)
+                    if os.path.exists(noise_file_path_alt):
+                        noise_file_path = noise_file_path_alt
+                    else:
+                        print(f"Warning: Background noise file '{noise_file}' not found. Skipping noise addition.")
+                        logging.warning(f"Background noise file '{noise_file}' not found.")
+                        augmented_audio = audio # No change
+                        augmentation_type = "Noise (skipped - file missing)"
 
                 if augmentation_type != "Noise (skipped - file missing)":
-                     try:
-                         noise = AudioSegment.from_file(noise_file_path)
-                         # Ensure noise is long enough, loop if necessary
-                         if len(noise) < len(audio):
-                              loops = (len(audio) // len(noise)) + 1
-                              noise = noise * loops
-                         noise = noise[:len(audio)] # Trim to match audio length
+                    try:
+                        noise = AudioSegment.from_file(noise_file_path)
+                        # Ensure noise is long enough, loop if necessary
+                        if len(noise) < len(audio):
+                            loops = (len(audio) // len(noise)) + 1
+                            noise = noise * loops
+                        noise = noise[:len(audio)] # Trim to match audio length
 
-                         # Add noise at a lower volume (e.g., -15 to -25 dB relative to audio RMS)
-                         noise_level = random.uniform(-25, -15)
-                         augmented_audio = audio.overlay(noise + noise_level) # Adjust noise volume relative to 0dBFS
-                         augmentation_type = f"Noise addition ('{os.path.basename(noise_file_path)}' at {noise_level:.1f}dB)"
-                     except Exception as noise_e:
-                          print(f"Error loading or applying noise: {noise_e}")
-                          logging.error(f"Error applying noise from {noise_file_path}: {noise_e}")
-                          augmented_audio = audio
-                          augmentation_type = "Noise (skipped - error)"
+                        # Add noise at a lower volume (e.g., -15 to -25 dB relative to audio RMS)
+                        noise_level = random.uniform(-25, -15)
+                        augmented_audio = audio.overlay(noise + noise_level) # Adjust noise volume relative to 0dBFS
+                        augmentation_type = f"Noise addition ('{os.path.basename(noise_file_path)}' at {noise_level:.1f}dB)"
+                    except Exception as noise_e:
+                        print(f"Error loading or applying noise: {noise_e}")
+                        logging.error(f"Error applying noise from {noise_file_path}: {noise_e}")
+                        augmented_audio = audio
+                        augmentation_type = "Noise (skipped - error)"
 
             else: # choice == "none"
-                 augmented_audio = audio
-                 augmentation_type = "None"
-
+                augmented_audio = audio
+                augmentation_type = "None"
 
             # Save the augmented audio with a new name and update metadata
             if augmentation_type not in ["None", "Speed (slow down failed)", "Noise (skipped - file missing)", "Noise (skipped - error)"]:
@@ -1167,7 +1184,7 @@ class VoiceTrainer:
                                 original_text = row[1]
                                 break
                 except Exception as e:
-                     logging.error(f"Could not read metadata to find text for {relative_file_path}: {e}")
+                    logging.error(f"Could not read metadata to find text for {relative_file_path}: {e}")
 
                 if original_text:
                     with open(self.metadata_path, "a", encoding="utf-8", newline='') as f:
@@ -1176,29 +1193,28 @@ class VoiceTrainer:
                     logging.info(f"Added metadata entry for augmented file: {augmented_filename}")
                     return augmented_filename # Return relative path of new file
                 else:
-                     logging.warning(f"Could not find original text for '{relative_file_path}' in metadata. Augmented file '{augmented_filename}' created but not added to metadata.")
-                     return None
+                    logging.warning(f"Could not find original text for '{relative_file_path}' in metadata. Augmented file '{augmented_filename}' created but not added to metadata.")
+                    return None
 
             else:
-                 print(f"No effective augmentation applied ({augmentation_type}).")
-                 return None
+                print(f"No effective augmentation applied ({augmentation_type}).")
+                return None
 
         except Exception as e:
             logging.error(f"Error during audio augmentation for {relative_file_path}: {e}", exc_info=True)
             return None
-
 
     @measure_execution_time
     def trim_silence(self, relative_file_path, silence_thresh=-40, min_silence_len=300, keep_silence_ms=100):
         """ Trims leading/trailing silence from a WAV file within the character's dataset. Overwrites original file. """
         full_file_path = os.path.join(self.dataset_path, relative_file_path)
         if not os.path.exists(full_file_path):
-             print(f"Error: Audio file for trimming not found: {full_file_path}")
-             logging.error(f"Audio file not found for trimming: {full_file_path}")
-             return False
+            print(f"Error: Audio file for trimming not found: {full_file_path}")
+            logging.error(f"Audio file not found for trimming: {full_file_path}")
+            return False
         if not relative_file_path.lower().endswith(".wav"):
-             print("Error: Silence trimming currently supports only WAV files.")
-             return False
+            print("Error: Silence trimming currently supports only WAV files.")
+            return False
 
         try:
             print(f"Trimming silence from: {relative_file_path} (Thresh: {silence_thresh}dB, MinLen: {min_silence_len}ms)")
@@ -1215,12 +1231,12 @@ class VoiceTrainer:
             )
 
             if not non_silent_chunks:
-                 print("Warning: No non-silent parts detected. File might be entirely silent or below threshold.")
-                 logging.warning(f"No non-silent parts detected in {relative_file_path}")
-                 # Optionally delete the file or leave as is
-                 # os.remove(full_file_path)
-                 # Remove from metadata? Requires care.
-                 return False
+                print("Warning: No non-silent parts detected. File might be entirely silent or below threshold.")
+                logging.warning(f"No non-silent parts detected in {relative_file_path}")
+                # Optionally delete the file or leave as is
+                # os.remove(full_file_path)
+                # Remove from metadata? Requires care.
+                return False
 
             # Concatenate the non-silent chunks
             trimmed_audio = sum(non_silent_chunks) # Pydub allows adding segments
@@ -1235,18 +1251,17 @@ class VoiceTrainer:
                 logging.info(f"Trimmed '{relative_file_path}': {original_duration}ms -> {trimmed_duration}ms")
                 return True
             elif trimmed_duration >= original_duration :
-                 print("No reduction in duration after trimming.")
-                 logging.info(f"No reduction in duration for {relative_file_path}")
-                 return False
+                print("No reduction in duration after trimming.")
+                logging.info(f"No reduction in duration for {relative_file_path}")
+                return False
             else:
-                 print("No significant silence detected to trim.")
-                 logging.info(f"No significant trimming applied to {relative_file_path}")
-                 return False
+                print("No significant silence detected to trim.")
+                logging.info(f"No significant trimming applied to {relative_file_path}")
+                return False
 
         except Exception as e:
             logging.error(f"Error during silence trimming for {relative_file_path}: {e}", exc_info=True)
             return False
-
 
     def validate_metadata(self):
         """ Validates character's metadata: checks file existence, format, and text presence. """
@@ -1268,20 +1283,20 @@ class VoiceTrainer:
                 lines = f.readlines()
 
             if not lines:
-                 print("Metadata file is empty.")
-                 return True # Empty is valid, technically
+                print("Metadata file is empty.")
+                return True # Empty is valid, technically
 
             # 1. Check Header
             expected_header = "audio_file|text|normalized_text\n"
             if lines[0] != expected_header:
-                 print("  [Issue Line 1] Invalid or missing header. Expected: 'audio_file|text|normalized_text'")
-                 # Attempt to fix header later if overwriting
-                 header = expected_header # Use correct header for potential rewrite
-                 issues_found += 1
-                 needs_overwrite = True
+                print("  [Issue Line 1] Invalid or missing header. Expected: 'audio_file|text|normalized_text'")
+                # Attempt to fix header later if overwriting
+                header = expected_header # Use correct header for potential rewrite
+                issues_found += 1
+                needs_overwrite = True
             else:
-                 header = lines[0]
-                 valid_entries.append(header) # Keep valid header
+                header = lines[0]
+                valid_entries.append(header) # Keep valid header
 
             # 2. Check Data Lines
             processed_filenames = set()
@@ -1289,10 +1304,10 @@ class VoiceTrainer:
                 line_num = i + 1
                 original_line = line.strip()
                 if not original_line:
-                     print(f"  [Info Line {line_num}] Skipping empty line.")
-                     # issues_found += 1 # Don't count as critical issue, just skip
-                     needs_overwrite = True # Need to remove empty lines
-                     continue
+                    print(f"  [Info Line {line_num}] Skipping empty line.")
+                    # issues_found += 1 # Don't count as critical issue, just skip
+                    needs_overwrite = True # Need to remove empty lines
+                    continue
 
                 parts = original_line.split("|", 2) # Split only twice on the pipe
                 if len(parts) != 3:
@@ -1308,10 +1323,10 @@ class VoiceTrainer:
 
                 # Check for duplicate filenames in metadata
                 if audio_file in processed_filenames:
-                     print(f"  [Issue Line {line_num}] Duplicate audio file entry found: {audio_file}")
-                     issues_found += 1
-                     needs_overwrite = True # Need to remove duplicates
-                     continue
+                    print(f"  [Issue Line {line_num}] Duplicate audio file entry found: {audio_file}")
+                    issues_found += 1
+                    needs_overwrite = True # Need to remove duplicates
+                    continue
                 processed_filenames.add(audio_file)
 
                 # Check if audio file exists in the character's dataset path
@@ -1336,8 +1351,8 @@ class VoiceTrainer:
                 print("Metadata validation complete. No critical issues found (check warnings above).")
                 return True
             elif issues_found == 0 and needs_overwrite:
-                 print("Metadata validation complete. Found minor issues (empty lines/header).")
-                 # Ask to fix minor issues
+                print("Metadata validation complete. Found minor issues (empty lines/header).")
+                # Ask to fix minor issues
             else:
                 print(f"\nMetadata validation complete. Found {issues_found} critical issue(s) requiring file modification.")
 
@@ -1358,32 +1373,31 @@ class VoiceTrainer:
                         logging.info(f"Overwrote metadata file {self.metadata_path} after validation.")
                         return True # Validation resulted in a clean file
                     except IOError as e:
-                         print(f"Error overwriting metadata file: {e}")
-                         logging.error(f"Error overwriting metadata file {self.metadata_path}: {e}")
-                         return False # Overwrite failed
+                        print(f"Error overwriting metadata file: {e}")
+                        logging.error(f"Error overwriting metadata file {self.metadata_path}: {e}")
+                        return False # Overwrite failed
                     except Exception as e_bak:
-                         print(f"Error creating backup or overwriting: {e_bak}")
-                         logging.error(f"Error creating backup/overwriting {self.metadata_path}: {e_bak}")
-                         return False
+                        print(f"Error creating backup or overwriting: {e_bak}")
+                        logging.error(f"Error creating backup/overwriting {self.metadata_path}: {e_bak}")
+                        return False
                 else:
                     print("Metadata file not overwritten.")
                     return False # Validation failed, file not fixed
             else:
-                 return True # No critical issues found, no overwrite needed
+                return True # No critical issues found, no overwrite needed
 
         except Exception as e:
             logging.error(f"Error during metadata validation for '{self.character_name}': {e}", exc_info=True)
             print(f"An unexpected error occurred during validation: {e}")
             return False
 
-
     def check_audio_quality(self, relative_file_path):
         """ Basic audio quality check (clipping, silence) for a file in the character's dataset. """
         full_file_path = os.path.join(self.dataset_path, relative_file_path)
         if not os.path.exists(full_file_path):
-             print(f"Error: Audio file for quality check not found: {full_file_path}")
-             logging.error(f"Audio file not found for quality check: {full_file_path}")
-             return
+            print(f"Error: Audio file for quality check not found: {full_file_path}")
+            logging.error(f"Audio file not found for quality check: {full_file_path}")
+            return
 
         try:
             print(f"\n--- Audio Quality Check for: {relative_file_path} (Character: {self.character_name}) ---")
@@ -1404,28 +1418,26 @@ class VoiceTrainer:
                 logging.warning(f"Potential clipping detected in {relative_file_path} (Peak: {peak_amplitude_dbfs:.2f} dBFS)")
             # Check for very low volume (RMS significantly low)
             elif rms_amplitude_dbfs < -45.0: # Threshold can be adjusted
-                 print("  - WARNING: Audio level seems very low (RMS < -45 dBFS).")
-                 logging.warning(f"Low audio level detected in {relative_file_path} (RMS: {rms_amplitude_dbfs:.2f} dBFS)")
+                print("  - WARNING: Audio level seems very low (RMS < -45 dBFS).")
+                logging.warning(f"Low audio level detected in {relative_file_path} (RMS: {rms_amplitude_dbfs:.2f} dBFS)")
             # Check for silence (using RMS)
             elif rms_amplitude_dbfs < -60.0: # Very low RMS likely indicates silence
-                 print("  - WARNING: Audio file appears to be mostly silent (RMS < -60 dBFS).")
-                 logging.warning(f"Potential silence detected in {relative_file_path} (RMS: {rms_amplitude_dbfs:.2f} dBFS)")
+                print("  - WARNING: Audio file appears to be mostly silent (RMS < -60 dBFS).")
+                logging.warning(f"Potential silence detected in {relative_file_path} (RMS: {rms_amplitude_dbfs:.2f} dBFS)")
             else:
                 print("  - Basic quality check passed (no obvious clipping or extreme volume issues).")
 
             # Check consistency (optional but recommended for training)
             if audio.frame_rate != 22050:
-                 print(f"  - WARNING: Sample rate is {audio.frame_rate} Hz, expected 22050 Hz for TTS training.")
+                print(f"  - WARNING: Sample rate is {audio.frame_rate} Hz, expected 22050 Hz for TTS training.")
             if audio.channels != 1:
-                 print(f"  - WARNING: Audio is not mono ({audio.channels} channels), expected 1 channel.")
+                print(f"  - WARNING: Audio is not mono ({audio.channels} channels), expected 1 channel.")
             if audio.frame_width != 2: # Corresponds to 16-bit
-                 print(f"  - WARNING: Audio bit depth is not 16-bit ({audio.frame_width*8}-bit), expected 16-bit.")
-
+                print(f"  - WARNING: Audio bit depth is not 16-bit ({audio.frame_width*8}-bit), expected 16-bit.")
 
         except Exception as e:
             logging.error(f"Error during audio quality check for {relative_file_path}: {e}", exc_info=True)
             print(f"An error occurred during quality check: {e}")
-
 
     def dataset_statistics(self):
         """ Generates and prints statistics about the character's voice dataset. """
@@ -1449,8 +1461,8 @@ class VoiceTrainer:
                 try:
                     _ = next(reader) # Read header
                 except StopIteration:
-                     print("Metadata file is empty or has no header.")
-                     return # Stop if file is empty
+                    print("Metadata file is empty or has no header.")
+                    return # Stop if file is empty
 
                 for row in reader: # Skip empty or malformed rows
                     if not row or len(row) != 3:
@@ -1462,7 +1474,7 @@ class VoiceTrainer:
                     if os.path.exists(file_path):
                         valid_files_in_metadata.append(audio_file)
                         if not text or text.lower() in ["<placeholder_text_please_update>", "<placeholder_transcription>", "<transcription_failed>", "<transcription_error>"]:
-                             placeholder_texts += 1
+                            placeholder_texts += 1
                         try:
                             # Use soundfile for more reliable info reading
                             info = sf.info(file_path)
@@ -1496,10 +1508,10 @@ class VoiceTrainer:
             print(f"- Total Samples in Metadata: {len(valid_files_in_metadata) + len(missing_files)}")
             print(f"- Samples with Audio File Found: {len(valid_files_in_metadata)}")
             if missing_files:
-                 print(f"- Samples with Missing Audio Files: {len(missing_files)}")
-                 # Optionally list missing files if list is short
-                 # if len(missing_files) < 10:
-                 #      for mf in missing_files: print(f"    - {mf}")
+                print(f"- Samples with Missing Audio Files: {len(missing_files)}")
+                # Optionally list missing files if list is short
+                # if len(missing_files) < 10:
+                #      for mf in missing_files: print(f"    - {mf}")
 
             if num_samples > 0: # Stats based on files successfully read
                 total_duration_sec = total_duration_ms / 1000
@@ -1513,13 +1525,13 @@ class VoiceTrainer:
 
                 # Warnings for inconsistencies (important for training)
                 if len(sample_rates) > 1 or any(sr != 22050 for sr in sample_rates):
-                     print("  ! WARNING: Inconsistent sample rates detected or rate is not 22050 Hz. Resampling might be needed.")
+                    print("  ! WARNING: Inconsistent sample rates detected or rate is not 22050 Hz. Resampling might be needed.")
                 if len(channels) > 1 or any(ch != 1 for ch in channels):
-                     print("  ! WARNING: Multiple channel counts or non-mono audio detected. Mono audio is typically required.")
+                    print("  ! WARNING: Multiple channel counts or non-mono audio detected. Mono audio is typically required.")
                 if len(bit_depths) > 1 or any(bd != 16 for bd in bit_depths if isinstance(bd, int)):
-                     print("  ! WARNING: Inconsistent bit depths detected or depth is not 16-bit. 16-bit PCM is standard.")
+                    print("  ! WARNING: Inconsistent bit depths detected or depth is not 16-bit. 16-bit PCM is standard.")
                 if placeholder_texts > 0:
-                     print(f"  ! WARNING: {placeholder_texts} samples have missing or placeholder transcriptions in the metadata.")
+                    print(f"  ! WARNING: {placeholder_texts} samples have missing or placeholder transcriptions in the metadata.")
             else:
                 print("No valid audio samples found or readable based on the metadata.")
             print("--------------------------")
@@ -1785,4 +1797,3 @@ if __name__ == "__main__":
              logging.error(f"An error occurred in the main menu: {main_loop_e}", exc_info=True)
              print(f"An unexpected error occurred: {main_loop_e}")
              print("Please check logs for more details.")
-

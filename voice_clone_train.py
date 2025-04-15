@@ -1,9 +1,8 @@
-# voice_clone_train.py (Modified for enhanced_logger)
+# voice_clone_train.py (Modified to remove skip_disk_logging and enhance file lock handling)
 
 import os
 import logging
 import argparse
-# Removed 'logging' import here, will get logger from enhanced_logger
 import time
 import shutil
 import torch
@@ -17,49 +16,47 @@ from TTS.tts.models.vits import Vits
 from TTS.utils.audio import AudioProcessor
 
 # --- Import from enhanced_logger ---
-# Make sure enhanced_logger.py is in the same directory or Python path
 try:
     from enhanced_logger import setup_logger, get_logger
 except ImportError:
-    print("Error: enhanced_logger.py not found. Logging will not work correctly.")
-    # Fallback to basic logging if module not found
-    import logging
-import os
-import logging
-import shutil
-import torch
-import numpy as np
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-# Initialize module-level logger for use in functions before main()
+    print("Error: enhanced_logger.py not found. Using basic logging.")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[logging.StreamHandler()],
+    )
+
+    def get_logger(name):
+        return logging.getLogger(name)
+
+
+# Initialize module-level logger
 logger = get_logger(__name__)
-    # Define a dummy get_logger if needed elsewhere, or handle missing loggerdef get_logger(name): return logging.getLogger(name)
-    # No setup_logger available in fallback
 
 # --- Constants ---
-METADATA_FILENAME = "metadata.csv"  # Expected metadata filename in dataset folder
+METADATA_FILENAME = "metadata.csv"
+
 
 # --- Custom Formatter ---
 def custom_formatter(root_path, meta_file, **kwargs):
     """
     Custom formatter to load dataset samples where audio filenames in metadata.csv
     include the .wav extension and are located directly in the dataset directory.
-    (Logging calls changed to use logger)
     """
-    # logger = get_logger('custom_formatter') # Or use module logger directly
     items = []
     try:
         with open(os.path.join(root_path, meta_file), "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.strip().split("|")
-                if len(parts) < 2 or parts[0] == "audio_file":  # Skip header or malformed lines
+                if len(parts) < 2 or parts[0] == "audio_file":
                     continue
-                audio_file = os.path.join(root_path, parts[0])  # Full filename from metadata
-                text = clean_text(parts[1])  # Clean text to remove unsupported characters
+                audio_file = os.path.join(root_path, parts[0])
+                text = clean_text(parts[1])
                 items.append(
                     {
                         "text": text,
                         "audio_file": audio_file,
-                        "speaker_name": "speaker1", # Assuming single speaker dataset
+                        "speaker_name": "speaker1",
                         "root_path": root_path,
                     }
                 )
@@ -70,60 +67,119 @@ def custom_formatter(root_path, meta_file, **kwargs):
         logger.exception(f"Error reading metadata file in custom_formatter: {e}")
     return items
 
-# Fix for UnicodeEncodeError: Add a preprocessing step to clean unsupported characters.
+
+# --- Text Cleaning ---
 def clean_text(text):
     """Removes unsupported characters from the text."""
-    # logger = get_logger('clean_text') # Or use module logger directly
-    # Increased character set based on VITS needs
     supported_chars = set(
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?'\"-:" # Basic English + Punctuation
-        # Add phoneme characters if needed, VITS might handle this internally
-        # Depending on your VITS configuration and language, more might be needed
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?'\"-:"
     )
     original_length = len(text)
-    cleaned_text = ''.join(c for c in text if c in supported_chars)
+    cleaned_text = "".join(c for c in text if c in supported_chars)
     if len(cleaned_text) != original_length:
         logger.debug(f"Cleaned text: Original='{text}', Cleaned='{cleaned_text}'")
     return cleaned_text
 
-# Add a vocabulary update function to include missing characters
+
+# --- Vocabulary Management ---
 def update_vocabulary(vocabulary_path, new_characters):
-    """
-    Update the vocabulary file to include new characters.
-    (Logging calls changed to use logger)
-    """
-    # logger = get_logger('update_vocabulary') # Or use module logger directly
+    """Update the vocabulary file to include new characters."""
     try:
-        # Read existing vocabulary
         if os.path.exists(vocabulary_path):
             with open(vocabulary_path, "r", encoding="utf-8") as f:
                 existing_vocab = set(f.read().strip())
         else:
             existing_vocab = set()
 
-        # Add new characters
         updated_vocab = existing_vocab.union(new_characters)
-
-        # Write updated vocabulary back to file if changed
         if updated_vocab != existing_vocab:
             with open(vocabulary_path, "w", encoding="utf-8") as f:
-                f.write("".join(sorted(list(updated_vocab)))) # Sort for consistency
-            logger.info(f"Vocabulary updated at {vocabulary_path} with new characters: {new_characters - existing_vocab}")
+                f.write("".join(sorted(list(updated_vocab))))
+            logger.info(
+                f"Vocabulary updated at {vocabulary_path} with new characters: {new_characters - existing_vocab}"
+            )
         else:
             logger.debug("Vocabulary already contains all required characters.")
     except Exception as e:
         logger.exception(f"Failed to update vocabulary: {e}")
 
 
-# --- Vocabulary check moved inside main where config and samples are available ---
+def ensure_phoneme_vocabulary(config):
+    """Ensures the VITS tokenizer vocabulary includes all gruut phonemes."""
+    logger = get_logger("ensure_phoneme_vocabulary")
+    try:
+        gruut_phonemes = set(
+            [
+                "a",
+                "b",
+                "d",
+                "e",
+                "f",
+                "g",
+                "h",
+                "i",
+                "j",
+                "k",
+                "l",
+                "m",
+                "n",
+                "o",
+                "p",
+                "r",
+                "s",
+                "t",
+                "u",
+                "v",
+                "w",
+                "z",
+                "æ",
+                "ʧ",
+                "ð",
+                "ɛ",
+                "ɪ",
+                "ŋ",
+                "ɔ",
+                "ɹ",
+                "ʃ",
+                "θ",
+                "ʊ",
+                "ʒ",
+                "ɑ",
+                "ɒ",
+                "ʌ",
+                "ː",
+                "ɡ",
+                "ɨ",
+                "ʔ",
+                "ɚ",
+                "ɝ",
+                "ɒ",
+                "ɪ",
+                "ʉ",
+                "ʲ",
+                "ʷ",
+                "ᵊ",
+                "ⁿ",
+                "̃",
+                "̩",
+                "̯",
+                "̮",
+                "̪",
+                "̺",
+                "̻",
+                "͡",
+            ]
+        )
+        vocab_file = os.path.join(config.output_path, "vocabulary.txt")
+        update_vocabulary(vocab_file, gruut_phonemes)
+        logger.info("Phoneme vocabulary ensured for gruut en-us.")
+    except Exception as e:
+        logger.exception(f"Failed to ensure phoneme vocabulary: {e}")
 
 
-# Fix for PermissionError: Retry file deletion with a delay.
-
-# Custom function to retry file deletion.
-def safe_delete(file_path, retries=3, delay=1):
+# --- File Deletion Utilities ---
+def safe_delete(file_path, retries=10, delay=3):
     """Retries deleting a file, useful for temporary locks."""
-    # logger = get_logger('safe_delete') # Or use module logger directly
     for attempt in range(retries):
         try:
             if os.path.exists(file_path):
@@ -131,120 +187,114 @@ def safe_delete(file_path, retries=3, delay=1):
                 logger.info(f"Deleted file: {file_path}")
             else:
                 logger.debug(f"File not found, no deletion needed: {file_path}")
-            return # Success
+            return
         except PermissionError as e:
-            logger.warning(f"Attempt {attempt + 1}/{retries}: PermissionError deleting {file_path}. Retrying in {delay}s...")
+            logger.warning(
+                f"Attempt {attempt + 1}/{retries}: PermissionError deleting {file_path}. Retrying in {delay}s..."
+            )
             time.sleep(delay)
         except Exception as e:
-            logger.exception(f"Unexpected error deleting file {file_path} on attempt {attempt + 1}")
-            # Decide if to continue retrying on other errors
+            logger.exception(
+                f"Unexpected error deleting file {file_path} on attempt {attempt + 1}"
+            )
             if attempt == retries - 1:
-                raise # Re-raise the last exception if all retries fail
+                raise
             time.sleep(delay)
-
     logger.error(f"Could not delete file after {retries} attempts: {file_path}")
-    # Optionally raise the last PermissionError if needed by caller
-    # raise PermissionError(f"Could not delete file after retries: {file_path}")
 
-# Custom function to retry directory removal.
-def safe_remove_experiment_folder(path, retries=5, delay=2):
+
+def safe_remove_experiment_folder(path, retries=10, delay=3):
     """Retries removing a directory tree, handling temporary locks."""
-    # logger = get_logger('safe_remove_experiment_folder') # Or use module logger directly
     for attempt in range(retries):
         try:
             if os.path.exists(path):
                 shutil.rmtree(path, ignore_errors=False)
                 logger.info(f"Removed directory tree: {path}")
             else:
-                 logger.debug(f"Directory not found, no removal needed: {path}")
-            return # Success
+                logger.debug(f"Directory not found, no removal needed: {path}")
+            return
         except PermissionError as e:
-            logger.warning(f"Attempt {attempt + 1}/{retries}: PermissionError removing {path}. Retrying in {delay}s...")
+            logger.warning(
+                f"Attempt {attempt + 1}/{retries}: PermissionError removing {path}. Retrying in {delay}s..."
+            )
             time.sleep(delay)
         except Exception as e:
-             logger.exception(f"Unexpected error removing directory {path} on attempt {attempt + 1}")
-             if attempt == retries - 1:
-                  raise # Re-raise the last exception if all retries fail
-             time.sleep(delay)
-
+            logger.exception(
+                f"Unexpected error removing directory {path} on attempt {attempt + 1}"
+            )
+            if attempt == retries - 1:
+                raise
+            time.sleep(delay)
     logger.error(f"Could not remove directory after {retries} attempts: {path}")
-    # Optionally raise the last PermissionError if needed by caller
-    # raise PermissionError(f"Could not remove directory after retries: {path}")
 
 
-# Function to plot and save spectrogram results
+# --- Plotting Results ---
 def plot_results(y_hat, y, ap, name_prefix):
     """Plots and saves spectrogram results for predicted and ground truth audio."""
-    # logger = get_logger('plot_results') # Or use module logger directly
     try:
-        # Ensure tensors are numpy arrays on CPU
         if isinstance(y_hat, torch.Tensor):
-             y_hat = y_hat.squeeze().detach().cpu().float().numpy()
+            y_hat = y_hat.squeeze().detach().cpu().float().numpy()
         if isinstance(y, torch.Tensor):
-             y = y.squeeze().detach().cpu().float().numpy()
+            y = y.squeeze().detach().cpu().float().numpy()
 
-        # Check if arrays are valid before processing
         if y_hat is None or y is None or y_hat.size == 0 or y.size == 0:
             logger.warning("Invalid or empty audio data received for plotting.")
             return
 
-        # Normalize spectrograms for better visualization
-        # Use try-except for spectrogram generation as it might fail on invalid data
         try:
-             y_hat_spec = np.log1p(np.abs(ap.mel_spectrogram(torch.tensor(y_hat).unsqueeze(0)))) # Add batch dim back temporarily
-             y_spec = np.log1p(np.abs(ap.mel_spectrogram(torch.tensor(y).unsqueeze(0))))
-             y_hat_spec = y_hat_spec.squeeze().numpy() # Remove batch dim
-             y_spec = y_spec.squeeze().numpy()
+            y_hat_spec = (
+                np.log1p(np.abs(ap.mel_spectrogram(torch.tensor(y_hat).unsqueeze(0))))
+                .squeeze()
+                .numpy()
+            )
+            y_spec = (
+                np.log1p(np.abs(ap.mel_spectrogram(torch.tensor(y).unsqueeze(0))))
+                .squeeze()
+                .numpy()
+            )
         except Exception as spec_e:
-             logger.error(f"Error generating spectrogram for {name_prefix}: {spec_e}")
-             return
+            logger.error(f"Error generating spectrogram for {name_prefix}: {spec_e}")
+            return
 
-
-        # Create a figure with two subplots
         fig, axes = plt.subplots(2, 1, figsize=(10, 8))
-
-        # Plot predicted spectrogram
-        im0 = axes[0].imshow(y_hat_spec, aspect="auto", origin="lower", interpolation="none")
+        im0 = axes[0].imshow(
+            y_hat_spec, aspect="auto", origin="lower", interpolation="none"
+        )
         axes[0].set_title("Predicted Spectrogram")
         axes[0].set_xlabel("Time Frames")
         axes[0].set_ylabel("Mel Bins")
         fig.colorbar(im0, ax=axes[0])
 
-
-        # Plot ground truth spectrogram
-        im1 = axes[1].imshow(y_spec, aspect="auto", origin="lower", interpolation="none")
+        im1 = axes[1].imshow(
+            y_spec, aspect="auto", origin="lower", interpolation="none"
+        )
         axes[1].set_title("Ground Truth Spectrogram")
         axes[1].set_xlabel("Time Frames")
         axes[1].set_ylabel("Mel Bins")
         fig.colorbar(im1, ax=axes[1])
 
-        # Save the figure
         plot_path = f"{name_prefix}_spectrogram.png"
         plt.tight_layout()
         plt.savefig(plot_path)
         plt.close(fig)
-
         logger.info(f"Spectrogram plots saved to: {plot_path}")
     except Exception as e:
         logger.exception(f"Error while plotting results: {e}")
 
+
 # --- Argument Parser ---
 def parse_arguments():
-
     parser = argparse.ArgumentParser(
         description="Train a VITS TTS model for a specific character."
     )
     parser.add_argument(
-        "--dataset_path",
-        type=str,
-        required=True,
-        help="Path to the character's dataset directory (containing metadata.csv and wav files).",
+        "--dataset_path", type=str, required=True, help="Path to dataset directory."
     )
     parser.add_argument(
         "--output_path",
         type=str,
         required=True,
-        help="Path to save the trained model, logs, and other outputs for this character.",
+        help="Path to save trained model and logs.",
     )
     parser.add_argument(
         "--epochs", type=int, default=1000, help="Number of training epochs."
@@ -258,221 +308,194 @@ def parse_arguments():
     parser.add_argument(
         "--num_loader_workers",
         type=int,
-        default=4, # Adjust based on your system's cores/RAM
-        help="Number of workers for data loading."
+        default=4,
+        help="Number of workers for data loading.",
     )
     parser.add_argument(
         "--learning_rate", type=float, default=0.0002, help="Initial learning rate."
     )
     parser.add_argument(
-        "--language",
-        type=str,
-        default="en",
-        help="Language code for the dataset (e.g., 'en', 'es'). Affects text processing.",
+        "--language", type=str, default="en", help="Language code for dataset."
     )
-    # Text cleaner argument removed - VITS internal cleaner is usually preferred/required
-    # parser.add_argument(
-    #     "--text_cleaner",
-    #     type=str,
-    #     # default="english_cleaners", # Let VitsConfig handle default based on phonemes/language
-    #     help="Text cleaner to use (often determined by phoneme settings)."
-    # )
     parser.add_argument(
         "--use_phonemes",
-        action=argparse.BooleanOptionalAction, # Allows --use-phonemes / --no-phonemes
+        action=argparse.BooleanOptionalAction,
         default=True,
-        help="Use phonemes for training (default: True)."
+        help="Use phonemes.",
     )
     parser.add_argument(
-        "--phoneme_language",
-        type=str,
-        default="en-us",
-        help="Phoneme language (if using phonemes, e.g., 'en-us', 'es')."
+        "--phoneme_language", type=str, default="en-us", help="Phoneme language."
     )
     parser.add_argument(
-        "--sample_rate", type=int, default=22050, help="Target sample rate for audio."
+        "--sample_rate", type=int, default=22050, help="Target sample rate."
     )
     parser.add_argument(
         "--run_eval",
-        action=argparse.BooleanOptionalAction, # Allows --run-eval / --no-run-eval
+        action=argparse.BooleanOptionalAction,
         default=True,
-        help="Run evaluation during training (default: True)."
+        help="Run evaluation.",
     )
     parser.add_argument(
         "--mixed_precision",
-        action=argparse.BooleanOptionalAction, # Allows --mixed-precision / --no-mixed-precision
-        default=False, # Defaulting to False as requested by user previously
-        help="Use mixed precision training (default: False)."
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Use mixed precision.",
     )
     parser.add_argument(
         "--continue_path",
         type=str,
         default=None,
-        help="Path to a previous training output directory to continue from."
+        help="Path to continue training from.",
     )
     parser.add_argument(
         "--log_level",
         type=str,
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Set the logging level (default: INFO)."
+        help="Logging level.",
     )
     args = parser.parse_args()
-    # Basic validation
     if args.use_phonemes and not args.phoneme_language:
         parser.error("--phoneme_language is required when --use_phonemes is enabled.")
-
-
-    # logger.info("Arguments parsed successfully.")
     return args
+
 
 def main():
     args = parse_arguments()
-    # --- Setup Logging USING enhanced_logger
+
+    # Setup Logging
     log_level_map = {
         "DEBUG": logging.DEBUG,
         "INFO": logging.INFO,
         "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,    "CRITICAL": logging.CRITICAL
+        "ERROR": logging.ERROR,
+        "CRITICAL": logging.CRITICAL,
     }
     log_level = log_level_map.get(args.log_level.upper(), logging.INFO)
-    log_file = os.path.join(args.output_path, "training.log") # Central log file
+    output_path = (
+        args.continue_path if args.continue_path else args.output_path
+    )  # Use continue_path if provided
+    log_file = os.path.join(output_path, "training.log")
 
-    # Ensure output path exists BEFORE setting up logger to write there
-    try:
-         os.makedirs(args.output_path, exist_ok=True)
-    except OSError as e:
-         # Use print because logger isn't set up yet
-         print(f"CRITICAL: Could not create output directory {args.output_path}: {e}", file=sys.stderr)
-         return # Cannot proceed without output directory
-
-    # Now setup the logger using the function from enhanced_logger
+    os.makedirs(output_path, exist_ok=True)
     setup_logger(log_file_path=log_file, level=log_level)
     logger = get_logger(__name__)
 
-
-    # --- Validate Paths ---
+    # Validate Paths
     logger.info(f"Using Dataset Path: {args.dataset_path}")
-    logger.info(f"Using Output Path: {args.output_path}")
+    logger.info(f"Using Output Path: {output_path}")
     if not os.path.isdir(args.dataset_path):
-        logger.critical(f"Dataset path not found or is not a directory: {args.dataset_path}")
+        logger.critical(f"Dataset path not found: {args.dataset_path}")
         return
     metadata_path = os.path.join(args.dataset_path, METADATA_FILENAME)
     if not os.path.isfile(metadata_path):
-        logger.critical(f"Metadata file not found in dataset path: {metadata_path}")
+        logger.critical(f"Metadata file not found: {metadata_path}")
         return
 
+    # Clean Up Stale Logs
+    run_dirs = [d for d in os.listdir(output_path) if d.startswith("run-")]
+    for run_dir in run_dirs:
+        run_path = os.path.join(output_path, run_dir)
+        logger.info(f"Cleaning up stale run directory: {run_path}")
+        safe_remove_experiment_folder(run_path)
 
-    # --- Audio Configuration (Standard VITS) ---
+    # Audio Configuration
     audio_config = BaseAudioConfig(
         sample_rate=args.sample_rate,
-        # VITS uses specific values, overriding some BaseAudioConfig defaults if needed
-        # Often these are baked into VitsConfig anyway
         num_mels=80,
         fft_size=1024,
         hop_length=256,
         win_length=1024,
-        # Ensure other params match expected VITS defaults if needed
-        # min_level_db=-100, # VITS often uses different normalization
-        # ref_level_db=20,
-        # power=1.5,
-        # preemphasis=0.97,
-        # log_func="np.log10", # VITS might use natural log implicitly
-        resample=False, # Resampling should happen during data prep if needed
+        resample=False,
     )
 
-    # --- Dataset Configuration ---
+    # Dataset Configuration
     dataset_config = BaseDatasetConfig(
-        formatter="ljspeech",  # Will be overridden by custom_formatter if provided to load_tts_samples
-        meta_file_train=METADATA_FILENAME, # Relative to dataset path
+        formatter="ljspeech",
+        meta_file_train=METADATA_FILENAME,
         path=args.dataset_path,
         language=args.language,
-        # ignored_speakers=None, # Set if you have multi-speaker metadata but want single speaker
     )
 
-    # --- VITS Model Configuration ---
-    # Make sure phoneme cache path is inside the output directory
-    phoneme_cache_path = os.path.join(args.output_path, "phoneme_cache")
-    os.makedirs(phoneme_cache_path, exist_ok=True) # Ensure cache dir exists
+    # VITS Model Configuration
+    phoneme_cache_path = os.path.join(output_path, "phoneme_cache")
+    os.makedirs(phoneme_cache_path, exist_ok=True)
 
     config = VitsConfig(
         audio=audio_config,
         batch_size=args.batch_size,
         eval_batch_size=args.eval_batch_size,
         num_loader_workers=args.num_loader_workers,
-        num_eval_loader_workers=max(1, args.num_loader_workers // 2), # Eval often needs fewer workers
+        num_eval_loader_workers=max(1, args.num_loader_workers // 2),
         run_eval=args.run_eval,
-        test_delay_epochs=-1, # Disable testing during training by default
+        test_delay_epochs=-1,
         epochs=args.epochs,
-        # text_cleaner=args.text_cleaner, # Let VITS handle cleaner based on phonemes/language
         use_phonemes=args.use_phonemes,
         phoneme_language=args.phoneme_language if args.use_phonemes else None,
         phoneme_cache_path=phoneme_cache_path,
-        compute_input_seq_cache=True, # Speeds up training start after first epoch
-        print_step=50, # Log training loss every 50 steps
-        print_eval=True, # Print evaluation results
+        compute_input_seq_cache=True,
+        print_step=50,
+        print_eval=True,
         mixed_precision=args.mixed_precision,
-        output_path=args.output_path,
-        datasets=[dataset_config], # Pass dataset config list
-        lr=args.learning_rate, # Learning rate
-        # VITS specific parameters (can often use defaults, but check documentation)
-        # e.g., data_dep_init=True, use_sdp=True can sometimes help
-        # Check Coqui TTS VitsConfig documentation for details
+        output_path=output_path,
+        datasets=[dataset_config],
+        lr=args.learning_rate,
     )
 
+    # Ensure Phoneme Vocabulary
+    ensure_phoneme_vocabulary(config)
 
-    # --- Load Dataset Samples ---
+    # Load Dataset Samples
     try:
         logger.info(f"Loading dataset samples from: {args.dataset_path}")
-        # Use the custom formatter defined earlier
         train_samples, eval_samples = load_tts_samples(
-            datasets=config.datasets, # Use datasets from the config object
+            datasets=config.datasets,
             eval_split=True,
-            eval_split_size=0.01, # Use 1% for evaluation
+            eval_split_size=0.01,
             formatter=custom_formatter,
         )
         if not train_samples:
-            logger.critical("No training samples loaded. Check metadata file format, content, and paths.")
+            logger.critical("No training samples loaded.")
             return
         logger.info(f"Loaded {len(train_samples)} training samples.")
         if eval_samples:
             logger.info(f"Loaded {len(eval_samples)} evaluation samples.")
         else:
-            # Training can proceed without eval samples, but evaluation steps will be skipped
-            logger.warning("No evaluation samples loaded (eval_split_size might be too small or dataset too small). Evaluation will be skipped.")
-            config.run_eval = False # Disable evaluation if no samples
-
-        # --- Vocabulary Check ---
-        # Collect all unique characters from the loaded dataset texts
-        # Only needs to be done once after loading samples
-        logger.info("Checking dataset vocabulary against model configuration...")
-        all_text = "".join(sample["text"] for sample in (train_samples + (eval_samples or [])))
-        dataset_chars = set(all_text)
-        logger.debug(f"Characters found in dataset: {sorted(list(dataset_chars))}")
-
-        # Check against VITS vocabulary (VITS handles its internal chars/phonemes)
-        # We mainly need to ensure our text cleaner doesn't remove essential chars unexpectedly
-        # and that the input text doesn't contain completely unsupported chars if NOT using phonemes.
-        if not config.use_phonemes:
-             # If not using phonemes, the model directly uses characters.
-             # VITS has a default character set. Check if dataset chars are outside common sets.
-             # This is a basic check; VITS might have its own validation.
-             common_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?'\"-:")
-             uncommon_chars = dataset_chars - common_chars
-             if uncommon_chars:
-                  logger.warning(f"Dataset contains characters not in the basic set (when not using phonemes): {uncommon_chars}. Ensure your VITS model supports these or clean the text further.")
-        else:
-             # If using phonemes, the text is converted, so character set issues are less common,
-             # unless the phonemizer itself fails on certain characters/words.
-             logger.info("Phonemes are enabled. Character issues are less likely, but check phonemizer warnings if they occur.")
-
-
+            logger.warning("No evaluation samples loaded.")
+            config.run_eval = False
+    except FileNotFoundError as fnf:
+        logger.error(f"Phoneme cache file missing or inaccessible: {fnf}")
+        logger.info("Clearing phoneme cache and retrying...")
+        shutil.rmtree(phoneme_cache_path, ignore_errors=True)
+        os.makedirs(phoneme_cache_path, exist_ok=True)
+        train_samples, eval_samples = load_tts_samples(
+            datasets=config.datasets,
+            eval_split=True,
+            eval_split_size=0.01,
+            formatter=custom_formatter,
+        )
     except Exception as e:
-        logger.exception(f"Failed to load or process dataset samples: {e}")
+        logger.exception(f"Failed to load dataset samples: {e}")
         return
 
-    # --- Initialize AudioProcessor ---
-    # This needs to be done AFTER the config is finalized and potentially AFTER checking dataset
+    # Vocabulary Check
+    logger.info("Checking dataset vocabulary against model configuration...")
+    all_text = "".join(
+        sample["text"] for sample in (train_samples + (eval_samples or []))
+    )
+    dataset_chars = set(all_text)
+    logger.debug(f"Characters found in dataset: {sorted(list(dataset_chars))}")
+    if not config.use_phonemes:
+        common_chars = set(
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?'\"-:"
+        )
+        uncommon_chars = dataset_chars - common_chars
+        if uncommon_chars:
+            logger.warning(
+                f"Dataset contains characters not in basic set: {uncommon_chars}."
+            )
+
+    # Initialize AudioProcessor
     try:
         ap = AudioProcessor.init_from_config(config)
         logger.info("AudioProcessor initialized successfully.")
@@ -480,98 +503,93 @@ def main():
         logger.exception(f"Failed to initialize AudioProcessor: {e}")
         return
 
-
-    # --- Initialize Model ---
+    # Initialize Tokenizer
     try:
-        # This will also initialize the tokenizer based on config (phonemes, language, etc.)
-        model = Vits.init_from_config(config) # Removed ap argument as it is not accepted
+        from TTS.tts.utils.text.tokenizer import TTSTokenizer
+
+        tokenizer, config = TTSTokenizer.init_from_config(config)
+        logger.info("Tokenizer initialized successfully.")
+    except Exception as e:
+        logger.exception(f"Failed to initialize Tokenizer: {e}")
+        return
+
+    # Initialize Model
+    try:
+        model = Vits(config, ap, tokenizer)
         logger.info("VITS model initialized successfully.")
     except Exception as e:
         logger.exception(f"Failed to initialize VITS model: {e}")
         return
 
-
-    # --- Initialize Trainer ---
+    # Initialize Trainer
     try:
         trainer = Trainer(
-            args=TrainerArgs(
-                continue_path=args.continue_path,
-                #restore_path=None, # Use continue_path for continuing training runs
-                #rank=0, # For distributed training
-                #group_id="group_id", # For distributed training
-                #use_ddp=False # Set to True for distributed training
-                ),
+            args=TrainerArgs(),  # Use default TrainerArgs, handle continue_path via output_path
             config=config,
-            output_path=args.output_path,
+            output_path=output_path,
             model=model,
             train_samples=train_samples,
-            eval_samples=eval_samples if config.run_eval else None, # Pass None if eval disabled
-            training_assets={"audio_processor": ap}, # Pass ap if needed by Trainer hooks/callbacks
+            eval_samples=eval_samples if config.run_eval else None,
+            training_assets={"audio_processor": ap},
         )
-        logger.info("Trainer initialized successfully.")
-
-        # --- Replace default folder removal with safer version ---
         trainer.remove_experiment_folder = safe_remove_experiment_folder
-
+        logger.info("Trainer initialized successfully.")
+    except TypeError as e:
+        logger.exception(f"Failed to initialize Trainer due to invalid arguments: {e}")
+        print(f"\nError: Invalid Trainer arguments: {e}")
+        print("Check your trainer package version or configuration.")
+        print("Check log file:", log_file)
+        return
     except Exception as e:
         logger.exception(f"Failed to initialize Trainer: {e}")
+        print(f"\nError initializing Trainer: {e}")
+        print("Check log file:", log_file)
         return
 
+    # Save Final Model and Config
+    final_model_save_path = os.path.join(output_path, "final_model.pth")
+    final_config_save_path = os.path.join(output_path, "final_config.json")
 
-    # --- Start Training ---
+    # Start Training
     try:
         logger.info(">>> Starting Training <<<")
-        logger.warning("On Windows, file locking issues may occur. Close other programs that might access training files to avoid PermissionErrors.")
+        logger.warning(
+            "On Windows, file locking issues may occur. Close other programs accessing training files."
+        )
         if args.continue_path:
-            logger.info(f"Attempting to continue training from: {args.continue_path}")
+            logger.info(f"Continuing training from: {args.continue_path}")
         trainer.fit()
         logger.info(">>> Training Finished <<<")
-        print(f"\nTraining complete. Model files saved in: {args.output_path}")
+        print(f"\nTraining complete. Model files saved in: {output_path}")
+
+        # Save final model and config after training
+        torch.save(model.state_dict(), final_model_save_path)
+        with open(final_config_save_path, "w") as f:
+            f.write(config.to_json())
+        logger.info(f"Saved final model to: {final_model_save_path}")
+        logger.info(f"Saved final config to: {final_config_save_path}")
     except PermissionError as e:
-        logger.exception(f"PermissionError occurred during training: {e}")
-        print(f"\nA PermissionError occurred: {e}")
-        print("Ensure no other processes are accessing the training files (output dir, dataset) and that you have write permissions.")
-        print("Check the log file for more details:", log_file)
-        # exit(1) # Optional: exit with error code
+        logger.exception(f"PermissionError during training: {e}")
+        print(f"\nPermissionError: {e}")
+        print(
+            "Ensure no other processes access training files and you have write permissions."
+        )
+        print("Check log file:", log_file)
     except RuntimeError as e:
-         # Catch common GPU errors
-         if "CUDA out of memory" in str(e):
-              print("\nCUDA out of memory. Try reducing --batch_size.")
-              print("If using mixed precision (--mixed_precision), ensure your GPU supports it well.")
-              print("Check the log file for more details:", log_file)
-         elif "cuDNN error" in str(e):
-              print("\nA cuDNN error occurred. This often indicates an issue with your CUDA/cuDNN installation or GPU driver compatibility.")
-              print("Ensure PyTorch, CUDA, and cuDNN versions are compatible.")
-              print("Check the log file for more details:", log_file)
-         else:
-              print(f"\nA RuntimeError occurred during training: {e}")
-              print("Check the log file for more details:", log_file)
-         # exit(1) # Optional: exit with error code
-    except KeyboardInterrupt:
-        logger.warning("Training interrupted by user (KeyboardInterrupt).")
-        print("\nTraining interrupted. Model might not have been saved properly.")
-    except Exception as e:
-        # Catch any other unexpected errors
-        logger.exception(f"An unexpected error occurred during training: {e}")
-        print(f"\nAn unexpected error occurred during training: {e}")
-        print("Check the log file for details:", log_file)
-        # exit(1) # Optional: exit with error code
-
-    #     # Save the model state dictionary
-        if trainer.model: # Check if model exists
-            torch.save(trainer.model.state_dict(), final_model_save_path)
-            logger.info(f"Final model state saved explicitly to: {final_model_save_path}")
+        if "CUDA out of memory" in str(e):
+            print("\nCUDA out of memory. Try reducing --batch_size.")
+        elif "cuDNN error" in str(e):
+            print("\ncuDNN error. Check CUDA/cuDNN compatibility.")
         else:
-            logger.warning("Trainer model object not found, cannot save final model state explicitly.")
-    #
-    #     # Save the model configuration (usually same as trainer's config.json)
-            config.save_json(final_config_save_path) # Use the config object's save method
-            logger.info(f"Final configuration saved explicitly to: {final_config_save_path}")
-
+            print(f"\nRuntimeError during training: {e}")
+        print("Check log file:", log_file)
+    except KeyboardInterrupt:
+        logger.warning("Training interrupted by user.")
+        print("\nTraining interrupted. Model may not have saved properly.")
     except Exception as e:
-        logger.exception(f"Failed during explicit final model/config saving: {e}")
-        print(f"Error during explicit final save: {e}")
-
+        logger.exception(f"Unexpected error during training: {e}")
+        print(f"\nUnexpected error: {e}")
+        print("Check log file:", log_file)
 
 if __name__ == "__main__":
     main()
