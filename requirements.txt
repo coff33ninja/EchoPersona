@@ -14,6 +14,8 @@ decorator==5.2.1 # More recent than 4.4.2
 audioread>=3.0.0 # Allow newer patch versions
 pooch>=1.6.0 # Allow newer patch versions
 packaging>=23.1 # Allow newer patch versions
+gruut==0.7.0 # More recent than 0.6.0
+gruut-ipa==0.7.0 # More recent than 0.6.0
 
 # Text-to-Speech and Speech Recognition
 simpleaudio
