@@ -1,15 +1,30 @@
 import argparse
-import os
-import re
 import logging
+import os
+import re  # Explicitly included to fix UnboundLocalError
+import shutil
+import subprocess
+import sys
+
+# Ensure the current working directory is set to the script's directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+sys.path.insert(0, script_dir)  # Add script directory to sys.path
 
 try:
     from voice_tools import VoiceTrainer, BASE_DATASET_DIR, BASE_MODEL_DIR
 except ImportError:
     print("Error: voice_tools.py not found. Make sure it's in the same directory.")
     logging.error("Failed to import from voice_tools.py")
-    exit(1)
+    sys.exit(1)
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -103,7 +118,6 @@ def main():
         default=None,
         help="Path to a previous checkpoint to continue training from (e.g., path/to/run-XXX).",
     )
-    # Optional: Add more parameters for flexibility
     parser.add_argument(
         "--sample_rate",
         type=int,
@@ -145,27 +159,24 @@ def main():
     try:
         safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", args.character)
         if safe_character_name != args.character:
-            print(
-                f"Warning: Character name sanitized to '{safe_character_name}' for path usage."
+            logger.warning(
+                f"Character name sanitized to '{safe_character_name}' for path usage."
             )
-        print(f"Initializing trainer for character: '{safe_character_name}'...")
+        logger.info(f"Initializing trainer for character: '{safe_character_name}'...")
         trainer = VoiceTrainer(
             character_name=safe_character_name,
             base_dataset_dir=args.base_dataset_dir,
             base_model_dir=args.base_model_dir,
         )
     except ValueError as ve:
-        print(f"Error initializing trainer: {ve}")
-        exit(1)
+        logger.error(f"Error initializing trainer: {ve}")
+        sys.exit(1)
     except Exception as e:
-        print(f"An unexpected error occurred during trainer initialization: {e}")
-        logging.exception("Trainer initialization failed.")
-        exit(1)
+        logger.exception("Trainer initialization failed.")
+        sys.exit(1)
 
     # Perform Action
-    print(
-        f"\nPerforming action '{args.action}' for character '{trainer.character_name}'..."
-    )
+    logger.info(f"Performing action '{args.action}' for character '{trainer.character_name}'...")
 
     # Pre-checks
     actions_requiring_dataset = [
@@ -179,33 +190,44 @@ def main():
     if args.action in actions_requiring_dataset and not os.path.isdir(
         trainer.dataset_path
     ):
-        print(
-            f"Error: Dataset directory does not exist for character '{trainer.character_name}': {trainer.dataset_path}"
+        logger.error(
+            f"Dataset directory does not exist for character '{trainer.character_name}': {trainer.dataset_path}"
         )
-        print("Please use 'record' or 'provide' first to create the dataset.")
-        exit(1)
+        logger.info("Please use 'record' or 'provide' first to create the dataset.")
+        sys.exit(1)
 
     actions_requiring_model = ["test", "use"]
     if args.action in actions_requiring_model:
         model_file = os.path.join(trainer.output_path, "best_model.pth")
         config_file = os.path.join(trainer.output_path, "config.json")
         if not os.path.exists(model_file) or not os.path.exists(config_file):
-            print(
-                f"Error: Trained model files ('best_model.pth', 'config.json') not found for character '{trainer.character_name}' in {trainer.output_path}"
+            logger.error(
+                f"Trained model files ('best_model.pth', 'config.json') not found for character '{trainer.character_name}' in {trainer.output_path}"
             )
-            print(
+            logger.info(
                 "Please ensure training was completed successfully using the 'train' action."
             )
-            exit(1)
+            sys.exit(1)
 
     actions_requiring_file_in_dataset = ["augment", "trim", "quality"]
     if args.action in actions_requiring_file_in_dataset:
         target_file_path = os.path.join(trainer.dataset_path, args.file)
         if not os.path.exists(target_file_path):
-            print(
-                f"Error: Specified file '{args.file}' not found within the dataset directory: {trainer.dataset_path}"
+            logger.error(
+                f"Specified file '{args.file}' not found within the dataset directory: {trainer.dataset_path}"
             )
-            exit(1)
+            sys.exit(1)
+
+    # Clear output directory for training to avoid PermissionError
+    if args.action == "train" and not args.continue_path:
+        output_path = os.path.join(args.base_model_dir, safe_character_name)
+        if os.path.exists(output_path):
+            try:
+                shutil.rmtree(output_path, ignore_errors=True)
+                logger.info(f"Cleared output directory: {output_path}")
+            except Exception as e:
+                logger.error(f"Failed to clear output directory {output_path}: {e}")
+                sys.exit(1)
 
     # Execute Action
     try:
@@ -224,32 +246,59 @@ def main():
         elif args.action == "quality":
             trainer.check_audio_quality(args.file)
         elif args.action == "train":
-            trainer.train_voice(
-                epochs=args.epochs,
-                batch_size=args.batch_size,
-                learning_rate=args.learning_rate,
-                continue_path=args.continue_path,
-                sample_rate=args.sample_rate,
-                use_phonemes=args.use_phonemes.lower() == "true",
-                phoneme_language=args.phoneme_language,
-                mixed_precision=args.mixed_precision.lower() == "true",
+            # Run training via subprocess with error checking
+            cmd = [
+                sys.executable, "voice_clone_train.py",
+                "--dataset_path", trainer.dataset_path,
+                "--output_path", trainer.output_path,
+                "--epochs", str(args.epochs),
+                "--batch_size", str(args.batch_size),
+                "--learning_rate", str(args.learning_rate),
+                "--sample_rate", str(args.sample_rate),
+                "--phoneme_language", args.phoneme_language,
+            ]
+            if args.use_phonemes.lower() == "true":
+                cmd.append("--use_phonemes")
+            else:
+                cmd.append("--no-use_phonemes")
+            if args.mixed_precision.lower() == "true":
+                cmd.append("--mixed_precision")
+            else:
+                cmd.append("--no-mixed_precision")
+            if args.continue_path:
+                cmd.extend(["--continue_path", args.continue_path])
+
+            logger.info(f"Running training command: {' '.join(cmd)}")
+            process = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace"
             )
+            if process.returncode != 0:
+                logger.error(f"Training failed with error: {process.stderr}")
+                raise RuntimeError(f"Training failed. Check logs at {trainer.output_path}/training.log")
+            logger.info(f"Training successful for character '{trainer.character_name}'.")
         elif args.action == "test":
             trainer.test_trained_voice(args.text)
         elif args.action == "use":
             trainer.use_trained_voice(args.text)
         else:
-            print(f"Error: Unknown action '{args.action}'.")
-        print(
-            f"\nAction '{args.action}' completed successfully for character '{trainer.character_name}'."
+            logger.error(f"Unknown action '{args.action}'.")
+            sys.exit(1)
+        logger.info(
+            f"Action '{args.action}' completed successfully for character '{trainer.character_name}'."
         )
     except FileNotFoundError as fnf_error:
-        print(f"\nError: File not found during action '{args.action}': {fnf_error}")
-        logging.error(f"FileNotFoundError during action {args.action}: {fnf_error}")
+        logger.error(f"File not found during action '{args.action}': {fnf_error}")
+        sys.exit(1)
+    except RuntimeError as runtime_error:
+        logger.error(f"Runtime error during action '{args.action}': {runtime_error}")
+        sys.exit(1)
     except Exception as e:
-        print(f"\nAn unexpected error occurred during action '{args.action}': {e}")
-        logging.exception(f"Error during action {args.action}")
-
+        logger.exception(f"Unexpected error during action '{args.action}': {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
