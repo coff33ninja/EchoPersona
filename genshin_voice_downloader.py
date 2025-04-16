@@ -300,11 +300,16 @@ def transcribe_character_audio(
                 else:
                     files_to_transcribe.append(file)
     else:
+        # Check both character_output_dir and wavs_dir for WAVs
         files_to_transcribe = [
             file
             for file in os.listdir(wavs_dir)
             if file.lower().endswith(".wav") and f"wavs/{file}" not in existing_files
         ]
+        # Add any WAVs in character_output_dir not yet in wavs_dir
+        for file in os.listdir(character_output_dir):
+            if file.lower().endswith(".wav") and file not in os.listdir(wavs_dir):
+                files_to_transcribe.append(file)
 
     if not files_to_transcribe:
         logging.info("No new WAV files to transcribe.")
@@ -312,7 +317,7 @@ def transcribe_character_audio(
             status_queue.put("No new files to transcribe.")
         if os.path.exists(metadata_path):
             return clean_metadata_file(metadata_path)
-        return True
+        return False  # No files to transcribe is a failure if no metadata exists
 
     logging.info(f"Processing {len(files_to_transcribe)} WAV files with Whisper {whisper_model}...")
     transcribed_count = 0
@@ -325,7 +330,12 @@ def transcribe_character_audio(
             mf.write("audio_file|text|normalized_text|speaker_id\n")
 
         for file in tqdm(files_to_transcribe, desc="Transcribing"):
+            # Ensure file is in wavs_dir
+            src_path = os.path.join(character_output_dir, file)
             wav_path = os.path.join(wavs_dir, file)
+            if os.path.exists(src_path) and not os.path.exists(wav_path):
+                shutil.move(src_path, wav_path)
+
             if status_queue:
                 status_queue.put(f"Checking: {file}")
 
@@ -447,7 +457,9 @@ def process_character_voices(
             logging.error(f"Transcription failed for {character}.")
             return None
         metadata_path = os.path.join(character_folder, "metadata.csv")
-        generate_valid_csv(metadata_path)
+        if not generate_valid_csv(metadata_path):
+            logging.error(f"Failed to generate valid.csv for {character}.")
+            return None
         update_character_config(
             character,
             base_output_dir,
@@ -497,6 +509,14 @@ def process_character_voices(
     status_queue.put(
         f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}."
     )
+
+    # Move WAVs to wavs_folder before transcription
+    for file in os.listdir(character_folder):
+        if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
+            shutil.move(
+                os.path.join(character_folder, file), os.path.join(wavs_folder, file)
+            )
+
     success = transcribe_character_audio(
         character_folder,
         whisper_model,
@@ -509,14 +529,10 @@ def process_character_voices(
         logging.error(f"Transcription failed for {character}.")
         return None
 
-    for file in os.listdir(character_folder):
-        if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
-            shutil.move(
-                os.path.join(character_folder, file), os.path.join(wavs_folder, file)
-            )
-
     metadata_path = os.path.join(character_folder, "metadata.csv")
-    generate_valid_csv(metadata_path)
+    if not generate_valid_csv(metadata_path):
+        logging.error(f"Failed to generate valid.csv for {character}.")
+        return None
     update_character_config(
         character,
         base_output_dir,
@@ -1497,47 +1513,49 @@ if __name__ == "__main__":
             num_epochs=args.num_epochs,
             learning_rate=args.learning_rate,
         )
-        if character_folder_path:
-            if not validate_metadata_existence(character_folder_path):
-                logging.error(
-                    f"No metadata found for {args.character}. Ensure WAV files are present and transcribed."
+        if not character_folder_path:
+            logging.error(f"Processing failed for {args.character}. Exiting.")
+            exit(1)
+        if not validate_metadata_existence(character_folder_path):
+            logging.error(
+                f"No metadata found for {args.character}. Ensure WAV files are present and transcribed."
+            )
+            exit(1)
+        if not validate_metadata_layout(
+            os.path.join(character_folder_path, "metadata.csv")
+        ):
+            logging.error(
+                f"Invalid metadata layout for {args.character}. Please re-transcribe."
+            )
+            exit(1)
+        config_path = update_character_config(
+            args.character,
+            args.output_dir,
+            batch_size=args.batch_size,
+            num_epochs=args.num_epochs,
+            learning_rate=args.learning_rate,
+        )
+        if not config_path:
+            logging.error(f"Failed to generate config for {args.character}. Exiting.")
+            exit(1)
+        checkpoint = (
+            args.resume_from_checkpoint
+            if args.resume_from_checkpoint
+            else find_latest_checkpoint(
+                os.path.join(
+                    args.output_dir, "tts_train_output", args.character
                 )
-            elif not validate_metadata_layout(
-                os.path.join(character_folder_path, "metadata.csv")
-            ):
-                logging.error(
-                    f"Invalid metadata layout for {args.character}. Please re-transcribe."
-                )
-            else:
-                config_path = update_character_config(
-                    args.character,
-                    args.output_dir,
-                    batch_size=args.batch_size,
-                    num_epochs=args.num_epochs,
-                    learning_rate=args.learning_rate,
-                )
-                if config_path:
-                    checkpoint = (
-                        args.resume_from_checkpoint
-                        if args.resume_from_checkpoint
-                        else find_latest_checkpoint(
-                            os.path.join(
-                                args.output_dir, "tts_train_output", args.character
-                            )
-                        )
-                    )
-                    if start_tts_training(
-                        config_path,
-                        resume_from_checkpoint=checkpoint,
-                        status_queue=status_queue,
-                    ):
-                        logging.info(f"Training started for {args.character}.")
-                        if args.test_model:
-                            test_trained_model(config_path, status_queue=status_queue)
-                    else:
-                        logging.info(f"Training failed for {args.character}.")
-                else:
-                    logging.error(f"Failed to generate config for {args.character}.")
+            )
+        )
+        if start_tts_training(
+            config_path,
+            resume_from_checkpoint=checkpoint,
+            status_queue=status_queue,
+        ):
+            logging.info(f"Training started for {args.character}.")
+            if args.test_model:
+                test_trained_model(config_path, status_queue=status_queue)
         else:
-            logging.error(f"Processing failed for {args.character}.")
+            logging.error(f"Training failed for {args.character}.")
+            exit(1)
         logging.info(f"Finished processing {args.character}.")
