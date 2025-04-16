@@ -243,7 +243,7 @@ def clean_metadata_file(metadata_path):
             cleaned_lines.append(line)
 
         if invalid_lines:
-            logging.warning(f"Removed {len(invalid_lines)} invalid metadata lines: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
+            logging.warning(f"Removed {len(invalid_lines)} invalid metadata lines: {[f'Line {i}: {line}' for i, line in invalid_lines]}")
 
         with open(metadata_path, "w", encoding="utf-8", newline="") as f:
             f.writelines(cleaned_lines)
@@ -451,7 +451,7 @@ def validate_metadata_for_training(metadata_path):
             if len(fields) != 4 or not all(fields[:3]):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
-            logging.error(f"Invalid metadata entries in {metadata_path}: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
+            logging.error(f"Invalid metadata entries in {metadata_path}: {[f'Line {i}: {line}' for i, line in invalid_lines]}")
             return False
         return True
     except Exception as e:
@@ -580,8 +580,9 @@ def validate_metadata_layout(metadata_path):
             if len(fields) != 4 or not all(fields[:3]):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
-            logging.warning(f"Found {len(invalid_lines)} invalid lines in {metadata_path}: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
-            clean_metadata_file(metadata_path)
+            logging.warning(
+                f"Found {len(invalid_lines)} invalid lines in {metadata_path}: {[f'Line {i}: {line}' for i, line in invalid_lines]}"
+            )
         return True
     except UnicodeDecodeError:
         logging.error(f"Encoding error in {metadata_path}. Ensure UTF-8 format.")
