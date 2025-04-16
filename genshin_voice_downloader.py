@@ -368,7 +368,8 @@ def process_character_voices(
     """Downloads and processes voice lines."""
     safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character)
     character_folder = os.path.join(base_output_dir, safe_character_name)
-    os.makedirs(character_folder, exist_ok=True)
+    wavs_folder = os.path.join(character_folder, "wavs")
+    os.makedirs(wavs_folder, exist_ok=True)
 
     if not download_wiki_audio:
         logging.info("Skipping Wiki download.")
@@ -412,7 +413,118 @@ def process_character_voices(
     transcribe_character_audio(
         character_folder, whisper_model, use_segmentation, hf_token, strict_ascii, status_label
     )
+
+    # Move remaining WAV files to the 'wavs' folder
+    for file in os.listdir(character_folder):
+        if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
+            shutil.move(os.path.join(character_folder, file), os.path.join(wavs_folder, file))
+
+    # Start TTS training after audio processing
+    metadata_path = os.path.join(character_folder, "metadata.csv")
+    if validate_metadata_existence(character_folder) and validate_metadata_layout(metadata_path):
+        config_path = generate_character_config(
+            character,
+            character_folder,
+            22050,  # Ensure this matches your audio sample rate
+            selected_model="Fast Tacotron2"  # Default TTS model
+        )
+        if config_path:
+            start_tts_training(config_path)
+        else:
+            logging.error("Failed to generate TTS config.")
+    else:
+        logging.error("Metadata validation failed. Skipping TTS training.")
+
     return character_folder
+
+# --- New Functions for Config Generation and Training ---
+
+AVAILABLE_MODELS = {
+    "Fast Tacotron2": {
+        "model_id": "tts_models/en/ljspeech/tacotron2-DDC",
+        "use_pre_trained": True,
+    },
+    "High-Quality VITS": {
+        "model_id": "tts_models/multilingual/multi-dataset/vits",
+        "use_pre_trained": False,
+    },
+}
+
+def generate_character_config(
+    character,
+    character_dir,
+    sample_rate,
+    selected_model="Fast Tacotron2",
+    pre_trained_path=None,
+):
+    """Generates a Coqui TTS config.json for a specific character."""
+
+    if selected_model not in AVAILABLE_MODELS:
+        logging.error(f"Invalid model selected: {selected_model}")
+        return None
+
+    model_data = AVAILABLE_MODELS[selected_model]
+    config = {
+        "output_path": os.path.join(character_dir, "tts_output"),
+        "datasets": [
+            {
+                "name": "ljspeech",
+                "path": os.path.join(character_dir, "wavs"),
+                "meta_file_train": os.path.join(character_dir, "train.csv"),
+                "meta_file_val": os.path.join(character_dir, "valid.csv"),
+            }
+        ],
+        "audio": {
+            "sample_rate": sample_rate,
+            "fft_size": 1024,
+            "win_length": 1024,
+            "hop_length": 256,
+            "num_mels": 80,
+            "mel_fmin": 0.0,
+            "mel_fmax": 8000.0,
+        },
+        "model": model_data["model_id"],
+        "batch_size": 16,
+        "num_epochs": 100,
+        "use_precomputed_alignments": False,
+        "run_eval": True,
+    }
+
+    if model_data["use_pre_trained"] and pre_trained_path:
+        config["restore_path"] = pre_trained_path
+
+    config_path = os.path.join(character_dir, f"{character}_config.json")
+
+    try:
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=4)
+        logging.info(f"Config file generated: {config_path}")
+        return config_path
+    except Exception as e:
+        logging.error(f"Error generating config for {character}: {e}")
+        return None
+
+def start_tts_training(config_path):
+    """Starts Coqui TTS training using a generated config file."""
+    try:
+        subprocess.run(
+            ["tts", "--config_path", config_path],
+            check=True,
+            text=True,
+            capture_output=True
+        )
+        logging.info(f"Training started with config: {config_path}")
+        return True
+    except subprocess.CalledProcessError as e:
+        logging.error(f"TTS Training failed with config: {config_path}: {e.stderr}")
+        return False
+    except FileNotFoundError:
+        logging.error("Coqui TTS 'tts' command not found. Ensure it's installed and in your PATH.")
+        return False
+    except Exception as e:
+        logging.error(f"Error starting TTS training: {e}")
+        return False
 
 # --- GUI ---
 
@@ -485,6 +597,14 @@ def main_gui():
         config_frame, text="Download Wiki Audio", variable=download_wiki_audio_var
     ).grid(row=7, column=1, padx=5, pady=5, sticky="w")
 
+    # TTS Model Selection
+    ttk.Label(config_frame, text="TTS Model:").grid(row=8, column=0, padx=5, pady=5, sticky="w")
+    tts_model_var = tk.StringVar(value="Fast Tacotron2")  # Default TTS model
+    tts_model_combo = ttk.Combobox(
+        config_frame, textvariable=tts_model_var, values=list(AVAILABLE_MODELS.keys()), state="readonly"
+    )
+    tts_model_combo.grid(row=8, column=1, padx=5, pady=5, sticky="w")
+
     # Control Frame
     control_frame = ttk.Frame(window)
     control_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
@@ -513,6 +633,7 @@ def main_gui():
         strict_ascii = strict_ascii_var.get()
         hf_token = hf_token_var.get()
         download_wiki_audio = download_wiki_audio_var.get()
+        selected_tts_model = tts_model_var.get()  # Get selected TTS model
 
         if not character or character == "No characters found":
             messagebox.showerror("Error", "Select a valid character.")
@@ -533,16 +654,29 @@ def main_gui():
             whisper_model, use_segmentation, hf_token, strict_ascii, status_label
         )
 
-        if character_folder_path and os.path.isdir(character_folder_path):
-            if not validate_metadata_existence(character_folder_path):
+        if character_folder_path:
+            if validate_metadata_existence(character_folder_path):
+                metadata_path = os.path.join(character_folder_path, "metadata.csv")
+                if validate_metadata_layout(metadata_path):
+                    # Generate TTS config
+                    config_path = generate_character_config(
+                        character,
+                        character_folder_path,
+                        22050,  # Ensure this matches your audio sample rate
+                        selected_model=selected_tts_model  # Use selected model
+                    )
+                    if config_path:
+                        # Start TTS training
+                        if start_tts_training(config_path):
+                            status_label.config(text=f"Training started: {character}")
+                        else:
+                            status_label.config(text=f"Training failed: {character}")
+                    else:
+                        status_label.config(text=f"Config generation failed: {character}")
+                else:
+                    status_label.config(text="Invalid metadata layout.")
+            else:
                 status_label.config(text="Metadata missing.")
-                download_button.config(state="normal")
-                return
-            metadata_path = os.path.join(character_folder_path, "metadata.csv")
-            if not validate_metadata_layout(metadata_path):
-                status_label.config(text="Invalid metadata layout.")
-                download_button.config(state="normal")
-                return
         else:
             status_label.config(text="Processing failed.")
 
