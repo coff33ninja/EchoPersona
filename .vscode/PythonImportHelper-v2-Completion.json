@@ -4592,20 +4592,20 @@
         "documentation": {}
     },
     {
-        "label": "transcribe_character_audio",
+        "label": "is_silent_audio",
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_queue:\n            status_queue.put(\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    os.makedirs(wavs_dir, exist_ok=True)\n    existing_files = set()",
+        "peekOfCode": "def is_silent_audio(file_path, silence_threshold=-50.0):\n    \"\"\"Check if audio is silent based on max dBFS.\"\"\"\n    try:\n        audio = AudioSegment.from_wav(file_path)\n        return audio.max_dBFS < silence_threshold\n    except Exception as e:\n        logging.error(f\"Error checking silence for {file_path}: {e}\")\n        return True  # Treat errors as silent to skip\ndef transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
     {
-        "label": "validate_metadata_existence",
+        "label": "transcribe_character_audio",
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def validate_metadata_existence(character_output_dir):\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    if not os.path.exists(metadata_path):\n        logging.warning(f\"Metadata file missing: {metadata_path}\")\n        return False\n    return True\ndef validate_metadata_layout(metadata_path):\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()",
+        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_queue:\n            status_queue.put(\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    silent_dir = os.path.join(character_output_dir, \"silent_files\")\n    os.makedirs(wavs_dir, exist_ok=True)",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4614,7 +4614,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:\n            logging.error(\n                f\"Metadata file {metadata_path} is empty or has no data entries.\"\n            )\n            return False\n        header = lines[0].strip()",
+        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:\n            logging.error(f\"Metadata file {metadata_path} is empty or has no data entries.\")\n            return False\n        header = lines[0].strip()\n        expected_headers = [\"audio_file|text|normalized_text|speaker_id\"]\n        if header not in expected_headers:",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },

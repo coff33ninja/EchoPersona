@@ -211,6 +211,15 @@ def fetch_character_list_from_api():
         logging.error(f"Error fetching character list: {e}")
         return []
 
+def is_silent_audio(file_path, silence_threshold=-50.0):
+    """Check if audio is silent based on max dBFS."""
+    try:
+        audio = AudioSegment.from_wav(file_path)
+        return audio.max_dBFS < silence_threshold
+    except Exception as e:
+        logging.error(f"Error checking silence for {file_path}: {e}")
+        return True  # Treat errors as silent to skip
+
 def transcribe_character_audio(character_output_dir, whisper_model="base", use_segmentation=False, hf_token="", strict_ascii=False, status_queue=None):
     if SpeechToText is None:
         logging.error("Transcription unavailable: SpeechToText not imported.")
@@ -220,10 +229,13 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
 
     metadata_path = os.path.join(character_output_dir, "metadata.csv")
     wavs_dir = os.path.join(character_output_dir, "wavs")
+    silent_dir = os.path.join(character_output_dir, "silent_files")
     os.makedirs(wavs_dir, exist_ok=True)
+    os.makedirs(silent_dir, exist_ok=True)
 
+    # Check existing metadata validity
     existing_files = set()
-    if os.path.exists(metadata_path):
+    if os.path.exists(metadata_path) and validate_metadata_layout(metadata_path):
         try:
             with open(metadata_path, "r", encoding="utf-8") as mf:
                 lines = mf.readlines()
@@ -234,6 +246,9 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
         except UnicodeDecodeError:
             logging.error(f"Encoding error reading {metadata_path}. Ensure UTF-8 format.")
             return
+    else:
+        logging.info(f"Invalid or missing metadata at {metadata_path}. Starting fresh.")
+        existing_files = set()
 
     files_to_transcribe = []
     if use_segmentation and hf_token:
@@ -250,19 +265,23 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                     files_to_transcribe.append(file)
     else:
         files_to_transcribe = [
-            file for file in os.listdir(character_output_dir)
-            if file.lower().endswith(".wav") and file not in existing_files and not os.path.exists(os.path.join(wavs_dir, file))
+            file for file in os.listdir(wavs_dir)
+            if file.lower().endswith(".wav") and f"wavs/{file}" not in existing_files
         ]
 
     if not files_to_transcribe:
         logging.info("No new WAV files to transcribe.")
         if status_queue:
             status_queue.put("No new files to transcribe.")
+        if os.path.exists(metadata_path):
+            clean_metadata_file(metadata_path)
+        split_metadata(metadata_path, valid_ratio=0.2)
         return
 
-    logging.info(f"Transcribing {len(files_to_transcribe)} files with Whisper {whisper_model}...")
+    logging.info(f"Processing {len(files_to_transcribe)} WAV files with Whisper {whisper_model}...")
     transcribed_count = 0
     failed_count = 0
+    silent_count = 0
     file_mode = "a" if existing_files else "w"
 
     with open(metadata_path, file_mode, encoding="utf-8", newline="") as mf:
@@ -270,82 +289,89 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
             mf.write("audio_file|text|normalized_text|speaker_id\n")
 
         for file in tqdm(files_to_transcribe, desc="Transcribing"):
-            wav_path = os.path.join(wavs_dir if file in os.listdir(wavs_dir) else character_output_dir, file)
+            wav_path = os.path.join(wavs_dir, file)
             if status_queue:
-                status_queue.put(f"Transcribing: {file}")
-            try:
-                stt = SpeechToText(
-                    use_microphone=False,
-                    audio_file=wav_path,
-                    engine="whisper",
-                    whisper_model_size=whisper_model,
-                )
-                audio_transcript = stt.process_audio(language="en")
-                cleaned_transcript = clean_transcript(audio_transcript, strict_ascii=strict_ascii)
-                if cleaned_transcript and is_valid_for_phonemes(cleaned_transcript):
-                    normalized = clean_transcript(cleaned_transcript, strict_ascii=True).lower().replace(".", "").replace(",", "")
-                    metadata_entry = (
-                        f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
-                        if file in os.listdir(wavs_dir)
-                        else f"{file}|{cleaned_transcript}|{normalized}|speaker_1"
-                    )
-                    mf.write(metadata_entry + "\n")
-                    transcribed_count += 1
-                else:
-                    logging.warning(f"Skipping {file}: Empty or invalid transcription")
-                    failed_count += 1
-                    if status_queue:
-                        status_queue.put(f"Skipped {file}: Empty or invalid transcription")
-            except Exception as e:
-                logging.error(f"Transcription error for {file}: {e}")
-                failed_count += 1
+                status_queue.put(f"Checking: {file}")
+
+            # Check for silence
+            if is_silent_audio(wav_path):
+                logging.warning(f"Moving silent file {file} to silent_files")
+                shutil.move(wav_path, os.path.join(silent_dir, file))
+                silent_count += 1
                 if status_queue:
-                    status_queue.put(f"Error transcribing {file}: {str(e)}")
+                    status_queue.put(f"Moved silent file: {file}")
+                continue
 
-    split_metadata(metadata_path, valid_ratio=0.2)
+            # Try transcribing
+            for attempt in range(2):  # Retry once
+                try:
+                    if status_queue:
+                        status_queue.put(f"Transcribing: {file} (Attempt {attempt+1})")
+                    stt = SpeechToText(
+                        use_microphone=False,
+                        audio_file=wav_path,
+                        engine="whisper",
+                        whisper_model_size=whisper_model,
+                    )
+                    audio_transcript = stt.process_audio(language="en")
+                    cleaned_transcript = clean_transcript(audio_transcript, strict_ascii=strict_ascii)
+                    if cleaned_transcript and is_valid_for_phonemes(cleaned_transcript):
+                        normalized = clean_transcript(cleaned_transcript, strict_ascii=True).lower().replace(".", "").replace(",", "")
+                        if normalized.strip():
+                            metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
+                            mf.write(metadata_entry + "\n")
+                            transcribed_count += 1
+                            if status_queue:
+                                status_queue.put(f"Transcribed: {file}")
+                            break
+                        else:
+                            logging.warning(f"Empty normalized transcription for {file}")
+                    else:
+                        logging.warning(f"Invalid transcription for {file}")
+                    if attempt == 1:  # Second attempt failed
+                        logging.warning(f"Moving failed file {file} to silent_files")
+                        shutil.move(wav_path, os.path.join(silent_dir, file))
+                        failed_count += 1
+                        if status_queue:
+                            status_queue.put(f"Moved failed file: {file}")
+                except Exception as e:
+                    logging.error(f"Transcription error for {file}: {e}")
+                    if attempt == 1:
+                        logging.warning(f"Moving errored file {file} to silent_files")
+                        shutil.move(wav_path, os.path.join(silent_dir, file))
+                        failed_count += 1
+                        if status_queue:
+                            status_queue.put(f"Error transcribing {file}: Moved to silent_files")
+                    continue
 
-    final_status = f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}."
-    logging.info(final_status)
+    logging.info(f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}.")
     if status_queue:
-        status_queue.put(final_status)
+        status_queue.put(f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}.")
 
-def validate_metadata_existence(character_output_dir):
-    metadata_path = os.path.join(character_output_dir, "metadata.csv")
-    if not os.path.exists(metadata_path):
-        logging.warning(f"Metadata file missing: {metadata_path}")
-        return False
-    return True
-
+    clean_metadata_file(metadata_path)
+    split_metadata(metadata_path, valid_ratio=0.2)
 
 def validate_metadata_layout(metadata_path):
     try:
         with open(metadata_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
         if len(lines) < 2:
-            logging.error(
-                f"Metadata file {metadata_path} is empty or has no data entries."
-            )
+            logging.error(f"Metadata file {metadata_path} is empty or has no data entries.")
             return False
         header = lines[0].strip()
-        expected_headers = [
-            "audio_file|text|normalized_text",
-            "audio_file|text|normalized_text|speaker_id",
-        ]
+        expected_headers = ["audio_file|text|normalized_text|speaker_id"]
         if header not in expected_headers:
             logging.error(f"Invalid header in {metadata_path}: {header}")
             return False
+        invalid_lines = []
         for i, line in enumerate(lines[1:], 2):
             fields = line.strip().split("|")
-            if len(fields) < 3 or len(fields) > 4:
-                logging.warning(
-                    f"Skipping invalid line {i} in {metadata_path}: {line.strip()}"
-                )
-                continue
-            if len(fields) == 3:
-                fields.append("speaker_1")  # Add default speaker_id if missing
-            if not all(fields[:3]):  # Check audio_file, text, normalized_text
-                logging.warning(f"Skipping empty field at line {i} in {metadata_path}")
-                continue
+            if len(fields) != 4 or not all(fields[:3]):
+                invalid_lines.append((i, line.strip()))
+        if invalid_lines:
+            logging.warning(f"Found {len(invalid_lines)} invalid lines in {metadata_path}: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
+            # Clean the file immediately
+            clean_metadata_file(metadata_path)
         return True
     except UnicodeDecodeError:
         logging.error(f"Encoding error in {metadata_path}. Ensure UTF-8 format.")
@@ -353,7 +379,6 @@ def validate_metadata_layout(metadata_path):
     except Exception as e:
         logging.error(f"Error validating {metadata_path}: {e}")
         return False
-
 
 def validate_training_prerequisites(character_dir, config_path):
     metadata_path = os.path.join(character_dir, "metadata.csv")
@@ -1287,20 +1312,63 @@ def main_gui():
 # --- Main Execution ---
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Download and transcribe Genshin Impact voice data.")
-    parser.add_argument("--character", type=str, help="Character name (e.g., Arlecchino).")
-    parser.add_argument("--output_dir", type=str, default=BASE_DATA_DIR, help="Base output directory.")
-    parser.add_argument("--language", type=str, default="English", choices=["English", "Japanese", "Chinese", "Korean"])
-    parser.add_argument("--whisper_model", type=str, default="base", choices=["base", "large-v2"], help="Whisper model size.")
-    parser.add_argument("--use_segmentation", action="store_true", help="Use PyAnnote segmentation.")
-    parser.add_argument("--strict_ascii", action="store_true", help="Force ASCII-only transcriptions.")
-    parser.add_argument("--hf_token", type=str, default="", help="Hugging Face token for segmentation.")
-    parser.add_argument("--skip_wiki_download", action="store_true", help="Skip Wiki download.")
-    parser.add_argument("--batch_size", type=int, default=16, help="Batch size for training.")
-    parser.add_argument("--num_epochs", type=int, default=100, help="Number of epochs for training.")
-    parser.add_argument("--learning_rate", type=float, default=0.0001, help="Learning rate for training.")
-    parser.add_argument("--resume_from_checkpoint", type=str, default="", help="Path to checkpoint to resume training.")
-    parser.add_argument("--test_model", action="store_true", help="Test the trained model after training.")
+    parser = argparse.ArgumentParser(
+        description="Download and transcribe Genshin Impact voice data."
+    )
+    parser.add_argument(
+        "--character", type=str, help="Character name (e.g., Arlecchino)."
+    )
+    parser.add_argument(
+        "--output_dir", type=str, default=BASE_DATA_DIR, help="Base output directory."
+    )
+    parser.add_argument(
+        "--language",
+        type=str,
+        default="English",
+        choices=["English", "Japanese", "Chinese", "Korean"],
+    )
+    parser.add_argument(
+        "--whisper_model",
+        type=str,
+        default="base",
+        choices=["base", "large-v2"],
+        help="Whisper model size.",
+    )
+    parser.add_argument(
+        "--use_segmentation", action="store_true", help="Use PyAnnote segmentation."
+    )
+    parser.add_argument(
+        "--strict_ascii", action="store_true", help="Force ASCII-only transcriptions."
+    )
+    parser.add_argument(
+        "--hf_token", type=str, default="", help="Hugging Face token for segmentation."
+    )
+    parser.add_argument(
+        "--skip_wiki_download", action="store_true", help="Skip Wiki download."
+    )
+    parser.add_argument(
+        "--batch_size", type=int, default=16, help="Batch size for training."
+    )
+    parser.add_argument(
+        "--num_epochs", type=int, default=100, help="Number of epochs for training."
+    )
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        default=0.0001,
+        help="Learning rate for training.",
+    )
+    parser.add_argument(
+        "--resume_from_checkpoint",
+        type=str,
+        default="",
+        help="Path to checkpoint to resume training.",
+    )
+    parser.add_argument(
+        "--test_model",
+        action="store_true",
+        help="Test the trained model after training.",
+    )
     args = parser.parse_args()
 
     if args.character is None:
@@ -1309,26 +1377,60 @@ if __name__ == "__main__":
         logging.info(f"Processing {args.character} via CLI...")
         status_queue = queue.Queue()
         character_folder_path = process_character_voices(
-            args.character, args.language, args.output_dir,
-            not args.skip_wiki_download, args.whisper_model,
-            args.use_segmentation, args.hf_token, args.strict_ascii, status_queue,
-            batch_size=args.batch_size, num_epochs=args.num_epochs, learning_rate=args.learning_rate
+            args.character,
+            args.language,
+            args.output_dir,
+            not args.skip_wiki_download,
+            args.whisper_model,
+            args.use_segmentation,
+            args.hf_token,
+            args.strict_ascii,
+            status_queue,
+            batch_size=args.batch_size,
+            num_epochs=args.num_epochs,
+            learning_rate=args.learning_rate,
         )
         if character_folder_path:
-            if validate_metadata_existence(character_folder_path):
-                metadata_path = os.path.join(character_folder_path, "metadata.csv")
-                config_path = update_character_config(
-                    args.character, args.output_dir,
-                    batch_size=args.batch_size, num_epochs=args.num_epochs, learning_rate=args.learning_rate
+            if not validate_metadata_existence(character_folder_path):
+                logging.error(
+                    f"No metadata found for {args.character}. Ensure WAV files are present and transcribed."
                 )
-                if validate_metadata_layout(metadata_path) and config_path:
-                    checkpoint = args.resume_from_checkpoint if args.resume_from_checkpoint else find_latest_checkpoint(
-                        os.path.join(args.output_dir, "tts_train_output", args.character)
+            elif not validate_metadata_layout(
+                os.path.join(character_folder_path, "metadata.csv")
+            ):
+                logging.error(
+                    f"Invalid metadata layout for {args.character}. Please re-transcribe."
+                )
+            else:
+                config_path = update_character_config(
+                    args.character,
+                    args.output_dir,
+                    batch_size=args.batch_size,
+                    num_epochs=args.num_epochs,
+                    learning_rate=args.learning_rate,
+                )
+                if config_path:
+                    checkpoint = (
+                        args.resume_from_checkpoint
+                        if args.resume_from_checkpoint
+                        else find_latest_checkpoint(
+                            os.path.join(
+                                args.output_dir, "tts_train_output", args.character
+                            )
+                        )
                     )
-                    if start_tts_training(config_path, resume_from_checkpoint=checkpoint, status_queue=status_queue):
+                    if start_tts_training(
+                        config_path,
+                        resume_from_checkpoint=checkpoint,
+                        status_queue=status_queue,
+                    ):
                         logging.info(f"Training started for {args.character}.")
                         if args.test_model:
                             test_trained_model(config_path, status_queue=status_queue)
                     else:
                         logging.info(f"Training failed for {args.character}.")
+                else:
+                    logging.error(f"Failed to generate config for {args.character}.")
+        else:
+            logging.error(f"Processing failed for {args.character}.")
         logging.info(f"Finished processing {args.character}.")

@@ -32,3 +32,6 @@ vosk
 requests
 pandas
 unicodedata2
+playsound==1.2.2
+python-slugify
+pyannote.audio
