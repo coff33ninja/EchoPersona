@@ -4337,6 +4337,24 @@
         "documentation": {}
     },
     {
+        "label": "update_character_config",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def update_character_config(character, base_output_dir, selected_model=\"Fast Tacotron2\"):\n    \"\"\"Automatically updates the JSON configuration file for a character.\"\"\"\n    character_folder = os.path.join(base_output_dir, character)\n    wavs_folder = os.path.join(character_folder, \"wavs\")\n    metadata_path = os.path.join(character_folder, \"metadata.csv\")\n    valid_metadata_path = os.path.join(character_folder, \"valid.csv\")\n    config_path = os.path.join(character_folder, f\"{character}_config.json\")\n    config = {\n        \"output_path\": os.path.join(base_output_dir, \"tts_train_output\", character),\n        \"datasets\": [",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "generate_valid_csv",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def generate_valid_csv(metadata_path, valid_ratio=0.2):\n    \"\"\"Generate a valid.csv file from metadata.csv for validation purposes.\"\"\"\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\")\n        n_valid = int(len(df) * valid_ratio)\n        indices = np.random.permutation(len(df))\n        valid_df = df.iloc[indices[:n_valid]]\n        valid_path = os.path.join(os.path.dirname(metadata_path), \"valid.csv\")\n        valid_df.to_csv(valid_path, sep=\"|\", index=False, encoding=\"utf-8\")\n        logging.info(f\"Valid CSV generated: {valid_path}\")",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
         "label": "process_character_voices",
         "kind": 2,
         "importPath": "genshin_voice_downloader",

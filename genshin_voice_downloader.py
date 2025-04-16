@@ -361,6 +361,64 @@ def validate_metadata_layout(metadata_path):
         logging.error(f"Error validating {metadata_path}: {e}")
         return False
 
+def update_character_config(character, base_output_dir, selected_model="Fast Tacotron2"):
+    """Automatically updates the JSON configuration file for a character."""
+    character_folder = os.path.join(base_output_dir, character)
+    wavs_folder = os.path.join(character_folder, "wavs")
+    metadata_path = os.path.join(character_folder, "metadata.csv")
+    valid_metadata_path = os.path.join(character_folder, "valid.csv")
+
+    config_path = os.path.join(character_folder, f"{character}_config.json")
+
+    config = {
+        "output_path": os.path.join(base_output_dir, "tts_train_output", character),
+        "datasets": [
+            {
+                "name": character,
+                "path": wavs_folder,
+                "meta_file_train": metadata_path,
+                "meta_file_val": valid_metadata_path
+            }
+        ],
+        "audio": {
+            "sample_rate": 22050,
+            "fft_size": 1024,
+            "win_length": 1024,
+            "hop_length": 256,
+            "num_mels": 80,
+            "mel_fmin": 0.0,
+            "mel_fmax": 8000.0
+        },
+        "model": AVAILABLE_MODELS[selected_model]["model_id"],
+        "batch_size": 16,
+        "num_epochs": 100,
+        "use_precomputed_alignments": False,
+        "run_eval": True
+    }
+
+    try:
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=4)
+        logging.info(f"Config file updated: {config_path}")
+    except Exception as e:
+        logging.error(f"Error updating config for {character}: {e}")
+
+def generate_valid_csv(metadata_path, valid_ratio=0.2):
+    """Generate a valid.csv file from metadata.csv for validation purposes."""
+    try:
+        df = pd.read_csv(metadata_path, sep="|", encoding="utf-8")
+        n_valid = int(len(df) * valid_ratio)
+        indices = np.random.permutation(len(df))
+        valid_df = df.iloc[indices[:n_valid]]
+        valid_path = os.path.join(os.path.dirname(metadata_path), "valid.csv")
+        valid_df.to_csv(valid_path, sep="|", index=False, encoding="utf-8")
+        logging.info(f"Valid CSV generated: {valid_path}")
+        return valid_path
+    except Exception as e:
+        logging.error(f"Error generating valid.csv from {metadata_path}: {e}")
+        return None
+
 def process_character_voices(
     character, language, base_output_dir, download_wiki_audio=True, whisper_model="base",
     use_segmentation=False, hf_token="", strict_ascii=False, status_label=None
@@ -376,6 +434,9 @@ def process_character_voices(
         transcribe_character_audio(
             character_folder, whisper_model, use_segmentation, hf_token, strict_ascii, status_label
         )
+        metadata_path = os.path.join(character_folder, "metadata.csv")
+        generate_valid_csv(metadata_path)
+        update_character_config(character, base_output_dir)
         return character_folder
 
     categories = (
@@ -419,21 +480,12 @@ def process_character_voices(
         if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
             shutil.move(os.path.join(character_folder, file), os.path.join(wavs_folder, file))
 
-    # Start TTS training after audio processing
+    # Generate valid.csv
     metadata_path = os.path.join(character_folder, "metadata.csv")
-    if validate_metadata_existence(character_folder) and validate_metadata_layout(metadata_path):
-        config_path = generate_character_config(
-            character,
-            character_folder,
-            22050,  # Ensure this matches your audio sample rate
-            selected_model="Fast Tacotron2"  # Default TTS model
-        )
-        if config_path:
-            start_tts_training(config_path)
-        else:
-            logging.error("Failed to generate TTS config.")
-    else:
-        logging.error("Metadata validation failed. Skipping TTS training.")
+    generate_valid_csv(metadata_path)
+
+    # Automatically update the JSON configuration file
+    update_character_config(character, base_output_dir)
 
     return character_folder
 
@@ -682,8 +734,44 @@ def main_gui():
 
         download_button.config(state="normal")
 
+    def start_training():
+        character = character_var.get()
+        base_output_dir = output_dir_var.get()
+        selected_tts_model = tts_model_var.get()
+
+        if not character or character == "No characters found":
+            messagebox.showerror("Error", "Select a valid character.")
+            return
+        if not base_output_dir:
+            messagebox.showerror("Error", "Enter an output directory.")
+            return
+
+        character_folder = os.path.join(base_output_dir, character)
+        metadata_path = os.path.join(character_folder, "metadata.csv")
+
+        if validate_metadata_existence(character_folder) and validate_metadata_layout(metadata_path):
+            config_path = generate_character_config(
+                character,
+                character_folder,
+                22050,  # Ensure this matches your audio sample rate
+                selected_model=selected_tts_model  # Use selected model
+            )
+            if config_path:
+                if start_tts_training(config_path):
+                    status_label.config(text=f"Training started for {character}.")
+                else:
+                    status_label.config(text=f"Training failed for {character}.")
+            else:
+                status_label.config(text=f"Failed to generate config for {character}.")
+        else:
+            status_label.config(text="Metadata validation failed. Training cannot proceed.")
+
     download_button = ttk.Button(control_frame, text="Process Voices", command=start_processing)
     download_button.pack(side=tk.RIGHT, padx=5, pady=5)
+
+    # Add Training Button
+    train_button = ttk.Button(control_frame, text="Start Training", command=start_training)
+    train_button.pack(side=tk.RIGHT, padx=5, pady=5)
 
     window.grid_columnconfigure(0, weight=1)
     config_frame.grid_columnconfigure(1, weight=1)
