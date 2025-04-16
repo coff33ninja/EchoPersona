@@ -813,6 +813,13 @@ def start_tts_training(config_path, resume_from_checkpoint=None, status_queue=No
             logging.error(f"Invalid validation metadata: {valid_metadata_path}")
             return False
 
+        if not os.path.exists(config["output_path"]):
+            os.makedirs(config["output_path"], exist_ok=True)
+        else:
+            backup_file(config["output_path"], "tts_output_backup")
+            shutil.rmtree(config["output_path"])
+            os.makedirs(config["output_path"], exist_ok=True)
+
         tts = TTS(model_name=config["model"].split("/")[-1] if config["model"].startswith("tts_models") else config["model"], progress_bar=True)
         character_dir = os.path.dirname(config_path)
         if not validate_training_prerequisites(character_dir, config_path):
