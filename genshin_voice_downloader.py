@@ -386,7 +386,9 @@ def transcribe_character_audio(
                             if status_queue:
                                 status_queue.put(f"Moved failed file: {file}")
                         continue
-                    metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
+                    metadata_entry = (
+                        f"{cleaned_transcript}|wavs/{file}|speaker_1"
+                    )
                     if metadata_entry.count("|") != 3:
                         logging.warning(f"Invalid metadata entry for {file}: {metadata_entry}")
                         if attempt == 1:
@@ -448,7 +450,7 @@ def validate_metadata_for_training(metadata_path):
         invalid_lines = []
         for i, line in enumerate(lines[1:], 2):
             fields = line.strip().split("|")
-            if len(fields) != 4 or not all(fields[:3]):
+            if len(fields) != 3 or not all(fields):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
             logging.error(f"Invalid metadata entries in {metadata_path}: {[f'Line {i}: {line}' for i, line in invalid_lines]}")
