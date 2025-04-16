@@ -4596,7 +4596,16 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def is_silent_audio(file_path, silence_threshold=-50.0):\n    \"\"\"Check if audio is silent based on max dBFS.\"\"\"\n    try:\n        audio = AudioSegment.from_wav(file_path)\n        return audio.max_dBFS < silence_threshold\n    except Exception as e:\n        logging.error(f\"Error checking silence for {file_path}: {e}\")\n        return True  # Treat errors as silent to skip\ndef transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:",
+        "peekOfCode": "def is_silent_audio(file_path, silence_threshold=-50.0):\n    \"\"\"Check if audio is silent based on max dBFS.\"\"\"\n    try:\n        audio = AudioSegment.from_wav(file_path)\n        return audio.max_dBFS < silence_threshold\n    except Exception as e:\n        logging.error(f\"Error checking silence for {file_path}: {e}\")\n        return True  # Treat errors as silent to skip\ndef clean_metadata_file(metadata_path):\n    \"\"\"Remove invalid lines from metadata.csv and rewrite it.\"\"\"",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "clean_metadata_file",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def clean_metadata_file(metadata_path):\n    \"\"\"Remove invalid lines from metadata.csv and rewrite it.\"\"\"\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if not lines:\n            logging.error(f\"Metadata file {metadata_path} is empty.\")\n            return False\n        cleaned_lines = [lines[0]]  # Keep header\n        for i, line in enumerate(lines[1:], 2):",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4605,7 +4614,25 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_queue:\n            status_queue.put(\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    silent_dir = os.path.join(character_output_dir, \"silent_files\")\n    os.makedirs(wavs_dir, exist_ok=True)",
+        "peekOfCode": "def transcribe_character_audio(\n    character_output_dir,\n    whisper_model=\"base\",\n    use_segmentation=False,\n    hf_token=\"\",\n    strict_ascii=False,\n    status_queue=None,\n):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "validate_metadata_existence",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def validate_metadata_existence(character_dir):\n    \"\"\"Check if metadata.csv exists and has at least one valid entry.\"\"\"\n    metadata_path = os.path.join(character_dir, \"metadata.csv\")\n    if not os.path.exists(metadata_path):\n        logging.error(f\"Metadata file missing: {metadata_path}\")\n        return False\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:  # Need header + at least one entry",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "process_character_voices",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def process_character_voices(\n    character,\n    language,\n    base_output_dir,\n    download_wiki_audio=True,\n    whisper_model=\"base\",\n    use_segmentation=False,\n    hf_token=\"\",\n    strict_ascii=False,\n    status_queue=None,",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4642,15 +4669,6 @@
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
         "peekOfCode": "def generate_valid_csv(metadata_path, valid_ratio=0.2):\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\")\n        n_valid = int(len(df) * valid_ratio)\n        indices = np.random.permutation(len(df))\n        valid_df = df.iloc[indices[:n_valid]]\n        valid_path = os.path.join(os.path.dirname(metadata_path), \"valid.csv\")\n        valid_df.to_csv(valid_path, sep=\"|\", index=False, encoding=\"utf-8\")\n        logging.info(f\"Valid CSV generated: {valid_path}\")\n        return valid_path",
-        "detail": "genshin_voice_downloader",
-        "documentation": {}
-    },
-    {
-        "label": "process_character_voices",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "def process_character_voices(\n    character, language, base_output_dir, download_wiki_audio=True, whisper_model=\"base\",\n    use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None,\n    batch_size=16, num_epochs=100, learning_rate=0.0001, stop_event=None\n):\n    safe_character_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", character)\n    character_folder = os.path.join(base_output_dir, safe_character_name)\n    wavs_folder = os.path.join(character_folder, \"wavs\")\n    os.makedirs(wavs_folder, exist_ok=True)\n    if not download_wiki_audio:",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4731,7 +4749,7 @@
         "kind": 5,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "BASE_DATA_DIR = \"voice_datasets\"\nWIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged for Brevity) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline",
+        "peekOfCode": "BASE_DATA_DIR = \"voice_datasets\"\nWIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4740,7 +4758,7 @@
         "kind": 5,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "WIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged for Brevity) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)",
+        "peekOfCode": "WIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4749,7 +4767,7 @@
         "kind": 5,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "JMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged for Brevity) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)\n        segments = pipeline(audio_path)",
+        "peekOfCode": "JMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)\n        segments = pipeline(audio_path)",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },

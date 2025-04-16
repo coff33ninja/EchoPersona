@@ -1,182 +1,260 @@
-I’m stoked to help you get Arlecchino’s TTS model up and running with all the CLI commands you need, from installing packages to training and testing! 😎 Based on your work with `genshin_voice_downloader.py` and focus on Arlecchino (April 14-15, 2025), I’ll provide a clear, step-by-step list of commands tailored for your Windows setup, using the latest script version with MP3 saving and GUI TTS feedback. This covers installing dependencies, downloading voice data, transcribing, training, and testing, all while keeping it practical and aligned with your `voice_datasets\Arlecchino` structure. Let’s dive in—no rabbit holes, just the commands you need!
+Genshin Impact Voice Downloader & TTS Trainer
+This project, genshin_voice_downloader.py, enables you to download voice-overs from the Genshin Impact wiki, transcribe them, train a text-to-speech (TTS) model using Coqui TTS, and generate custom MP3s for characters like Arlecchino. With both CLI and GUI support, it’s ideal for creating lines like “Would you sit by my side?” in Arlecchino’s voice. This README provides step-by-step instructions for your Windows setup, tailored to your existing project folder and 59 WAV files (30 successful, 11 failed, 18 silent as of April 16, 2025).
+Features
 
-### Assumptions
-- **OS**: Windows 10 (per your April 15, 2025, context).
-- **Python**: 3.11.9 (your preference, April 12, 2025).
-- **Directory**: Working in a project folder (e.g., `C:\GenshinTTS`).
-- **Character**: Arlecchino, with data in `voice_datasets\Arlecchino`.
-- **Tools**: Coqui TTS, `ffmpeg` for audio processing, and `pydub` for MP3 conversion.
-- **Script**: Using the latest `genshin_voice_downloader.py` (artifact_version_id: c6f25839-bb7c-4efd-a073-427c424538d3).
+Download: Fetches voice-overs from Genshin Impact wiki.
+Transcribe: Uses Whisper (base or large-v2) to generate metadata.csv and valid.csv.
+Train: Builds a TTS model with customizable batch_size, num_epochs, and learning_rate.
+Test: Generates test audio to verify model quality.
+Synthesize: Creates MP3s via GUI with custom text, saved as Arlecchino_tts_YYYYMMDD_HHMMSS.mp3.
+Options: Supports segmentation (--use_segmentation), strict ASCII (--strict_ascii), and resuming training (--resume_from_checkpoint).
 
-### Step-by-Step CLI Commands
+Prerequisites
 
-#### 1. Set Up Your Environment
-Create a project folder and virtual environment to keep things clean.
+OS: Windows 10/11
+Python: 3.11.9
+Project Directory: C:\Users\USER\Documents\GitHub\EchoPersona
+Character: Arlecchino (default)
+Data: ~59 WAVs in voice_datasets\Arlecchino\wavs (from April 16, 2025)
+Dependencies: ffmpeg, Python packages (below)
+Optional: Hugging Face token for audio segmentation
 
-```bash
-mkdir C:\GenshinTTS
-cd C:\GenshinTTS
-python -m venv venv
-venv\Scripts\activate
-```
+Setup Instructions
+1. Navigate to Project
+Open PowerShell and go to your project folder.
+cd C:\Users\USER\Documents\GitHub\EchoPersona
 
-#### 2. Install Required Pip Packages
-Install all dependencies for `genshin_voice_downloader.py`. I’ve included everything from the script’s imports and your past TTS work (April 13, 2025, with `gTTS` and `playsound`).
+2. Set Up Virtual Environment
+Activate your existing virtual environment.
+.venv\Scripts\Activate.ps1
 
-```bash
+If missing:
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+
+3. Install Dependencies
+Install required Python packages.
 pip install requests pandas numpy pydub tqdm TTS playsound python-slugify
-```
 
-**Notes**:
-- `TTS` installs Coqui TTS for training and synthesis.
-- `pydub` requires `ffmpeg`. Install it manually:
-  - Download `ffmpeg` from [ffmpeg.org](https://ffmpeg.org/download.html) or a trusted source like [gyan.dev](https://www.gyan.dev/ffmpeg/builds/).
-  - Extract and add `ffmpeg\bin` to your system PATH (e.g., `C:\ffmpeg\bin`).
-  - Verify: `ffmpeg -version`
-- If you’re using audio segmentation (optional), add:
-  ```bash
-  pip install pyannote.audio
-  ```
-  - Requires a Hugging Face token (set later if needed).
+Install ffmpeg:
 
-#### 3. Download and Save the Script
-Save `genshin_voice_downloader.py` in `C:\GenshinTTS`. You can copy the latest version from the artifact (I’ll assume you’ve got it downloaded). If not, here’s a placeholder command to remind you:
+Download from gyan.dev.
+Extract to C:\ffmpeg.
+Add to PATH:$env:Path += ";C:\ffmpeg\bin"
 
-```bash
-echo Save genshin_voice_downloader.py to C:\GenshinTTS
-```
 
-**Note**: If you’re fetching it programmatically, let me know, and I can suggest a curl/wget command!
+Verify:ffmpeg -version
 
-#### 4. Download Voice Data
-Download Arlecchino’s voice-overs from the Genshin wiki and prepare the dataset.
 
-```bash
-python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English
-```
 
-**What it does**:
-- Downloads English voice-overs to `voice_datasets\Arlecchino`.
-- Creates `wavs` folder, `metadata.csv`, and `valid.csv`.
-- Skips transcription if `--skip_wiki_download` is used (not here).
+For audio segmentation (optional):
+pip install pyannote.audio
 
-**Optional** (if using segmentation, requires HF token):
-```bash
-python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --use_segmentation --hf_token YOUR_HF_TOKEN
-```
-- Replace `YOUR_HF_TOKEN` with your Hugging Face token (get from [huggingface.co](https://huggingface.co/settings/tokens)).
 
-#### 5. Transcribe Audio (Optional)
-If you skipped transcription in step 4 or want to re-transcribe:
+Requires a Hugging Face token (set in step 5).
 
-```bash
+4. Verify Script
+Ensure genshin_voice_downloader.py is in C:\Users\USER\Documents\GitHub\EchoPersona and includes clean_metadata_file and validate_metadata_existence (fixes for NameError, April 16, 2025).
+If outdated/missing:
+
+Update with the latest script (artifact b6a459cb-46bc-41bf-b0e0-255c9dc8f3e4, version 1f6f83c3-4787-4443-9766-36639c9f2af4).
+Save to C:\Users\USER\Documents\GitHub\EchoPersona\genshin_voice_downloader.py.
+
+5. Check Voice Data
+Verify your WAV files (~59 expected).
+Get-ChildItem -Path voice_datasets\Arlecchino\wavs\*.wav | Measure-Object
+
+If fewer than expected:
+
+Download voice-overs:python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English
+
+
+Saves WAVs to voice_datasets\Arlecchino\wavs.
+
+
+With segmentation:python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --use_segmentation --hf_token YOUR_HF_TOKEN
+
+
+Replace YOUR_HF_TOKEN with your token from huggingface.co.
+
+
+Strict ASCII (optional, for cleaner transcriptions):python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --strict_ascii
+
+
+
+Running the Pipeline
+6. Transcribe Audio
+Transcribe WAVs to generate metadata.csv and valid.csv, addressing failed (11) and silent (18) files.
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --skip_wiki_download --whisper_model base
-```
 
-**What it does**:
-- Transcribes WAVs in `voice_datasets\Arlecchino` using Whisper `base` model.
-- Updates `metadata.csv` and `valid.csv`.
-
-**Optional** (for better transcription):
-```bash
+For higher accuracy (recommended):
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --skip_wiki_download --whisper_model large-v2
-```
 
-#### 6. Train the TTS Model
-Train Arlecchino’s voice model with custom parameters. Start small to test.
+With segmentation:
+python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --skip_wiki_download --whisper_model large-v2 --use_segmentation --hf_token YOUR_HF_TOKEN
 
-```bash
+With strict ASCII:
+python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --skip_wiki_download --whisper_model large-v2 --strict_ascii
+
+Outputs:
+
+voice_datasets\Arlecchino\wavs: ~30+ valid WAVs
+voice_datasets\Arlecchino\silent_files: Failed/silent WAVs
+voice_datasets\Arlecchino\metadata.csv: ~30 entries
+voice_datasets\Arlecchino\valid.csv: ~6 entries
+
+7. Verify Silent Files
+Check files in silent_files to ensure they’re truly silent.
+Get-ChildItem -Path voice_datasets\Arlecchino\silent_files\*.wav
+
+If valid audio found:
+
+Play to confirm:Start-Process voice_datasets\Arlecchino\silent_files\0.wav
+
+
+Move back and re-transcribe:Move-Item -Path voice_datasets\Arlecchino\silent_files\*.wav -Destination voice_datasets\Arlecchino\wavs
+Remove-Item -Path voice_datasets\Arlecchino\metadata.csv
+
+Repeat step 6 with --whisper_model large-v2.
+
+8. Validate Metadata
+Ensure metadata.csv is clean and valid.
+Get-Content voice_datasets\Arlecchino\metadata.csv
+
+If empty or invalid:
+Remove-Item -Path voice_datasets\Arlecchino\metadata.csv
+
+Repeat step 6.
+9. Train TTS Model
+Test training with small parameters to verify setup.
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --batch_size 4 --num_epochs 5 --learning_rate 0.0001
-```
 
-**What it does**:
-- Generates `Arlecchino_config.json` in `voice_datasets\Arlecchino`.
-- Trains a model, saving checkpoints to `voice_datasets\tts_train_output\Arlecchino\checkpoints`.
-- Small `batch_size` and `num_epochs` for quick testing.
-
-**Full Training** (once tested):
-```bash
+Full training:
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --batch_size 8 --num_epochs 100 --learning_rate 0.0001
-```
 
-**Resume Training** (if interrupted, uses latest checkpoint):
-```bash
+Resume training (if interrupted):
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --batch_size 8 --num_epochs 100 --learning_rate 0.0001 --resume_from_checkpoint voice_datasets\tts_train_output\Arlecchino\checkpoints\checkpoint_latest.pth
-```
 
-#### 7. Test the Trained Model
-Test the model to generate a sample audio file.
+Outputs:
 
-```bash
+voice_datasets\Arlecchino\Arlecchino_config.json
+voice_datasets\tts_train_output\Arlecchino\checkpoints
+
+10. Test Model
+Generate a test audio to check model quality.
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --test_model
-```
 
-**What it does**:
-- Synthesizes “Hello, this is a test of the trained model!” using the latest checkpoint.
-- Saves to `voice_datasets\tts_train_output\Arlecchino\test_output.wav`.
+Output:
 
-#### 8. Verify Output (Optional)
-Play the test output to confirm it sounds like Arlecchino.
+voice_datasets\tts_train_output\Arlecchino\test_output.wav
 
-```bash
-# Windows command to play the WAV
-start voice_datasets\tts_train_output\Arlecchino\test_output.wav
-```
+11. Play Test Audio
+Verify the model sounds like Arlecchino.
+Start-Process voice_datasets\tts_train_output\Arlecchino\test_output.wav
 
-**Note**: Requires a media player associated with WAV files.
-
-#### 9. Use GUI for TTS Feedback (Optional)
-The CLI doesn’t support interactive TTS, so launch the GUI to test custom text and save MP3s.
-
-```bash
+12. Generate MP3s with GUI
+Create custom MP3s with the GUI.
 python genshin_voice_downloader.py
-```
 
-- Select Arlecchino, keep `voice_datasets` as output directory.
-- In “TTS Feedback”, enter text (e.g., “I am the Knave!”), click “Speak”.
-- Saves MP3 to `voice_datasets\tts_train_output\Arlecchino\tts_outputs\Arlecchino_tts_YYYYMMDD_HHMMSS.mp3` and plays it.
 
-#### 10. Organize Outputs (Optional)
-List saved MP3s to check your collection.
+Select “Arlecchino” and voice_datasets.
+In “TTS Feedback”, enter text (e.g., “Would you sit by my side?”).
+Click “Speak”.
+Saves to voice_datasets\tts_train_output\Arlecchino\tts_outputs\Arlecchino_tts_YYYYMMDD_HHMMSS.mp3.
 
-```bash
-dir voice_datasets\tts_train_output\Arlecchino\tts_outputs\*.mp3
-```
+13. Organize Outputs
+List generated MP3s.
+Get-ChildItem -Path voice_datasets\tts_train_output\Arlecchino\tts_outputs\*.mp3
 
-### Full Workflow Example
-Run these in sequence for a complete pipeline (assuming no errors):
-
-```bash
-mkdir C:\GenshinTTS
-cd C:\GenshinTTS
-python -m venv venv
-venv\Scripts\activate
+Full Workflow
+Run these commands for a complete pipeline:
+cd C:\Users\USER\Documents\GitHub\EchoPersona
+.venv\Scripts\Activate.ps1
 pip install requests pandas numpy pydub tqdm TTS playsound python-slugify
-# Save genshin_voice_downloader.py to C:\GenshinTTS
-python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English
+Get-ChildItem -Path voice_datasets\Arlecchino\wavs\*.wav | Measure-Object
+python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --language English --skip_wiki_download --whisper_model large-v2
+Get-Content voice_datasets\Arlecchino\metadata.csv
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --batch_size 4 --num_epochs 5 --learning_rate 0.0001
 python genshin_voice_downloader.py --character Arlecchino --output_dir voice_datasets --test_model
-start voice_datasets\tts_train_output\Arlecchino\test_output.wav
-python genshin_voice_downloader.py  # GUI for MP3 saving
-```
+Start-Process voice_datasets\tts_train_output\Arlecchino\test_output.wav
+python genshin_voice_downloader.py  # GUI for MP3s
 
-### Troubleshooting Tips
-- **PermissionError**: Clear `voice_datasets\tts_train_output\Arlecchino` and retry (April 15, 2025, issue).
-  ```bash
-  rmdir /s /q voice_datasets\tts_train_output\Arlecchino
-  ```
-- **UnicodeEncodeError**: Ensure UTF-8 encoding; the script handles this now (April 15, 2025).
-- **Missing `ffmpeg`**: Verify PATH with `ffmpeg -version`.
-- **Coqui TTS Errors**: Check GPU compatibility or force CPU:
-  ```bash
-  set CUDA_VISIBLE_DEVICES=""
-  ```
-- **Slow Training**: Reduce `batch_size` (e.g., 4) or use fewer `num_epochs`.
+CLI Options
+The script supports the following arguments:
 
-### Why This Rocks
-You’ve got a full pipeline to go from scratch to Arlecchino’s voice in MP3s! The commands are modular, so you can tweak parameters (like your April 15, 2025, interest in custom paths) or pause/resume training. The GUI step lets you play with custom lines, saving them for later—perfect for your verification vibe (April 13, 2025).
+--character: Character name (e.g., Arlecchino).
+--output_dir: Output directory (default: voice_datasets).
+--language: Language for voice-overs (default: English, options: English, Japanese, Chinese, Korean).
+--whisper_model: Whisper model for transcription (default: base, options: base, large-v2).
+--use_segmentation: Enable PyAnnote audio segmentation (requires --hf_token).
+--hf_token: Hugging Face token for segmentation.
+--strict_ascii: Force ASCII-only transcriptions.
+--skip_wiki_download: Skip downloading from wiki, use existing WAVs.
+--batch_size: Batch size for training (default: 16).
+--num_epochs: Number of training epochs (default: 100).
+--learning_rate: Learning rate for training (default: 0.0001).
+--resume_from_checkpoint: Path to checkpoint to resume training.
+--test_model: Test the trained model after training.
 
-### Avoiding Rabbit Holes
-- **Start Small**: Use `--batch_size 4 --num_epochs 5` to test training first.
-- **Check Outputs**: After testing, play `test_output.wav` to confirm quality.
-- **GUI for Fun**: Use the GUI to save MP3s like “Arlecchino_tts_20250416_1220.mp3” without CLI hassle.
+Troubleshooting
+
+Transcription Failures (e.g., 11 failed, 18 silent, April 16, 2025):
+Retry step 6 with --whisper_model large-v2.
+Check silent_files (step 7).
+
+
+PermissionError (April 15, 2025):Remove-Item -Recurse -Force voice_datasets\tts_train_output\Arlecchino
+
+
+Metadata Errors (e.g., “not enough values”, April 16, 2025):Remove-Item -Path voice_datasets\Arlecchino\metadata.csv
+
+Repeat step 6.
+Missing voice_tools.py:
+Ensure it’s in the project folder for SpeechToText.
+If missing, transcription fails—reinstall or skip segmentation.
+
+
+UnicodeEncodeError (April 15, 2025):
+Script now uses UTF-8; verify file encodings.
+
+
+Coqui TTS Errors:
+Force CPU if GPU issues:$env:CUDA_VISIBLE_DEVICES=""
+
+
+
+
+Slow Training:
+Test with --batch_size 4 --num_epochs 5.
+
+
+No Audio Output:
+Check WAV/MP3 associations in Windows.
+Verify playsound logs in GUI.
+
+
+
+Notes
+
+Data Safety:
+Back up metadata.csv before re-transcribing:Copy-Item -Path voice_datasets\Arlecchino\metadata.csv -Destination voice_datasets\Arlecchino\metadata_backup.csv
+
+
+
+
+Performance Tips:
+Use --whisper_model large-v2 for better transcription accuracy.
+Adjust batch_size (e.g., 4 for low memory, 8 for full training).
+
+
+Verification:
+Always check metadata.csv and silent_files to catch issues early.
+
+
+GUI:
+Ideal for generating MP3s with custom text; CLI handles downloading and training.
+
+
+
+Support
+If you encounter errors (e.g., low transcription counts or new crashes), check PowerShell logs or share them for assistance. This pipeline is optimized for your 59 WAVs and includes fixes for past issues (NameError, metadata errors). Get ready to hear Arlecchino’s voice in stunning MP3s! 🎙️

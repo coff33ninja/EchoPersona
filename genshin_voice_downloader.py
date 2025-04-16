@@ -40,7 +40,7 @@ BASE_DATA_DIR = "voice_datasets"
 WIKI_API_URL = "https://genshin-impact.fandom.com/api.php"
 JMP_API_URL_BASE = "https://genshin.jmp.blue"
 
-# --- Helper Functions (Unchanged for Brevity) ---
+# --- Helper Functions ---
 
 def segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=""):
     if not hf_token:
@@ -220,12 +220,44 @@ def is_silent_audio(file_path, silence_threshold=-50.0):
         logging.error(f"Error checking silence for {file_path}: {e}")
         return True  # Treat errors as silent to skip
 
-def transcribe_character_audio(character_output_dir, whisper_model="base", use_segmentation=False, hf_token="", strict_ascii=False, status_queue=None):
+def clean_metadata_file(metadata_path):
+    """Remove invalid lines from metadata.csv and rewrite it."""
+    try:
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        if not lines:
+            logging.error(f"Metadata file {metadata_path} is empty.")
+            return False
+
+        cleaned_lines = [lines[0]]  # Keep header
+        for i, line in enumerate(lines[1:], 2):
+            fields = line.strip().split("|")
+            if len(fields) == 4 and all(fields[:3]):  # Require 4 fields, first 3 non-empty
+                cleaned_lines.append(line)
+            else:
+                logging.warning(f"Removed invalid line {i} in {metadata_path}: {line.strip()}")
+
+        with open(metadata_path, "w", encoding="utf-8", newline="") as f:
+            f.writelines(cleaned_lines)
+        logging.info(f"Cleaned {metadata_path}: {len(cleaned_lines)-1} valid entries.")
+        return True
+    except Exception as e:
+        logging.error(f"Error cleaning {metadata_path}: {e}")
+        return False
+
+def transcribe_character_audio(
+    character_output_dir,
+    whisper_model="base",
+    use_segmentation=False,
+    hf_token="",
+    strict_ascii=False,
+    status_queue=None,
+):
     if SpeechToText is None:
         logging.error("Transcription unavailable: SpeechToText not imported.")
         if status_queue:
             status_queue.put("Transcription unavailable.")
-        return
+        return False  # Return False to indicate failure
 
     metadata_path = os.path.join(character_output_dir, "metadata.csv")
     wavs_dir = os.path.join(character_output_dir, "wavs")
@@ -233,7 +265,6 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
     os.makedirs(wavs_dir, exist_ok=True)
     os.makedirs(silent_dir, exist_ok=True)
 
-    # Check existing metadata validity
     existing_files = set()
     if os.path.exists(metadata_path) and validate_metadata_layout(metadata_path):
         try:
@@ -245,7 +276,7 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                         existing_files.add(parts[0])
         except UnicodeDecodeError:
             logging.error(f"Encoding error reading {metadata_path}. Ensure UTF-8 format.")
-            return
+            return False
     else:
         logging.info(f"Invalid or missing metadata at {metadata_path}. Starting fresh.")
         existing_files = set()
@@ -256,7 +287,12 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
             if file.lower().endswith(".wav") and file not in os.listdir(wavs_dir):
                 wav_path = os.path.join(character_output_dir, file)
                 segmented_files = segment_audio_file(
-                    wav_path, wavs_dir, onset=0.6, offset=0.4, min_duration=2.0, hf_token=hf_token
+                    wav_path,
+                    wavs_dir,
+                    onset=0.6,
+                    offset=0.4,
+                    min_duration=2.0,
+                    hf_token=hf_token,
                 )
                 if segmented_files:
                     files_to_transcribe.extend([os.path.basename(f) for f in segmented_files])
@@ -265,7 +301,8 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                     files_to_transcribe.append(file)
     else:
         files_to_transcribe = [
-            file for file in os.listdir(wavs_dir)
+            file
+            for file in os.listdir(wavs_dir)
             if file.lower().endswith(".wav") and f"wavs/{file}" not in existing_files
         ]
 
@@ -274,9 +311,8 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
         if status_queue:
             status_queue.put("No new files to transcribe.")
         if os.path.exists(metadata_path):
-            clean_metadata_file(metadata_path)
-        split_metadata(metadata_path, valid_ratio=0.2)
-        return
+            return clean_metadata_file(metadata_path)
+        return True
 
     logging.info(f"Processing {len(files_to_transcribe)} WAV files with Whisper {whisper_model}...")
     transcribed_count = 0
@@ -293,7 +329,6 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
             if status_queue:
                 status_queue.put(f"Checking: {file}")
 
-            # Check for silence
             if is_silent_audio(wav_path):
                 logging.warning(f"Moving silent file {file} to silent_files")
                 shutil.move(wav_path, os.path.join(silent_dir, file))
@@ -302,8 +337,7 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                     status_queue.put(f"Moved silent file: {file}")
                 continue
 
-            # Try transcribing
-            for attempt in range(2):  # Retry once
+            for attempt in range(2):
                 try:
                     if status_queue:
                         status_queue.put(f"Transcribing: {file} (Attempt {attempt+1})")
@@ -316,7 +350,12 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                     audio_transcript = stt.process_audio(language="en")
                     cleaned_transcript = clean_transcript(audio_transcript, strict_ascii=strict_ascii)
                     if cleaned_transcript and is_valid_for_phonemes(cleaned_transcript):
-                        normalized = clean_transcript(cleaned_transcript, strict_ascii=True).lower().replace(".", "").replace(",", "")
+                        normalized = (
+                            clean_transcript(cleaned_transcript, strict_ascii=True)
+                            .lower()
+                            .replace(".", "")
+                            .replace(",", "")
+                        )
                         if normalized.strip():
                             metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
                             mf.write(metadata_entry + "\n")
@@ -328,7 +367,7 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                             logging.warning(f"Empty normalized transcription for {file}")
                     else:
                         logging.warning(f"Invalid transcription for {file}")
-                    if attempt == 1:  # Second attempt failed
+                    if attempt == 1:
                         logging.warning(f"Moving failed file {file} to silent_files")
                         shutil.move(wav_path, os.path.join(silent_dir, file))
                         failed_count += 1
@@ -344,12 +383,148 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                             status_queue.put(f"Error transcribing {file}: Moved to silent_files")
                     continue
 
-    logging.info(f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}.")
+    logging.info(
+        f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}."
+    )
     if status_queue:
-        status_queue.put(f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}.")
+        status_queue.put(
+            f"Transcription complete. Successful: {transcribed_count}, Failed: {failed_count}, Silent: {silent_count}."
+        )
 
-    clean_metadata_file(metadata_path)
-    split_metadata(metadata_path, valid_ratio=0.2)
+    success = clean_metadata_file(metadata_path)
+    if success:
+        split_metadata(metadata_path, valid_ratio=0.2)
+    return success
+
+def validate_metadata_existence(character_dir):
+    """Check if metadata.csv exists and has at least one valid entry."""
+    metadata_path = os.path.join(character_dir, "metadata.csv")
+    if not os.path.exists(metadata_path):
+        logging.error(f"Metadata file missing: {metadata_path}")
+        return False
+    try:
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        if len(lines) < 2:  # Need header + at least one entry
+            logging.error(f"Metadata file {metadata_path} has no data entries.")
+            return False
+        return True
+    except Exception as e:
+        logging.error(f"Error checking metadata {metadata_path}: {e}")
+        return False
+
+def process_character_voices(
+    character,
+    language,
+    base_output_dir,
+    download_wiki_audio=True,
+    whisper_model="base",
+    use_segmentation=False,
+    hf_token="",
+    strict_ascii=False,
+    status_queue=None,
+    batch_size=16,
+    num_epochs=100,
+    learning_rate=0.0001,
+    stop_event=None,
+):
+    safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character)
+    character_folder = os.path.join(base_output_dir, safe_character_name)
+    wavs_folder = os.path.join(character_folder, "wavs")
+    os.makedirs(wavs_folder, exist_ok=True)
+
+    if not download_wiki_audio:
+        logging.info("Skipping Wiki download.")
+        success = transcribe_character_audio(
+            character_folder,
+            whisper_model,
+            use_segmentation,
+            hf_token,
+            strict_ascii,
+            status_queue=status_queue,
+        )
+        if not success:
+            logging.error(f"Transcription failed for {character}.")
+            return None
+        metadata_path = os.path.join(character_folder, "metadata.csv")
+        generate_valid_csv(metadata_path)
+        update_character_config(
+            character,
+            base_output_dir,
+            batch_size=batch_size,
+            num_epochs=num_epochs,
+            learning_rate=learning_rate,
+        )
+        return character_folder
+
+    categories = (
+        [
+            f"Category:{character} Voice-Overs",
+            f"Category:English {character} Voice-Overs",
+        ]
+        if language == "English"
+        else [f"Category:{language} {character} Voice-Overs"]
+    )
+
+    files_to_download = []
+    for category in categories:
+        files_to_download.extend(get_category_files(category))
+
+    unique_files = sorted(list(set(files_to_download)))
+    downloaded_count = 0
+    failed_count = 0
+
+    for i, file_title in enumerate(unique_files):
+        if stop_event and stop_event.is_set():
+            status_queue.put("Processing cancelled.")
+            return None
+        file_name = re.match(r"File:(.*)", file_title).group(1).strip()
+        file_url = get_file_url(file_title)
+        if file_url:
+            wav_file_path = download_and_convert(
+                file_url, character_folder, file_name, status_queue=status_queue
+            )
+            if wav_file_path:
+                downloaded_count += 1
+            else:
+                failed_count += 1
+        else:
+            failed_count += 1
+
+    logging.info(
+        f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}."
+    )
+    status_queue.put(
+        f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}."
+    )
+    success = transcribe_character_audio(
+        character_folder,
+        whisper_model,
+        use_segmentation,
+        hf_token,
+        strict_ascii,
+        status_queue=status_queue,
+    )
+    if not success:
+        logging.error(f"Transcription failed for {character}.")
+        return None
+
+    for file in os.listdir(character_folder):
+        if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
+            shutil.move(
+                os.path.join(character_folder, file), os.path.join(wavs_folder, file)
+            )
+
+    metadata_path = os.path.join(character_folder, "metadata.csv")
+    generate_valid_csv(metadata_path)
+    update_character_config(
+        character,
+        base_output_dir,
+        batch_size=batch_size,
+        num_epochs=num_epochs,
+        learning_rate=learning_rate,
+    )
+    return character_folder
 
 def validate_metadata_layout(metadata_path):
     try:
@@ -370,7 +545,6 @@ def validate_metadata_layout(metadata_path):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
             logging.warning(f"Found {len(invalid_lines)} invalid lines in {metadata_path}: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
-            # Clean the file immediately
             clean_metadata_file(metadata_path)
         return True
     except UnicodeDecodeError:
@@ -495,73 +669,6 @@ def generate_valid_csv(metadata_path, valid_ratio=0.2):
     except Exception as e:
         logging.error(f"Error generating valid.csv from {metadata_path}: {e}")
         return None
-
-def process_character_voices(
-    character, language, base_output_dir, download_wiki_audio=True, whisper_model="base",
-    use_segmentation=False, hf_token="", strict_ascii=False, status_queue=None,
-    batch_size=16, num_epochs=100, learning_rate=0.0001, stop_event=None
-):
-    safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character)
-    character_folder = os.path.join(base_output_dir, safe_character_name)
-    wavs_folder = os.path.join(character_folder, "wavs")
-    os.makedirs(wavs_folder, exist_ok=True)
-
-    if not download_wiki_audio:
-        logging.info("Skipping Wiki download.")
-        transcribe_character_audio(
-            character_folder, whisper_model, use_segmentation, hf_token, strict_ascii, status_queue=status_queue
-        )
-        metadata_path = os.path.join(character_folder, "metadata.csv")
-        generate_valid_csv(metadata_path)
-        update_character_config(character, base_output_dir, batch_size=batch_size, num_epochs=num_epochs, learning_rate=learning_rate)
-        return character_folder
-
-    categories = (
-        [
-            f"Category:{character} Voice-Overs",
-            f"Category:English {character} Voice-Overs"
-        ]
-        if language == "English"
-        else [f"Category:{language} {character} Voice-Overs"]
-    )
-
-    files_to_download = []
-    for category in categories:
-        files_to_download.extend(get_category_files(category))
-
-    unique_files = sorted(list(set(files_to_download)))
-    downloaded_count = 0
-    failed_count = 0
-
-    for i, file_title in enumerate(unique_files):
-        if stop_event and stop_event.is_set():
-            status_queue.put("Processing cancelled.")
-            return None
-        file_name = re.match(r"File:(.*)", file_title).group(1).strip()
-        file_url = get_file_url(file_title)
-        if file_url:
-            wav_file_path = download_and_convert(file_url, character_folder, file_name, status_queue=status_queue)
-            if wav_file_path:
-                downloaded_count += 1
-            else:
-                failed_count += 1
-        else:
-            failed_count += 1
-
-    logging.info(f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}.")
-    status_queue.put(f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}.")
-    transcribe_character_audio(
-        character_folder, whisper_model, use_segmentation, hf_token, strict_ascii, status_queue=status_queue
-    )
-
-    for file in os.listdir(character_folder):
-        if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
-            shutil.move(os.path.join(character_folder, file), os.path.join(wavs_folder, file))
-
-    metadata_path = os.path.join(character_folder, "metadata.csv")
-    generate_valid_csv(metadata_path)
-    update_character_config(character, base_output_dir, batch_size=batch_size, num_epochs=num_epochs, learning_rate=learning_rate)
-    return character_folder
 
 # --- Enhanced Training Functions ---
 
@@ -1332,7 +1439,7 @@ if __name__ == "__main__":
         type=str,
         default="base",
         choices=["base", "large-v2"],
-        help="Whisper model size.",
+        help="Whisper model size."
     )
     parser.add_argument(
         "--use_segmentation", action="store_true", help="Use PyAnnote segmentation."
@@ -1356,18 +1463,18 @@ if __name__ == "__main__":
         "--learning_rate",
         type=float,
         default=0.0001,
-        help="Learning rate for training.",
+        help="Learning rate for training."
     )
     parser.add_argument(
         "--resume_from_checkpoint",
         type=str,
         default="",
-        help="Path to checkpoint to resume training.",
+        help="Path to checkpoint to resume training."
     )
     parser.add_argument(
         "--test_model",
         action="store_true",
-        help="Test the trained model after training.",
+        help="Test the trained model after training."
     )
     args = parser.parse_args()
 
