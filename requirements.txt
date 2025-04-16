@@ -29,3 +29,6 @@ soundfile
 openai-whisper
 vosk
 # pocketsphinx (optional)
+requests
+pandas
+unicodedata2
