@@ -232,12 +232,12 @@ def clean_metadata_file(metadata_path):
         for i, line in enumerate(lines, 1):
             fields = line.strip().split("|")
             if i == 1:  # Header
-                if fields != ["audio_file", "text", "speaker_id"]:
+                if fields != ["audio_file", "text", "normalized_text", "speaker_id"]:
                     logging.error(f"Invalid header in {metadata_path}: {line.strip()}")
                     return False
                 cleaned_lines.append(line)
                 continue
-            if len(fields) != 4 or not fields[0] or not fields[1] or not fields[2]:
+            if len(fields) != 3 or not fields[0] or not fields[1] or not fields[2]:
                 invalid_lines.append((i, line.strip()))
                 continue
             cleaned_lines.append(line)
@@ -331,7 +331,7 @@ def transcribe_character_audio(
 
     with open(metadata_path, file_mode, encoding="utf-8", newline="") as mf:
         if file_mode == "w":
-            mf.write("audio_file|text|speaker_id\n")
+            mf.write("audio_file|text|normalized_text|speaker_id\n")
 
         for file in tqdm(files_to_transcribe, desc="Transcribing"):
             src_path = os.path.join(character_output_dir, file)
@@ -386,9 +386,7 @@ def transcribe_character_audio(
                             if status_queue:
                                 status_queue.put(f"Moved failed file: {file}")
                         continue
-                    metadata_entry = (
-                        f"{cleaned_transcript}|wavs/{file}|speaker_1"
-                    )
+                    metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
                     if metadata_entry.count("|") != 3:
                         logging.warning(f"Invalid metadata entry for {file}: {metadata_entry}")
                         if attempt == 1:
@@ -450,7 +448,7 @@ def validate_metadata_for_training(metadata_path):
         invalid_lines = []
         for i, line in enumerate(lines[1:], 2):
             fields = line.strip().split("|")
-            if len(fields) != 3 or not all(fields):
+            if len(fields) != 3 or not all(fields[:3]):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
             logging.error(f"Invalid metadata entries in {metadata_path}: {[f'Line {i}: {line}' for i, line in invalid_lines]}")
@@ -572,19 +570,20 @@ def validate_metadata_layout(metadata_path):
             logging.error(f"Metadata file {metadata_path} is empty or has no data entries.")
             return False
         header = lines[0].strip()
-        expected_header = "audio_file|text|speaker_id"
+        expected_header = "audio_file|text|normalized_text|speaker_id"
         if header != expected_header:
             logging.error(f"Invalid header in {metadata_path}: {header}")
             return False
         invalid_lines = []
         for i, line in enumerate(lines[1:], 2):
             fields = line.strip().split("|")
-            if len(fields) != 4 or not all(fields[:3]):
+            if len(fields) != 3 or not all(fields[:3]):
                 invalid_lines.append((i, line.strip()))
         if invalid_lines:
             logging.warning(
                 f"Found {len(invalid_lines)} invalid lines in {metadata_path}: {[f'Line {i}: {line}' for i, line in invalid_lines]}"
             )
+            clean_metadata_file(metadata_path)
         return True
     except UnicodeDecodeError:
         logging.error(f"Encoding error in {metadata_path}. Ensure UTF-8 format.")
@@ -603,15 +602,17 @@ def validate_training_prerequisites(character_dir, config_path):
         return False
 
     if not validate_metadata_existence(character_dir):
+        logging.error(f"Invalid metadata for Character Directory: {character_dir}")
         return False
     if not os.path.exists(valid_metadata_path):
         logging.error(f"Validation metadata file missing: {valid_metadata_path}")
         return False
 
     if not validate_metadata_for_training(metadata_path):
+        logging.error(f"Invalid metadata for training: {metadata_path}")
         return False
     if not validate_metadata_for_training(valid_metadata_path):
-        logging.error(f"Invalid metadata for training: {metadata_path}")
+        logging.error(f"Invalid metadata for training path: {valid_metadata_path}")
         return False
 
     if not os.path.exists(wavs_dir) or not os.listdir(wavs_dir):
@@ -808,17 +809,14 @@ def start_tts_training(config_path, resume_from_checkpoint=None, status_queue=No
         valid_metadata_path = config["datasets"][0]["meta_file_val"]
         if not validate_metadata_for_training(metadata_path):
             logging.error(f"Invalid metadata for training: {metadata_path}")
+            if status_queue:
+                status_queue.put("Invalid training metadata.")
             return False
         if not validate_metadata_for_training(valid_metadata_path):
             logging.error(f"Invalid validation metadata: {valid_metadata_path}")
+            if status_queue:
+                status_queue.put("Invalid validation metadata.")
             return False
-
-        if not os.path.exists(config["output_path"]):
-            os.makedirs(config["output_path"], exist_ok=True)
-        else:
-            backup_file(config["output_path"], "tts_output_backup")
-            shutil.rmtree(config["output_path"])
-            os.makedirs(config["output_path"], exist_ok=True)
 
         tts = TTS(model_name=config["model"].split("/")[-1] if config["model"].startswith("tts_models") else config["model"], progress_bar=True)
         character_dir = os.path.dirname(config_path)
