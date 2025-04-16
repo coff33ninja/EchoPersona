@@ -14,6 +14,7 @@ import numpy as np
 from pydub import AudioSegment
 from tqdm import tqdm
 import unicodedata
+import datetime
 
 # Ensure voice_tools.py is in the same directory or Python path
 try:
@@ -578,6 +579,13 @@ def start_tts_training(config_path):
         logging.error(f"Error starting TTS training: {e}")
         return False
 
+def backup_file(file_path, suffix):
+    """Create a backup of a file with a given suffix."""
+    if os.path.exists(file_path):
+        backup_path = f"{file_path}.{suffix}.{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+        shutil.copy(file_path, backup_path)
+        logging.info(f"Backup created: {backup_path}")
+
 # --- GUI ---
 
 window = None
@@ -748,23 +756,37 @@ def main_gui():
 
         character_folder = os.path.join(base_output_dir, character)
         metadata_path = os.path.join(character_folder, "metadata.csv")
+        valid_metadata_path = os.path.join(character_folder, "valid.csv")
+        config_path = os.path.join(character_folder, f"{character}_config.json")
 
-        if validate_metadata_existence(character_folder) and validate_metadata_layout(metadata_path):
-            config_path = generate_character_config(
-                character,
-                character_folder,
-                22050,  # Ensure this matches your audio sample rate
-                selected_model=selected_tts_model  # Use selected model
-            )
-            if config_path:
-                if start_tts_training(config_path):
-                    status_label.config(text=f"Training started for {character}.")
-                else:
-                    status_label.config(text=f"Training failed for {character}.")
+        # Backup and recreate JSON and CSV files if necessary
+        if not os.path.exists(config_path):
+            logging.warning(f"Config file not found: {config_path}. Recreating...")
+            if os.path.exists(metadata_path):
+                backup_file(metadata_path, "metadata_backup")
+            if os.path.exists(valid_metadata_path):
+                backup_file(valid_metadata_path, "valid_backup")
+            generate_valid_csv(metadata_path)
+            update_character_config(character, base_output_dir, selected_model=selected_tts_model)
+
+        # Validate metadata and config
+        if not validate_metadata_existence(character_folder) or not validate_metadata_layout(metadata_path):
+            messagebox.showerror("Error", "Metadata validation failed. Please redo the download or validation.")
+            return
+
+        # Backup JSON if Whisper model changes
+        current_whisper_model = whisper_model_var.get()
+        if os.path.exists(config_path):
+            backup_file(config_path, f"backup_{current_whisper_model}")
+
+        # Load JSON and start training
+        if os.path.exists(config_path):
+            if start_tts_training(config_path):
+                status_label.config(text=f"Training started for {character}.")
             else:
-                status_label.config(text=f"Failed to generate config for {character}.")
+                status_label.config(text=f"Training failed for {character}.")
         else:
-            status_label.config(text="Metadata validation failed. Training cannot proceed.")
+            messagebox.showerror("Error", "Config file missing. Please redo the download or validation.")
 
     download_button = ttk.Button(control_frame, text="Process Voices", command=start_processing)
     download_button.pack(side=tk.RIGHT, padx=5, pady=5)

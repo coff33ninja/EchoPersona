@@ -543,6 +543,15 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "torch",
         "kind": 6,
         "isExtraImport": true,
@@ -4378,6 +4387,15 @@
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
         "peekOfCode": "def start_tts_training(config_path):\n    \"\"\"Starts Coqui TTS training using a generated config file.\"\"\"\n    try:\n        subprocess.run(\n            [\"tts\", \"--config_path\", config_path],\n            check=True,\n            text=True,\n            capture_output=True\n        )\n        logging.info(f\"Training started with config: {config_path}\")",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "backup_file",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def backup_file(file_path, suffix):\n    \"\"\"Create a backup of a file with a given suffix.\"\"\"\n    if os.path.exists(file_path):\n        backup_path = f\"{file_path}.{suffix}.{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}\"\n        shutil.copy(file_path, backup_path)\n        logging.info(f\"Backup created: {backup_path}\")\n# --- GUI ---\nwindow = None\ndef main_gui():\n    global window",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
