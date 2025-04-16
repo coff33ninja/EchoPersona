@@ -611,6 +611,7 @@ def validate_training_prerequisites(character_dir, config_path):
     if not validate_metadata_for_training(metadata_path):
         return False
     if not validate_metadata_for_training(valid_metadata_path):
+        logging.error(f"Invalid metadata for training: {metadata_path}")
         return False
 
     if not os.path.exists(wavs_dir) or not os.listdir(wavs_dir):
@@ -807,13 +808,9 @@ def start_tts_training(config_path, resume_from_checkpoint=None, status_queue=No
         valid_metadata_path = config["datasets"][0]["meta_file_val"]
         if not validate_metadata_for_training(metadata_path):
             logging.error(f"Invalid metadata for training: {metadata_path}")
-            if status_queue:
-                status_queue.put("Invalid training metadata.")
             return False
         if not validate_metadata_for_training(valid_metadata_path):
             logging.error(f"Invalid validation metadata: {valid_metadata_path}")
-            if status_queue:
-                status_queue.put("Invalid validation metadata.")
             return False
 
         tts = TTS(model_name=config["model"].split("/")[-1] if config["model"].startswith("tts_models") else config["model"], progress_bar=True)
