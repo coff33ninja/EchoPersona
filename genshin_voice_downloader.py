@@ -212,16 +212,14 @@ def fetch_character_list_from_api():
         return []
 
 def is_silent_audio(file_path, silence_threshold=-50.0):
-    """Check if audio is silent based on max dBFS."""
     try:
         audio = AudioSegment.from_wav(file_path)
         return audio.max_dBFS < silence_threshold
     except Exception as e:
         logging.error(f"Error checking silence for {file_path}: {e}")
-        return True  # Treat errors as silent to skip
+        return True
 
 def clean_metadata_file(metadata_path):
-    """Remove invalid lines from metadata.csv and rewrite it."""
     try:
         with open(metadata_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -229,18 +227,28 @@ def clean_metadata_file(metadata_path):
             logging.error(f"Metadata file {metadata_path} is empty.")
             return False
 
-        cleaned_lines = [lines[0]]  # Keep header
-        for i, line in enumerate(lines[1:], 2):
+        cleaned_lines = []
+        invalid_lines = []
+        for i, line in enumerate(lines, 1):
             fields = line.strip().split("|")
-            if len(fields) == 4 and all(fields[:3]):  # Require 4 fields, first 3 non-empty
+            if i == 1:  # Header
+                if fields != ["audio_file", "text", "normalized_text", "speaker_id"]:
+                    logging.error(f"Invalid header in {metadata_path}: {line.strip()}")
+                    return False
                 cleaned_lines.append(line)
-            else:
-                logging.warning(f"Removed invalid line {i} in {metadata_path}: {line.strip()}")
+                continue
+            if len(fields) != 4 or not fields[0] or not fields[1] or not fields[2]:
+                invalid_lines.append((i, line.strip()))
+                continue
+            cleaned_lines.append(line)
+
+        if invalid_lines:
+            logging.warning(f"Removed {len(invalid_lines)} invalid metadata lines: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
 
         with open(metadata_path, "w", encoding="utf-8", newline="") as f:
             f.writelines(cleaned_lines)
         logging.info(f"Cleaned {metadata_path}: {len(cleaned_lines)-1} valid entries.")
-        return True
+        return len(cleaned_lines) > 1
     except Exception as e:
         logging.error(f"Error cleaning {metadata_path}: {e}")
         return False
@@ -257,7 +265,7 @@ def transcribe_character_audio(
         logging.error("Transcription unavailable: SpeechToText not imported.")
         if status_queue:
             status_queue.put("Transcription unavailable.")
-        return False  # Return False to indicate failure
+        return False
 
     metadata_path = os.path.join(character_output_dir, "metadata.csv")
     wavs_dir = os.path.join(character_output_dir, "wavs")
@@ -300,13 +308,9 @@ def transcribe_character_audio(
                 else:
                     files_to_transcribe.append(file)
     else:
-        # Check both character_output_dir and wavs_dir for WAVs
-        files_to_transcribe = [
-            file
-            for file in os.listdir(wavs_dir)
-            if file.lower().endswith(".wav") and f"wavs/{file}" not in existing_files
-        ]
-        # Add any WAVs in character_output_dir not yet in wavs_dir
+        for file in os.listdir(wavs_dir):
+            if file.lower().endswith(".wav") and f"wavs/{file}" not in existing_files:
+                files_to_transcribe.append(file)
         for file in os.listdir(character_output_dir):
             if file.lower().endswith(".wav") and file not in os.listdir(wavs_dir):
                 files_to_transcribe.append(file)
@@ -317,7 +321,7 @@ def transcribe_character_audio(
             status_queue.put("No new files to transcribe.")
         if os.path.exists(metadata_path):
             return clean_metadata_file(metadata_path)
-        return False  # No files to transcribe is a failure if no metadata exists
+        return False
 
     logging.info(f"Processing {len(files_to_transcribe)} WAV files with Whisper {whisper_model}...")
     transcribed_count = 0
@@ -330,7 +334,6 @@ def transcribe_character_audio(
             mf.write("audio_file|text|normalized_text|speaker_id\n")
 
         for file in tqdm(files_to_transcribe, desc="Transcribing"):
-            # Ensure file is in wavs_dir
             src_path = os.path.join(character_output_dir, file)
             wav_path = os.path.join(wavs_dir, file)
             if os.path.exists(src_path) and not os.path.exists(wav_path):
@@ -359,30 +362,43 @@ def transcribe_character_audio(
                     )
                     audio_transcript = stt.process_audio(language="en")
                     cleaned_transcript = clean_transcript(audio_transcript, strict_ascii=strict_ascii)
-                    if cleaned_transcript and is_valid_for_phonemes(cleaned_transcript):
-                        normalized = (
-                            clean_transcript(cleaned_transcript, strict_ascii=True)
-                            .lower()
-                            .replace(".", "")
-                            .replace(",", "")
-                        )
-                        if normalized.strip():
-                            metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
-                            mf.write(metadata_entry + "\n")
-                            transcribed_count += 1
+                    if not cleaned_transcript or not is_valid_for_phonemes(cleaned_transcript):
+                        logging.warning(f"Invalid or empty transcription for {file}")
+                        if attempt == 1:
+                            logging.warning(f"Moving failed file {file} to silent_files")
+                            shutil.move(wav_path, os.path.join(silent_dir, file))
+                            failed_count += 1
                             if status_queue:
-                                status_queue.put(f"Transcribed: {file}")
-                            break
-                        else:
-                            logging.warning(f"Empty normalized transcription for {file}")
-                    else:
-                        logging.warning(f"Invalid transcription for {file}")
-                    if attempt == 1:
-                        logging.warning(f"Moving failed file {file} to silent_files")
-                        shutil.move(wav_path, os.path.join(silent_dir, file))
-                        failed_count += 1
-                        if status_queue:
-                            status_queue.put(f"Moved failed file: {file}")
+                                status_queue.put(f"Moved failed file: {file}")
+                        continue
+                    normalized = (
+                        clean_transcript(cleaned_transcript, strict_ascii=True)
+                        .lower()
+                        .replace(".", "")
+                        .replace(",", "")
+                    )
+                    if not normalized.strip():
+                        logging.warning(f"Empty normalized transcription for {file}")
+                        if attempt == 1:
+                            logging.warning(f"Moving failed file {file} to silent_files")
+                            shutil.move(wav_path, os.path.join(silent_dir, file))
+                            failed_count += 1
+                            if status_queue:
+                                status_queue.put(f"Moved failed file: {file}")
+                        continue
+                    metadata_entry = f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
+                    if metadata_entry.count("|") != 3:
+                        logging.warning(f"Invalid metadata entry for {file}: {metadata_entry}")
+                        if attempt == 1:
+                            failed_count += 1
+                            if status_queue:
+                                status_queue.put(f"Invalid entry for {file}")
+                        continue
+                    mf.write(metadata_entry + "\n")
+                    transcribed_count += 1
+                    if status_queue:
+                        status_queue.put(f"Transcribed: {file}")
+                    break
                 except Exception as e:
                     logging.error(f"Transcription error for {file}: {e}")
                     if attempt == 1:
@@ -407,7 +423,6 @@ def transcribe_character_audio(
     return success
 
 def validate_metadata_existence(character_dir):
-    """Check if metadata.csv exists and has at least one valid entry."""
     metadata_path = os.path.join(character_dir, "metadata.csv")
     if not os.path.exists(metadata_path):
         logging.error(f"Metadata file missing: {metadata_path}")
@@ -415,12 +430,32 @@ def validate_metadata_existence(character_dir):
     try:
         with open(metadata_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        if len(lines) < 2:  # Need header + at least one entry
+        if len(lines) < 2:
             logging.error(f"Metadata file {metadata_path} has no data entries.")
             return False
         return True
     except Exception as e:
         logging.error(f"Error checking metadata {metadata_path}: {e}")
+        return False
+
+def validate_metadata_for_training(metadata_path):
+    try:
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        if len(lines) < 2:
+            logging.error(f"Metadata file {metadata_path} has no data entries.")
+            return False
+        invalid_lines = []
+        for i, line in enumerate(lines[1:], 2):
+            fields = line.strip().split("|")
+            if len(fields) != 4 or not all(fields[:3]):
+                invalid_lines.append((i, line.strip()))
+        if invalid_lines:
+            logging.error(f"Invalid metadata entries in {metadata_path}: {[f'Line {i}: {l}' for i, l in invalid_lines]}")
+            return False
+        return True
+    except Exception as e:
+        logging.error(f"Error validating metadata for training {metadata_path}: {e}")
         return False
 
 def process_character_voices(
@@ -460,13 +495,6 @@ def process_character_voices(
         if not generate_valid_csv(metadata_path):
             logging.error(f"Failed to generate valid.csv for {character}.")
             return None
-        update_character_config(
-            character,
-            base_output_dir,
-            batch_size=batch_size,
-            num_epochs=num_epochs,
-            learning_rate=learning_rate,
-        )
         return character_folder
 
     categories = (
@@ -510,7 +538,6 @@ def process_character_voices(
         f"Download complete. Downloaded: {downloaded_count}, Failed: {failed_count}."
     )
 
-    # Move WAVs to wavs_folder before transcription
     for file in os.listdir(character_folder):
         if file.lower().endswith(".wav") and file not in os.listdir(wavs_folder):
             shutil.move(
@@ -533,13 +560,6 @@ def process_character_voices(
     if not generate_valid_csv(metadata_path):
         logging.error(f"Failed to generate valid.csv for {character}.")
         return None
-    update_character_config(
-        character,
-        base_output_dir,
-        batch_size=batch_size,
-        num_epochs=num_epochs,
-        learning_rate=learning_rate,
-    )
     return character_folder
 
 def validate_metadata_layout(metadata_path):
@@ -550,8 +570,8 @@ def validate_metadata_layout(metadata_path):
             logging.error(f"Metadata file {metadata_path} is empty or has no data entries.")
             return False
         header = lines[0].strip()
-        expected_headers = ["audio_file|text|normalized_text|speaker_id"]
-        if header not in expected_headers:
+        expected_header = "audio_file|text|normalized_text|speaker_id"
+        if header != expected_header:
             logging.error(f"Invalid header in {metadata_path}: {header}")
             return False
         invalid_lines = []
@@ -585,9 +605,9 @@ def validate_training_prerequisites(character_dir, config_path):
         logging.error(f"Validation metadata file missing: {valid_metadata_path}")
         return False
 
-    if not validate_metadata_layout(metadata_path):
+    if not validate_metadata_for_training(metadata_path):
         return False
-    if not validate_metadata_layout(valid_metadata_path):
+    if not validate_metadata_for_training(valid_metadata_path):
         return False
 
     if not os.path.exists(wavs_dir) or not os.listdir(wavs_dir):
@@ -779,6 +799,19 @@ def start_tts_training(config_path, resume_from_checkpoint=None, status_queue=No
     try:
         with open(config_path, "r", encoding="utf-8") as f:
             config = json.load(f)
+
+        metadata_path = config["datasets"][0]["meta_file_train"]
+        valid_metadata_path = config["datasets"][0]["meta_file_val"]
+        if not validate_metadata_for_training(metadata_path):
+            logging.error(f"Invalid metadata for training: {metadata_path}")
+            if status_queue:
+                status_queue.put("Invalid training metadata.")
+            return False
+        if not validate_metadata_for_training(valid_metadata_path):
+            logging.error(f"Invalid validation metadata: {valid_metadata_path}")
+            if status_queue:
+                status_queue.put("Invalid validation metadata.")
+            return False
 
         tts = TTS(model_name=config["model"].split("/")[-1] if config["model"].startswith("tts_models") else config["model"], progress_bar=True)
         character_dir = os.path.dirname(config_path)
@@ -1069,7 +1102,6 @@ def main_gui():
     )
     tts_model_combo.grid(row=11, column=1, padx=5, pady=5, sticky="w")
 
-    # TTS Feedback Frame
     tts_frame = ttk.LabelFrame(window, text="TTS Feedback")
     tts_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
     tts_frame.grid_remove()
@@ -1088,7 +1120,6 @@ def main_gui():
     status_label = ttk.Label(control_frame, text="Ready", relief=tk.SUNKEN, anchor="w", width=60)
     status_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
 
-    # Threading state
     status_queue = queue.Queue()
     stop_event = threading.Event()
     current_thread = [None]
