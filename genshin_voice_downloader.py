@@ -229,7 +229,7 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                 lines = mf.readlines()
                 for line in lines[1:]:
                     parts = line.strip().split("|")
-                    if parts:
+                    if len(parts) >= 1:
                         existing_files.add(parts[0])
         except UnicodeDecodeError:
             logging.error(f"Encoding error reading {metadata_path}. Ensure UTF-8 format.")
@@ -282,10 +282,8 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                 )
                 audio_transcript = stt.process_audio(language="en")
                 cleaned_transcript = clean_transcript(audio_transcript, strict_ascii=strict_ascii)
-                if cleaned_transcript:
+                if cleaned_transcript and is_valid_for_phonemes(cleaned_transcript):
                     normalized = clean_transcript(cleaned_transcript, strict_ascii=True).lower().replace(".", "").replace(",", "")
-                    if not is_valid_for_phonemes(normalized):
-                        logging.warning(f"Potential phoneme issue in {file}: {normalized}")
                     metadata_entry = (
                         f"wavs/{file}|{cleaned_transcript}|{normalized}|speaker_1"
                         if file in os.listdir(wavs_dir)
@@ -294,22 +292,15 @@ def transcribe_character_audio(character_output_dir, whisper_model="base", use_s
                     mf.write(metadata_entry + "\n")
                     transcribed_count += 1
                 else:
-                    metadata_entry = (
-                        f"wavs/{file}|<transcription_failed>|<transcription_failed>|speaker_1"
-                        if file in os.listdir(wavs_dir)
-                        else f"{file}|<transcription_failed>|<transcription_failed>|speaker_1"
-                    )
-                    mf.write(metadata_entry + "\n")
+                    logging.warning(f"Skipping {file}: Empty or invalid transcription")
                     failed_count += 1
+                    if status_queue:
+                        status_queue.put(f"Skipped {file}: Empty or invalid transcription")
             except Exception as e:
                 logging.error(f"Transcription error for {file}: {e}")
-                metadata_entry = (
-                    f"wavs/{file}|<transcription_error>|<transcription_error>|speaker_1"
-                    if file in os.listdir(wavs_dir)
-                    else f"{file}|<transcription_error>|<transcription_error>|speaker_1"
-                )
-                mf.write(metadata_entry + "\n")
                 failed_count += 1
+                if status_queue:
+                    status_queue.put(f"Error transcribing {file}: {str(e)}")
 
     split_metadata(metadata_path, valid_ratio=0.2)
 
@@ -325,25 +316,36 @@ def validate_metadata_existence(character_output_dir):
         return False
     return True
 
+
 def validate_metadata_layout(metadata_path):
     try:
         with open(metadata_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
         if len(lines) < 2:
-            logging.error(f"Metadata file {metadata_path} is empty or has no data entries.")
+            logging.error(
+                f"Metadata file {metadata_path} is empty or has no data entries."
+            )
             return False
         header = lines[0].strip()
         expected_headers = [
             "audio_file|text|normalized_text",
-            "audio_file|text|normalized_text|speaker_id"
+            "audio_file|text|normalized_text|speaker_id",
         ]
         if header not in expected_headers:
             logging.error(f"Invalid header in {metadata_path}: {header}")
             return False
         for i, line in enumerate(lines[1:], 2):
-            if len(line.strip().split("|")) not in [3, 4]:
-                logging.error(f"Invalid format at line {i} in {metadata_path}")
-                return False
+            fields = line.strip().split("|")
+            if len(fields) < 3 or len(fields) > 4:
+                logging.warning(
+                    f"Skipping invalid line {i} in {metadata_path}: {line.strip()}"
+                )
+                continue
+            if len(fields) == 3:
+                fields.append("speaker_1")  # Add default speaker_id if missing
+            if not all(fields[:3]):  # Check audio_file, text, normalized_text
+                logging.warning(f"Skipping empty field at line {i} in {metadata_path}")
+                continue
         return True
     except UnicodeDecodeError:
         logging.error(f"Encoding error in {metadata_path}. Ensure UTF-8 format.")
@@ -351,6 +353,7 @@ def validate_metadata_layout(metadata_path):
     except Exception as e:
         logging.error(f"Error validating {metadata_path}: {e}")
         return False
+
 
 def validate_training_prerequisites(character_dir, config_path):
     metadata_path = os.path.join(character_dir, "metadata.csv")
