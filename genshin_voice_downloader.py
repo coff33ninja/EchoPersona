@@ -232,7 +232,7 @@ def clean_metadata_file(metadata_path):
         for i, line in enumerate(lines, 1):
             fields = line.strip().split("|")
             if i == 1:  # Header
-                if fields != ["audio_file", "text", "normalized_text", "speaker_id"]:
+                if fields != ["audio_file", "text", "speaker_id"]:
                     logging.error(f"Invalid header in {metadata_path}: {line.strip()}")
                     return False
                 cleaned_lines.append(line)
@@ -331,7 +331,7 @@ def transcribe_character_audio(
 
     with open(metadata_path, file_mode, encoding="utf-8", newline="") as mf:
         if file_mode == "w":
-            mf.write("audio_file|text|normalized_text|speaker_id\n")
+            mf.write("audio_file|text|speaker_id\n")
 
         for file in tqdm(files_to_transcribe, desc="Transcribing"):
             src_path = os.path.join(character_output_dir, file)
@@ -572,7 +572,7 @@ def validate_metadata_layout(metadata_path):
             logging.error(f"Metadata file {metadata_path} is empty or has no data entries.")
             return False
         header = lines[0].strip()
-        expected_header = "audio_file|text|normalized_text|speaker_id"
+        expected_header = "audio_file|text|speaker_id"
         if header != expected_header:
             logging.error(f"Invalid header in {metadata_path}: {header}")
             return False

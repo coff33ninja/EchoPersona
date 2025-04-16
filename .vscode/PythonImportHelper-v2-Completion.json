@@ -4650,7 +4650,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:\n            logging.error(f\"Metadata file {metadata_path} is empty or has no data entries.\")\n            return False\n        header = lines[0].strip()\n        expected_header = \"audio_file|text|normalized_text|speaker_id\"\n        if header != expected_header:",
+        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:\n            logging.error(f\"Metadata file {metadata_path} is empty or has no data entries.\")\n            return False\n        header = lines[0].strip()\n        expected_header = \"audio_file|text|speaker_id\"\n        if header != expected_header:",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
