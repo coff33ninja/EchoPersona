@@ -19,6 +19,7 @@ import threading
 import queue
 from TTS.api import TTS
 from TTS.utils.synthesizer import Synthesizer
+import playsound
 
 try:
     from voice_tools import SpeechToText
@@ -154,7 +155,7 @@ def get_file_url(file_title):
         logging.error(f"Error fetching file URL for {file_title}: {e}")
         return None
 
-def download_and_convert(file_url, output_dir, file_name, status_label=None, status_queue=None):
+def download_and_convert(file_url, output_dir, file_name, status_queue=None):
     safe_file_name = re.sub(r'[\\/*?:"<>|]', "_", file_name)
     ogg_file_name = safe_file_name if safe_file_name.lower().endswith(".ogg") else f"{safe_file_name}.ogg"
     wav_file_name = ogg_file_name.replace(".ogg", ".wav").replace(".OGG", ".wav")
@@ -210,7 +211,7 @@ def fetch_character_list_from_api():
         logging.error(f"Error fetching character list: {e}")
         return []
 
-def transcribe_character_audio(character_output_dir, whisper_model="base", use_segmentation=False, hf_token="", strict_ascii=False, status_label=None, status_queue=None):
+def transcribe_character_audio(character_output_dir, whisper_model="base", use_segmentation=False, hf_token="", strict_ascii=False, status_queue=None):
     if SpeechToText is None:
         logging.error("Transcription unavailable: SpeechToText not imported.")
         if status_queue:
@@ -755,12 +756,94 @@ def backup_file(file_path, suffix):
             shutil.copytree(file_path, backup_path, dirs_exist_ok=True)
         logging.info(f"Backup created: {backup_path}")
 
+def has_trained_model(character, base_output_dir):
+    output_path = os.path.join(base_output_dir, "tts_train_output", character)
+    checkpoint_dir = os.path.join(output_path, "checkpoints")
+    config_path = os.path.join(base_output_dir, character, f"{character}_config.json")
+    if os.path.exists(checkpoint_dir) and os.path.exists(config_path):
+        checkpoints = [f for f in os.listdir(checkpoint_dir) if f.startswith("checkpoint_")]
+        return len(checkpoints) > 0
+    return False
+
+def speak_tts(config_path, text, character, status_queue=None, stop_event=None):
+    if not text.strip():
+        if status_queue:
+            status_queue.put("Please enter text to synthesize.")
+        return False
+
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+
+        output_path = config["output_path"]
+        checkpoint_dir = os.path.join(output_path, "checkpoints")
+        if not os.path.exists(checkpoint_dir):
+            logging.error(f"No checkpoints found in {checkpoint_dir}")
+            if status_queue:
+                status_queue.put("No trained model checkpoints found.")
+            return False
+
+        latest_checkpoint = max(
+            [os.path.join(checkpoint_dir, f) for f in os.listdir(checkpoint_dir) if f.startswith("checkpoint_")],
+            key=os.path.getmtime,
+            default=None
+        )
+        if not latest_checkpoint:
+            logging.error("No valid checkpoint found.")
+            if status_queue:
+                status_queue.put("No valid checkpoint found.")
+            return False
+
+        if stop_event and stop_event.is_set():
+            status_queue.put("TTS synthesis cancelled.")
+            return False
+
+        tts = TTS(model_path=latest_checkpoint, config_path=config_path, progress_bar=False)
+        temp_wav = os.path.join(output_path, "temp_tts_output.wav")
+        tts_output_dir = os.path.join(output_path, "tts_outputs")
+        os.makedirs(tts_output_dir, exist_ok=True)
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        mp3_filename = f"{character}_tts_{timestamp}.mp3"
+        mp3_path = os.path.join(tts_output_dir, mp3_filename)
+
+        if status_queue:
+            status_queue.put(f"Synthesizing audio: {mp3_filename}")
+
+        tts.tts_to_file(text=text, file_path=temp_wav)
+        if stop_event and stop_event.is_set():
+            status_queue.put("TTS synthesis cancelled.")
+            if os.path.exists(temp_wav):
+                os.remove(temp_wav)
+            return False
+
+        audio = AudioSegment.from_wav(temp_wav)
+        audio.export(mp3_path, format="mp3")
+        os.remove(temp_wav)
+
+        if status_queue:
+            status_queue.put(f"Saved MP3: {mp3_filename}")
+
+        if status_queue:
+            status_queue.put("Playing audio...")
+        playsound.playsound(mp3_path)
+        logging.info(f"TTS audio saved and played: {mp3_path}")
+        if status_queue:
+            status_queue.put(f"Audio played: {mp3_filename}")
+        return mp3_path
+
+    except Exception as e:
+        logging.error(f"Error in TTS synthesis: {e}")
+        if status_queue:
+            status_queue.put(f"TTS failed: {str(e)}")
+        return False
+
 # --- GUI ---
 
 window = None
+tts_frame = None
 
 def main_gui():
-    global window
+    global window, tts_frame
     window = tk.Tk()
     window.title("Genshin Impact Voice Downloader & Transcriber")
 
@@ -835,8 +918,21 @@ def main_gui():
     )
     tts_model_combo.grid(row=11, column=1, padx=5, pady=5, sticky="w")
 
+    # TTS Feedback Frame
+    tts_frame = ttk.LabelFrame(window, text="TTS Feedback")
+    tts_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+    tts_frame.grid_remove()
+
+    ttk.Label(tts_frame, text="TTS Text:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+    tts_text_var = tk.StringVar()
+    tts_text_entry = ttk.Entry(tts_frame, textvariable=tts_text_var, width=40)
+    tts_text_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+
+    speak_button = ttk.Button(tts_frame, text="Speak", state="disabled")
+    speak_button.grid(row=0, column=2, padx=5, pady=5)
+
     control_frame = ttk.Frame(window)
-    control_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
+    control_frame.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
 
     status_label = ttk.Label(control_frame, text="Ready", relief=tk.SUNKEN, anchor="w", width=60)
     status_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
@@ -844,7 +940,7 @@ def main_gui():
     # Threading state
     status_queue = queue.Queue()
     stop_event = threading.Event()
-    current_thread = [None]  # List to allow modification in closures
+    current_thread = [None]
 
     def update_hf_token_state(*args):
         if whisper_model_var.get() == "base" and not use_segmentation_var.get():
@@ -856,12 +952,31 @@ def main_gui():
     use_segmentation_var.trace_add("write", update_hf_token_state)
     update_hf_token_state()
 
+    def update_tts_frame(*args):
+        character = character_var.get()
+        base_output_dir = output_dir_var.get()
+        if character and character != "No characters found" and base_output_dir and has_trained_model(character, base_output_dir):
+            tts_frame.grid()
+            speak_button.config(state="normal")
+        else:
+            tts_frame.grid_remove()
+            speak_button.config(state="disabled")
+
+    character_var.trace_add("write", update_tts_frame)
+    output_dir_var.trace_add("write", update_tts_frame)
+
     def update_status():
         try:
             while True:
                 message = status_queue.get_nowait()
                 status_label.config(text=message)
                 window.update_idletasks()
+                if message == "enable_buttons":
+                    download_button.config(state="normal")
+                    train_button.config(state="normal")
+                    test_button.config(state="normal")
+                    cancel_button.config(state="disabled")
+                    speak_button.config(state="normal" if has_trained_model(character_var.get(), output_dir_var.get()) else "disabled")
         except queue.Empty:
             window.after(100, update_status)
 
@@ -926,6 +1041,7 @@ def main_gui():
         train_button.config(state="disabled")
         test_button.config(state="disabled")
         cancel_button.config(state="normal")
+        speak_button.config(state="disabled")
         status_label.config(text=f"Processing {character}...")
 
         def process_task():
@@ -1014,6 +1130,7 @@ def main_gui():
         train_button.config(state="disabled")
         test_button.config(state="disabled")
         cancel_button.config(state="normal")
+        speak_button.config(state="disabled")
 
         character_folder = os.path.join(base_output_dir, character)
         metadata_path = os.path.join(character_folder, "metadata.csv")
@@ -1038,6 +1155,7 @@ def main_gui():
             train_button.config(state="normal")
             test_button.config(state="normal")
             cancel_button.config(state="disabled")
+            speak_button.config(state="normal" if has_trained_model(character, base_output_dir) else "disabled")
             return
 
         current_whisper_model = whisper_model_var.get()
@@ -1088,6 +1206,7 @@ def main_gui():
         train_button.config(state="disabled")
         test_button.config(state="disabled")
         cancel_button.config(state="normal")
+        speak_button.config(state="disabled")
 
         def test_task():
             try:
@@ -1098,6 +1217,48 @@ def main_gui():
                 status_queue.put("enable_buttons")
 
         current_thread[0] = threading.Thread(target=test_task)
+        current_thread[0].start()
+
+    def speak_model():
+        if current_thread[0] and current_thread[0].is_alive():
+            messagebox.showwarning("Warning", "Another operation is running. Please cancel or wait.")
+            return
+
+        character = character_var.get()
+        base_output_dir = output_dir_var.get()
+        text = tts_text_var.get()
+        if not character or character == "No characters found":
+            messagebox.showerror("Error", "Select a valid character.")
+            return
+        if not base_output_dir:
+            messagebox.showerror("Error", "Enter an output directory.")
+            return
+        if not text.strip():
+            messagebox.showerror("Error", "Enter text to synthesize.")
+            return
+
+        character_folder = os.path.join(base_output_dir, character)
+        config_path = os.path.join(character_folder, f"{character}_config.json")
+        if not os.path.exists(config_path):
+            messagebox.showerror("Error", f"Configuration file missing: {config_path}")
+            return
+
+        stop_event.clear()
+        download_button.config(state="disabled")
+        train_button.config(state="disabled")
+        test_button.config(state="disabled")
+        cancel_button.config(state="normal")
+        speak_button.config(state="disabled")
+
+        def speak_task():
+            try:
+                speak_tts(config_path, text, character, status_queue=status_queue, stop_event=stop_event)
+            except Exception as e:
+                status_queue.put(f"Error: {str(e)}")
+            finally:
+                status_queue.put("enable_buttons")
+
+        current_thread[0] = threading.Thread(target=speak_task)
         current_thread[0].start()
 
     download_button = ttk.Button(control_frame, text="Process Voices", command=start_processing)
@@ -1112,9 +1273,12 @@ def main_gui():
     cancel_button = ttk.Button(control_frame, text="Cancel", command=cancel_operation, state="disabled")
     cancel_button.pack(side=tk.RIGHT, padx=5, pady=5)
 
+    speak_button.configure(command=speak_model)
+
     window.after(100, update_status)
     window.grid_columnconfigure(0, weight=1)
     config_frame.grid_columnconfigure(1, weight=1)
+    tts_frame.grid_columnconfigure(1, weight=1)
     window.mainloop()
 
 # --- Main Execution ---

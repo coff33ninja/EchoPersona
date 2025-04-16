@@ -626,6 +626,15 @@
         "documentation": {}
     },
     {
+        "label": "playsound",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "playsound",
+        "description": "playsound",
+        "detail": "playsound",
+        "documentation": {}
+    },
+    {
         "label": "torch",
         "kind": 6,
         "isExtraImport": true,
@@ -4569,7 +4578,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_label=None, status_queue=None):\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", file_name)\n    ogg_file_name = safe_file_name if safe_file_name.lower().endswith(\".ogg\") else f\"{safe_file_name}.ogg\"\n    wav_file_name = ogg_file_name.replace(\".ogg\", \".wav\").replace(\".OGG\", \".wav\")\n    ogg_path = os.path.join(output_dir, ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)\n    if os.path.exists(wav_path):\n        logging.info(f\"Skipping existing WAV: {wav_path}\")\n        if status_queue:\n            status_queue.put(f\"Skipped: {wav_file_name}\")",
+        "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_queue=None):\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", file_name)\n    ogg_file_name = safe_file_name if safe_file_name.lower().endswith(\".ogg\") else f\"{safe_file_name}.ogg\"\n    wav_file_name = ogg_file_name.replace(\".ogg\", \".wav\").replace(\".OGG\", \".wav\")\n    ogg_path = os.path.join(output_dir, ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)\n    if os.path.exists(wav_path):\n        logging.info(f\"Skipping existing WAV: {wav_path}\")\n        if status_queue:\n            status_queue.put(f\"Skipped: {wav_file_name}\")",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4587,7 +4596,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_label=None, status_queue=None):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_queue:\n            status_queue.put(\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    os.makedirs(wavs_dir, exist_ok=True)\n    existing_files = set()",
+        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_queue=None):\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_queue:\n            status_queue.put(\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    os.makedirs(wavs_dir, exist_ok=True)\n    existing_files = set()",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4686,7 +4695,25 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def backup_file(file_path, suffix):\n    if os.path.exists(file_path):\n        timestamp = datetime.datetime.now().strftime(\"%Y%m%d%H%M%S\")\n        backup_path = f\"{file_path}.{suffix}.{timestamp}\"\n        if os.path.isfile(file_path):\n            shutil.copy(file_path, backup_path)\n        else:\n            shutil.copytree(file_path, backup_path, dirs_exist_ok=True)\n        logging.info(f\"Backup created: {backup_path}\")\n# --- GUI ---",
+        "peekOfCode": "def backup_file(file_path, suffix):\n    if os.path.exists(file_path):\n        timestamp = datetime.datetime.now().strftime(\"%Y%m%d%H%M%S\")\n        backup_path = f\"{file_path}.{suffix}.{timestamp}\"\n        if os.path.isfile(file_path):\n            shutil.copy(file_path, backup_path)\n        else:\n            shutil.copytree(file_path, backup_path, dirs_exist_ok=True)\n        logging.info(f\"Backup created: {backup_path}\")\ndef has_trained_model(character, base_output_dir):",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "has_trained_model",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def has_trained_model(character, base_output_dir):\n    output_path = os.path.join(base_output_dir, \"tts_train_output\", character)\n    checkpoint_dir = os.path.join(output_path, \"checkpoints\")\n    config_path = os.path.join(base_output_dir, character, f\"{character}_config.json\")\n    if os.path.exists(checkpoint_dir) and os.path.exists(config_path):\n        checkpoints = [f for f in os.listdir(checkpoint_dir) if f.startswith(\"checkpoint_\")]\n        return len(checkpoints) > 0\n    return False\ndef speak_tts(config_path, text, character, status_queue=None, stop_event=None):\n    if not text.strip():",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "speak_tts",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "def speak_tts(config_path, text, character, status_queue=None, stop_event=None):\n    if not text.strip():\n        if status_queue:\n            status_queue.put(\"Please enter text to synthesize.\")\n        return False\n    try:\n        with open(config_path, \"r\", encoding=\"utf-8\") as f:\n            config = json.load(f)\n        output_path = config[\"output_path\"]\n        checkpoint_dir = os.path.join(output_path, \"checkpoints\")",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4695,7 +4722,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "def main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]\n    language_var = tk.StringVar(value=\"English\")\n    ttk.Combobox(config_frame, textvariable=language_var, values=languages, state=\"readonly\").grid(",
+        "peekOfCode": "def main_gui():\n    global window, tts_frame\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]\n    language_var = tk.StringVar(value=\"English\")\n    ttk.Combobox(config_frame, textvariable=language_var, values=languages, state=\"readonly\").grid(",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
@@ -4740,7 +4767,16 @@
         "kind": 5,
         "importPath": "genshin_voice_downloader",
         "description": "genshin_voice_downloader",
-        "peekOfCode": "window = None\ndef main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]\n    language_var = tk.StringVar(value=\"English\")",
+        "peekOfCode": "window = None\ntts_frame = None\ndef main_gui():\n    global window, tts_frame\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]",
+        "detail": "genshin_voice_downloader",
+        "documentation": {}
+    },
+    {
+        "label": "tts_frame",
+        "kind": 5,
+        "importPath": "genshin_voice_downloader",
+        "description": "genshin_voice_downloader",
+        "peekOfCode": "tts_frame = None\ndef main_gui():\n    global window, tts_frame\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]\n    language_var = tk.StringVar(value=\"English\")",
         "detail": "genshin_voice_downloader",
         "documentation": {}
     },
