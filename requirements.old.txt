@@ -8,7 +8,7 @@ torch~=2.2.0  # Or torch==2.2.0 if you prefer exact
 torchaudio~=2.2.0 # Or torchaudio==2.2.0
 
 # Numerical and Scientific Computing
-numpy==1.26.4  # Back to recent version < 2.0 (compatible with gruut)
+numpy==2.0.2  # Back to recent version < 2.0 (compatible with gruut)
 scipy==1.12.0  # More recent than 1.4.1, compatible with numpy 1.26
 numba==0.61.2  # More recent than 0.48.0
 
