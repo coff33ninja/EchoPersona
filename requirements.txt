@@ -12,3 +12,12 @@ pandas  # Keep if you need data manipulation
 python-slugify  # Keep if you need text slugification
 tenacity  # Keep if you need retry logic
 playsound==1.2.2  # Keep if you need to play sound files
+setuptools
+wheel
+gruut
+noisereduce
+montreal-forced-aligner
+pygame
+#Install PyTorch (important!)
+#pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+#Or swap cpu with cu121 if you're running CUDA 12.1+
