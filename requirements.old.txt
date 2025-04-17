@@ -5,7 +5,7 @@ coqui-tts[all]
 coqpit-config
 TTS==0.22.0
 torch~=2.2.0  # Or torch==2.2.0 if you prefer exact
-torchaudio~=2.2.0 # Or torchaudio==2.2.0
+torchaudio~=2.6.0 # Or torchaudio==2.2.0
 
 # Numerical and Scientific Computing
 numpy==1.26.4  # Back to recent version < 2.0 (compatible with gruut)
