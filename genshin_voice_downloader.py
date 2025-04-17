@@ -94,7 +94,7 @@ def ensure_tts_model(model_id, status_queue=None):
     try:
         # Initialize TTS without loading the model to check availability
         tts = TTS()
-        available_models = tts.list_models()
+        available_models = list(tts.list_models())
         logging.debug(f"Available models: {available_models}")
 
         if model_id not in available_models:
@@ -115,7 +115,7 @@ def ensure_tts_model(model_id, status_queue=None):
             status_queue.put(f"Model {model_id} ready.")
         return True
 
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Failed to ensure model {model_id}: {e}")
         if status_queue:
             status_queue.put(f"Error downloading model {model_id}: {str(e)}")
@@ -166,7 +166,7 @@ def segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_durati
     except ImportError:
         logging.error("PyAnnote.audio not installed. Segmentation requires 'pip install pyannote.audio'.")
         return []
-    except Exception as e:
+    except (TypeError, Exception) as e:
         # Catch specific exceptions if possible (e.g., AuthenticationError)
         logging.error(f"Error during audio segmentation for {audio_path}: {e}")
         return []
@@ -381,7 +381,7 @@ def download_and_convert(file_url, output_dir, file_name, status_queue=None):
         if status_queue:
             status_queue.put(f"Conversion Error: {ogg_file_name}")
         return None
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error processing {ogg_file_name} (URL: {file_url}): {e}")
         if status_queue:
             status_queue.put(f"Error with {ogg_file_name}")
@@ -446,7 +446,7 @@ def is_silent_audio(file_path, silence_threshold=-50.0, chunk_size=10):
     except FileNotFoundError:
         logging.error(f"File not found while checking silence: {file_path}")
         return True # Treat as silent if file doesn't exist
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error checking silence for {file_path}: {e}")
         return True # Assume silent if error occurs to avoid processing potentially bad files
 
@@ -517,7 +517,7 @@ def clean_metadata_file(metadata_path):
     except FileNotFoundError:
         logging.error(f"Metadata file not found for cleaning: {metadata_path}")
         return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error cleaning metadata file {metadata_path}: {e}")
         return False
 
@@ -578,7 +578,7 @@ def transcribe_character_audio(
         except pd.errors.EmptyDataError:
              logging.info(f"Metadata file {metadata_path} is empty. Starting fresh.")
              existing_transcribed_files = set()
-        except Exception as e:
+        except (TypeError, Exception) as e:
             logging.error(f"Error reading existing metadata {metadata_path}: {e}. Starting fresh.")
             existing_transcribed_files = set() # Reset on error
             # Optionally backup the problematic metadata file here
@@ -604,7 +604,7 @@ def transcribe_character_audio(
             try:
                 shutil.move(item_path, os.path.join(temp_dir, item))
                 logging.info(f"Moved {item} to temp directory for processing.")
-            except Exception as e:
+            except (TypeError, Exception) as e:
                 logging.warning(f"Could not move {item} to temp directory: {e}")
 
     # 2. Process files in temp_dir
@@ -617,7 +617,7 @@ def transcribe_character_audio(
                   # Move directly to wavs_dir if skipped
                   try:
                       shutil.move(temp_path, os.path.join(wavs_dir, file))
-                  except Exception as e:
+                  except (TypeError, Exception) as e:
                       logging.warning(f"Could not move skipped file {file} to wavs dir: {e}")
                   continue
 
@@ -638,7 +638,7 @@ def transcribe_character_audio(
                      try:
                          shutil.move(temp_path, os.path.join(wavs_dir, file))
                          files_to_process.append(file) # Add original file for transcription attempt
-                     except Exception as e:
+                     except (TypeError, Exception) as e:
                           logging.warning(f"Could not move original file {file} to wavs dir after failed segmentation: {e}")
 
              else:
@@ -646,7 +646,7 @@ def transcribe_character_audio(
                  try:
                      shutil.move(temp_path, os.path.join(wavs_dir, file))
                      files_to_process.append(file)
-                 except Exception as e:
+                 except (TypeError, Exception) as e:
                       logging.warning(f"Could not move file {file} to wavs dir: {e}")
 
     # 3. Check wavs_dir for any files missed (e.g., if script was interrupted)
@@ -679,7 +679,7 @@ def transcribe_character_audio(
                      writer.writerow(["text", "audio_file", "speaker_id"])
                 logging.info(f"Created empty metadata file: {metadata_path}")
                 return True # Considered success (empty but valid state)
-            except Exception as e:
+            except (TypeError, Exception) as e:
                  logging.error(f"Failed to create empty metadata file {metadata_path}: {e}")
                  return False
 
@@ -748,7 +748,7 @@ def transcribe_character_audio(
                             logging.warning(f"Invalid or empty transcription for {file} on attempt {attempt+1}. Transcript: '{audio_transcript}' -> '{cleaned_transcript}'")
                             # Don't immediately move on first failure, allow retry
 
-                    except Exception as e:
+                    except (TypeError, Exception) as e:
                         logging.error(f"Transcription error for {file} on attempt {attempt+1}: {e}")
                         # Allow retry loop to continue
 
@@ -775,7 +775,7 @@ def transcribe_character_audio(
     except IOError as e:
          logging.error(f"Error writing to metadata file {metadata_path}: {e}")
          return False # Cannot proceed if metadata cannot be written
-    except Exception as e:
+    except (TypeError, Exception) as e:
          logging.exception(f"An unexpected error occurred during the transcription loop: {e}")
          return False # General failure
 
@@ -816,7 +816,7 @@ def validate_metadata_existence(character_dir):
             logging.error(f"Metadata file {metadata_path} exists but has no data entries (only header or empty).")
             return False
         return True
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error checking metadata existence {metadata_path}: {e}")
         return False
 
@@ -886,7 +886,7 @@ def validate_metadata_for_training(metadata_path):
     except csv.Error as e:
          logging.error(f"CSV parsing error in {metadata_path}, line {reader.line_num}: {e}")
          return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Unexpected error validating metadata {metadata_path}: {e}")
         return False
 
@@ -1129,7 +1129,7 @@ def validate_metadata_layout(metadata_path):
     except csv.Error as e:
          logging.error(f"CSV parsing error during layout validation of {metadata_path}: {e}")
          return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error validating layout of {metadata_path}: {e}")
         return False
 
@@ -1168,7 +1168,7 @@ def validate_training_prerequisites(character_dir, config_path):
                 # Only log pass for existence checks, validation functions log their own success
                 if check_func in [os.path.exists, os.path.isdir]:
                     logging.info(f"Prerequisite Check Passed: {name} exists at {path}")
-        except Exception as e:
+        except (TypeError, Exception) as e:
             logging.error(f"Error during prerequisite check '{name}' for path {path}: {e}")
             all_passed = False
 
@@ -1187,7 +1187,7 @@ def validate_training_prerequisites(character_dir, config_path):
         # This case should be caught by os.path.isdir check above, but added for safety
         logging.error(f"Prerequisite Check Failed: WAVs directory {wavs_dir} not found.")
         return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error checking contents of WAVs directory {wavs_dir}: {e}")
         return False
 
@@ -1227,7 +1227,7 @@ def validate_training_prerequisites(character_dir, config_path):
     except KeyError:
         logging.error(f"Prerequisite Check Failed: Metadata file {metadata_path} or {valid_metadata_path} missing 'audio_file' column.")
         return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error validating WAV file references in metadata: {e}")
         return False
 
@@ -1342,7 +1342,7 @@ def update_character_config(
         if status_queue:
             status_queue.put(f"Config created: {os.path.basename(config_path)}")
         return config_path
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error saving config file {config_path}: {e}")
         if status_queue:
             status_queue.put(f"Error creating config: {str(e)}")
@@ -1408,7 +1408,7 @@ def generate_valid_csv(metadata_path, valid_ratio=0.1):
     except pd.errors.EmptyDataError:
         logging.error(f"Metadata file {metadata_path} is empty, cannot split.")
         return None
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error generating validation split from {metadata_path}: {e}")
         # Attempt to restore backup if split failed? Might be complex.
         return None
@@ -1495,7 +1495,7 @@ def start_tts_training(config_path, resume_from_checkpoint=None, status_queue=No
         if status_queue:
             status_queue.put("Training interrupted.")
         return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.error(f"Error during TTS training: {e}")
         if status_queue:
             status_queue.put(f"Training failed: {str(e)}")
@@ -1592,7 +1592,7 @@ def test_trained_model(config_path, test_text="Hello, this is a test of the trai
          if status_queue:
             status_queue.put("TTS Library Error during test.")
          return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.exception(f"Error testing trained model from {config_path}: {e}") # Log traceback
         if status_queue:
             status_queue.put(f"Test failed: {str(e)}")
@@ -1635,7 +1635,7 @@ def find_latest_checkpoint(output_path):
     except FileNotFoundError:
          logging.error(f"Checkpoint directory {checkpoint_dir} not found when listing files.")
          return None
-    except Exception as e:
+    except (TypeError, Exception) as e:
          logging.error(f"Error listing files in checkpoint directory {checkpoint_dir}: {e}")
          return None
 
@@ -1655,7 +1655,7 @@ def find_latest_checkpoint(output_path):
         latest_checkpoint = max(checkpoints, key=os.path.getmtime)
         logging.info(f"Found latest numbered checkpoint: {latest_checkpoint}")
         return latest_checkpoint
-    except Exception as e:
+    except (TypeError, Exception) as e:
          logging.error(f"Error finding latest checkpoint by modification time: {e}")
          return None
 
@@ -1687,7 +1687,7 @@ def backup_file(path, suffix="backup"):
             elif os.path.isdir(path):
                 shutil.copytree(path, backup_path, dirs_exist_ok=True) # Copy directory tree
                 logging.info(f"Backup of directory created: {backup_path}")
-        except Exception as e:
+        except (TypeError, Exception) as e:
             logging.error(f"Failed to create backup for {path} -> {backup_path}: {e}")
     else:
          logging.warning(f"Cannot backup non-existent path: {path}")
@@ -1737,7 +1737,7 @@ def has_trained_model(character, base_output_dir):
     except (json.JSONDecodeError, KeyError) as e:
         logging.warning(f"Error reading config file {config_path} during trained model check: {e}")
         return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
          logging.error(f"Unexpected error during trained model check for {character}: {e}")
          return False
 
@@ -1886,7 +1886,7 @@ def speak_tts(config_path, text, character, status_queue=None, stop_event=None):
          if status_queue:
             status_queue.put("TTS Library Error during synthesis.")
          return False
-    except Exception as e:
+    except (TypeError, Exception) as e:
         logging.exception(f"An unexpected error occurred in TTS synthesis or playback for {character}: {e}")
         if status_queue:
             status_queue.put(f"TTS failed: {str(e)}")
@@ -2122,7 +2122,7 @@ def main_gui():
                 # Check if config and checkpoint exist
                 if has_trained_model(character, base_output_dir):
                     show_tts = True
-            except Exception as e: # Catch potential errors during check
+            except (TypeError, Exception) as e: # Catch potential errors during check
                 logging.warning(f"Error checking for trained model: {e}")
 
         # Update GUI elements
@@ -2214,7 +2214,7 @@ def main_gui():
                      # If task function completes without error and wasn't cancelled
                      # status_queue.put("TASK_COMPLETE") # Task func should put final status msg
                      pass # Task func should put its final status before TASK_COMPLETE/FAILED
-            except Exception as e:
+            except (TypeError, Exception) as e:
                 task_failed = True
                 error_msg = f"Thread Error: {str(e)}"
                 logging.exception(f"Error in background thread for {task_func.__name__}") # Log full traceback
