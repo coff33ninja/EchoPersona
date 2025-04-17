@@ -18,12 +18,12 @@ import datetime
 import threading
 import queue
 import playsound
-from TTS.api import TTS
+from tts.api import TTS
 
 # --- Coqui TTS Imports ---
 # Use try-except for robustness, especially for optional components
 try:
-    from TTS.api import TTS
+    # from TTS.api import TTS
     from TTS.config import load_config
     from TTS.utils.audio import AudioProcessor
     # Trainer related imports might vary slightly based on TTS version
@@ -57,7 +57,7 @@ logging.basicConfig(
 # --- Constants ---
 BASE_DATA_DIR = "voice_datasets" # Default directory for datasets
 WIKI_API_URL = "https://genshin-impact.fandom.com/api.php" # Wiki API endpoint
-JMP_API_URL_BASE = "https://genshin.jmp.blue" # API for character list 
+JMP_API_URL_BASE = "https://genshin.jmp.blue" # API for character list
 
 # --- Available TTS Models ---
 # Dictionary mapping user-friendly names to Coqui TTS model identifiers and properties
@@ -94,11 +94,12 @@ def ensure_tts_model(model_id, status_queue=None):
     try:
         # Initialize TTS without loading the model to check availability
         tts = TTS()
-        available_models = list(tts.list_models())
+        available_models = tts.list_models() if hasattr(tts, 'list_models') else []
         logging.debug(f"Available models: {available_models}")
 
         if model_id not in available_models:
-            logging.error(f"Model {model_id} not supported by this Coqui TTS version.")
+            logging.info(f"Model {model_id} not available locally. Attempting to download...")
+            tts.download_model(model_id)
             if status_queue:
                 status_queue.put(f"Error: Model {model_id} not supported.")
             return False
@@ -107,7 +108,7 @@ def ensure_tts_model(model_id, status_queue=None):
         logging.info(f"Checking availability of model: {model_id}")
         if status_queue:
             status_queue.put(f"Checking model: {model_id}...")
-        
+
         # Try initializing the model (this will download it if missing)
         tts = TTS(model_name=model_id, progress_bar=True)
         logging.info(f"Model {model_id} is available and ready.")

@@ -1,4 +1,8 @@
 # Core Libraries
+gruut[de,es,fr]==2.2.3
+coqui-tts==0.25.0
+coqui-tts[all]
+coqpit-config
 TTS==0.22.0
 torch~=2.2.0  # Or torch==2.2.0 if you prefer exact
 torchaudio~=2.2.0 # Or torchaudio==2.2.0
