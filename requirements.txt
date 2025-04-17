@@ -11,3 +11,4 @@ SpeechRecognition  # Keep only if you need a simple speech recognition interface
 pandas  # Keep if you need data manipulation
 python-slugify  # Keep if you need text slugification
 tenacity  # Keep if you need retry logic
+playsound==1.2.2  # Keep if you need to play sound files

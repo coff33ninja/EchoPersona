@@ -285,10 +285,18 @@
     },
     {
         "label": "TTS",
-        "importPath": "tts.api",
-        "description": "tts.api",
+        "importPath": "TTS.api",
+        "description": "TTS.api",
         "isExtraImport": true,
-        "detail": "tts.api",
+        "detail": "TTS.api",
+        "documentation": {}
+    },
+    {
+        "label": "TTS",
+        "importPath": "TTS.api",
+        "description": "TTS.api",
+        "isExtraImport": true,
+        "detail": "TTS.api",
         "documentation": {}
     },
     {
@@ -298,14 +306,6 @@
         "importPath": "torch",
         "description": "torch",
         "detail": "torch",
-        "documentation": {}
-    },
-    {
-        "label": "TTS",
-        "importPath": "TTS.api",
-        "description": "TTS.api",
-        "isExtraImport": true,
-        "detail": "TTS.api",
         "documentation": {}
     },
     {

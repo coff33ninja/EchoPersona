@@ -18,12 +18,13 @@ import datetime
 import threading
 import queue
 import playsound
-from tts.api import TTS
+from TTS.api import TTS
 
+# $env:CUDA_VISIBLE_DEVICES=""
 # --- Coqui TTS Imports ---
 # Use try-except for robustness, especially for optional components
 try:
-    # from TTS.api import TTS
+    from TTS.api import TTS
     from TTS.config import load_config
     from TTS.utils.audio import AudioProcessor
     # Trainer related imports might vary slightly based on TTS version
@@ -2233,7 +2234,6 @@ def main_gui():
         return True
 
     # --- Task Functions (to be run in threads) ---
-
     def task_process_voices():
         """Background task for downloading and transcribing voices."""
         character = character_var.get()
