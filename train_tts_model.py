@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from TTS.utils.radam import RAdam
 import torch.serialization
+from coqpit import Coqpit
 
 # --- Logging Configuration ---
 logger = logging.getLogger()
@@ -278,8 +279,12 @@ def train_model(
 
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
-            from coqpit import Coqpit  # Ensure Coqpit is used
-            config = Coqpit(**config)  # Convert dictionary to Coqpit object
+            # Filter out invalid keys for Coqpit
+            valid_coqpit_keys = Coqpit().__dict__.keys()  # Get valid keys from an empty Coqpit instance
+            filtered_config = {k: v for k, v in config.items() if k in valid_coqpit_keys}
+
+            # Convert the filtered dictionary to a Coqpit object
+            config = Coqpit(**filtered_config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
