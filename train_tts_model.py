@@ -279,8 +279,18 @@ def train_model(
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
             from coqpit import Coqpit
-            # Remove keys not expected by Coqpit
-            filtered_config = {k: v for k, v in config.items() if k not in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]}
+            import copy
+            # Deep copy config to avoid modifying original
+            filtered_config = copy.deepcopy(config)
+            # Remove 'formatter' key from each dataset dict if present
+            if "datasets" in filtered_config:
+                for dataset in filtered_config["datasets"]:
+                    if "formatter" in dataset:
+                        del dataset["formatter"]
+            # Remove other top-level keys not expected by Coqpit
+            for key in ["config_path", "output_path", "restore_path", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
+                if key in filtered_config:
+                    del filtered_config[key]
             config = Coqpit(**filtered_config)
 
         # Training logic
