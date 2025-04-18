@@ -302,8 +302,8 @@ def train_model(
                     del filtered_config[key]
             # Convert filtered_config dict to Coqpit object
             config = Coqpit(**filtered_config)
-            # Fix for parse_known_args error: keep as Coqpit object for Trainer
-            # config = dict(config)
+            # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
+            config = dict(config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
