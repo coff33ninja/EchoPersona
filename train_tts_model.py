@@ -292,15 +292,18 @@ def train_model(
                     for item in d:
                         remove_key_recursive(item, keys_to_remove)
 
-            # Deep copy config to avoid modifying original
-            filtered_config = copy.deepcopy(config)
-            # Recursively remove all 'formatter' and 'ignored_speakers' keys
-            remove_key_recursive(filtered_config, ["formatter", "ignored_speakers"])
-            # Remove other top-level keys not expected by Coqpit
-            for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
-                if key in filtered_config:
-                    del filtered_config[key]
-            config = Coqpit(**filtered_config)
+        # Deep copy config to avoid modifying original
+        filtered_config = copy.deepcopy(config)
+        # Recursively remove all 'formatter' and 'ignored_speakers' keys
+        remove_key_recursive(filtered_config, ["formatter", "ignored_speakers"])
+        # Remove other top-level keys not expected by Coqpit
+        for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
+            if key in filtered_config:
+                del filtered_config[key]
+        # Convert filtered_config dict to Coqpit object
+        config = Coqpit(**filtered_config)
+        # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
+        config = dict(config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
@@ -313,8 +316,8 @@ def train_model(
                     datasets=[
                         {
                             "path": dataset_path,
-                            "meta_file_train": meta_file_train_basename,
-                            "meta_file_val": meta_file_val_basename,
+                            "meta_file_train": os.path.basename(meta_file_train_path),
+                            "meta_file_val": os.path.basename(meta_file_val_path),
                             "formatter": "ljspeech",
                             "dataset_name": dataset_name,
                             "ignored_speakers": [],
