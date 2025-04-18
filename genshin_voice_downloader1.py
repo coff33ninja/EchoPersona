@@ -890,7 +890,7 @@ def process_character_voices(
         if status_queue:
             status_queue.put("Processing cancelled.")
         return None
-    safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character)
+    safe_character_name = re.sub(r'[\\/*?:"<>| ]', "_", character)
     character_folder = os.path.join(base_output_dir, safe_character_name)
     wavs_folder = os.path.join(character_folder, "wavs")
     os.makedirs(wavs_folder, exist_ok=True)
