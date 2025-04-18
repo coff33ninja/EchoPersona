@@ -2,3 +2,37 @@
 2025-04-18 13:05:52,490 - INFO - Found config for Hu Tao: voice_datasets\Hu Tao\Hu Tao_config.json
 2025-04-18 13:05:52,491 - INFO - Found config for Xiao: voice_datasets\Xiao\Xiao_config.json
 2025-04-18 13:05:52,491 - INFO - Found 2 character configs in voice_datasets
+2025-04-18 13:32:44,235 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 13:32:49,206 - INFO - Found config for Hu Tao: voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:32:49,207 - INFO - Found config for Xiao: voice_datasets\Xiao\Xiao_config.json
+2025-04-18 13:32:49,208 - INFO - Found 2 character configs in voice_datasets
+2025-04-18 13:33:03,295 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:33:03,298 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:33:03,298 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 13:33:03,310 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 13:33:03,310 - INFO - Using CPU for training.
+2025-04-18 13:33:03,311 - INFO - Checking training metadata file at: voice_datasets\Hu Tao\wavs\metadata.csv
+2025-04-18 13:33:03,311 - INFO - Checking validation metadata file at: voice_datasets\Hu Tao\wavs\valid.csv
+2025-04-18 13:33:03,312 - ERROR - Training failed: Training metadata file not found: voice_datasets\Hu Tao\wavs\metadata.csv
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 253, in train_model
+    raise FileNotFoundError(
+FileNotFoundError: Training metadata file not found: voice_datasets\Hu Tao\wavs\metadata.csv
+
+2025-04-18 13:34:53,659 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 13:34:59,175 - INFO - Found config for Hu Tao: voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:34:59,177 - INFO - Found config for Xiao: voice_datasets\Xiao\Xiao_config.json
+2025-04-18 13:34:59,178 - INFO - Found 2 character configs in voice_datasets
+2025-04-18 13:35:03,536 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:35:03,539 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 13:35:03,539 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 13:35:03,553 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 13:35:03,553 - INFO - Using CPU for training.
+2025-04-18 13:35:03,554 - INFO - Checking training metadata file at: D:\Scripts\EchoPersona\voice_datasets\Hu Tao\wavs\metadata.csv
+2025-04-18 13:35:03,555 - INFO - Checking validation metadata file at: D:\Scripts\EchoPersona\voice_datasets\Hu Tao\wavs\valid.csv
+2025-04-18 13:35:03,555 - ERROR - Training failed: Training metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Hu Tao\wavs\metadata.csv
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 254, in train_model
+    raise FileNotFoundError(
+FileNotFoundError: Training metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Hu Tao\wavs\metadata.csv
+

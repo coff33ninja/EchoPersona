@@ -239,15 +239,24 @@ def train_model(
             raise ValueError(
                 "Dataset configuration missing required fields: path, meta_file_train, meta_file_val"
             )
-        if not os.path.exists(dataset_path):
-            raise FileNotFoundError(f"Dataset path not found: {dataset_path}")
-        if not os.path.exists(meta_file_train):
+        from pathlib import Path
+        dataset_path_abs = str(Path(dataset_path).resolve())
+        if not os.path.exists(dataset_path_abs):
+            raise FileNotFoundError(f"Dataset path not found: {dataset_path_abs}")
+        # Adjust meta_file_train and meta_file_val to be basenames only and join properly
+        meta_file_train_basename = Path(meta_file_train).name
+        meta_file_val_basename = Path(meta_file_val).name
+        meta_file_train_path = str(Path(dataset_path_abs) / meta_file_train_basename)
+        meta_file_val_path = str(Path(dataset_path_abs) / meta_file_val_basename)
+        logging.info(f"Checking training metadata file at: {meta_file_train_path}")
+        logging.info(f"Checking validation metadata file at: {meta_file_val_path}")
+        if not os.path.exists(meta_file_train_path):
             raise FileNotFoundError(
-                f"Training metadata file not found: {meta_file_train}"
+                f"Training metadata file not found: {meta_file_train_path}"
             )
-        if not os.path.exists(meta_file_val):
+        if not os.path.exists(meta_file_val_path):
             raise FileNotFoundError(
-                f"Validation metadata file not found: {meta_file_val}"
+                f"Validation metadata file not found: {meta_file_val_path}"
             )
 
         # Training logic
@@ -261,10 +270,12 @@ def train_model(
                     datasets=[
                         {
                             "path": dataset_path,
-                            "meta_file_train": meta_file_train,
-                            "meta_file_val": meta_file_val,
+                            "meta_file_train": meta_file_train_basename,
+                            "meta_file_val": meta_file_val_basename,
                             "formatter": "ljspeech",
                             "dataset_name": dataset_name,
+                            "ignored_speakers": [],
+                            "language": "en",
                         }
                     ],
                     eval_split=True,
@@ -285,8 +296,8 @@ def train_model(
                     continue_path=restore_path,
                 )
                 trainer = Trainer(
+                    trainer_args,
                     output_path=output_dir,  # Pass output_path here
-                    trainer_args=trainer_args,
                     config=model_config,
                 ).to(device)
 
@@ -311,14 +322,14 @@ def train_model(
                         continue_path=restore_path,
                     )
                     trainer = Trainer(
+                        trainer_args,
                         output_path=output_dir,  # Pass output_path here
-                        trainer_args=trainer_args,
                         config=load_config(config_path),
                     ).to(device)
                     trainer.fit(
                         dataset_path=dataset_path,
-                        meta_file_train=meta_file_train,
-                        meta_file_val=meta_file_val,
+                        meta_file_train=meta_file_train_basename,
+                        meta_file_val=meta_file_val_basename,
                         batch_size=batch_size,
                         epochs=epochs,
                         checkpoint_dir=checkpoint_dir,
