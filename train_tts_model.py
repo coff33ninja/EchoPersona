@@ -29,28 +29,21 @@ def load_config(config_path):
 def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):
     """Adjust metadata file paths."""
     # Use the provided paths directly if they are absolute
-    if os.path.isabs(meta_file_train) and os.path.isabs(meta_file_val):
+    if os.path.isabs(meta_file_train):
         meta_file_train_path = meta_file_train
+    else:
+        meta_file_train_path = os.path.join(dataset_path, meta_file_train)
+
+    if os.path.isabs(meta_file_val):
         meta_file_val_path = meta_file_val
     else:
-        # Resolve relative paths
-        meta_file_train_basename = os.path.basename(meta_file_train)
-        meta_file_val_basename = os.path.basename(meta_file_val)
-        meta_file_train_path = os.path.join(dataset_path, meta_file_train_basename)
-        meta_file_val_path = os.path.join(dataset_path, meta_file_val_basename)
-
-        if not os.path.exists(meta_file_train_path) or not os.path.exists(
-            meta_file_val_path
-        ):
-            parent_dir = os.path.dirname(dataset_path)
-            meta_file_train_path = os.path.join(parent_dir, meta_file_train_basename)
-            meta_file_val_path = os.path.join(parent_dir, meta_file_val_basename)
+        meta_file_val_path = os.path.join(dataset_path, meta_file_val)
 
     # Validate the resolved paths
-    if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):
-        raise FileNotFoundError(
-            f"Metadata files not found at {meta_file_train_path} or {meta_file_val_path}"
-        )
+    if not os.path.exists(meta_file_train_path):
+        raise FileNotFoundError(f"Training metadata file not found: {meta_file_train_path}")
+    if not os.path.exists(meta_file_val_path):
+        raise FileNotFoundError(f"Validation metadata file not found: {meta_file_val_path}")
 
     logging.info(f"Resolved training metadata file: {meta_file_train_path}")
     logging.info(f"Resolved validation metadata file: {meta_file_val_path}")

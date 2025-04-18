@@ -4374,7 +4374,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def load_config(config_path):\n    \"\"\"Load configuration using VitsConfig.\"\"\"\n    config = VitsConfig()\n    config.load_json(config_path)\n    return config\ndef adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train) and os.path.isabs(meta_file_val):\n        meta_file_train_path = meta_file_train",
+        "peekOfCode": "def load_config(config_path):\n    \"\"\"Load configuration using VitsConfig.\"\"\"\n    config = VitsConfig()\n    config.load_json(config_path)\n    return config\ndef adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train):\n        meta_file_train_path = meta_file_train",
         "detail": "train_tts_model",
         "documentation": {}
     },
@@ -4383,7 +4383,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train) and os.path.isabs(meta_file_val):\n        meta_file_train_path = meta_file_train\n        meta_file_val_path = meta_file_val\n    else:\n        # Resolve relative paths\n        meta_file_train_basename = os.path.basename(meta_file_train)\n        meta_file_val_basename = os.path.basename(meta_file_val)",
+        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train):\n        meta_file_train_path = meta_file_train\n    else:\n        meta_file_train_path = os.path.join(dataset_path, meta_file_train)\n    if os.path.isabs(meta_file_val):\n        meta_file_val_path = meta_file_val\n    else:",
         "detail": "train_tts_model",
         "documentation": {}
     },
