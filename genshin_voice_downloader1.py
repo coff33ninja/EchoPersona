@@ -1146,7 +1146,8 @@ def generate_character_config(
         "batch_size": 16,
         "num_epochs": 100,
         "run_eval": True,
-        "formatter": "ljspeech"  # Top-level formatter for compatibility
+        "formatter": "ljspeech",  # Top-level formatter for compatibility
+        "ignored_speakers": []
     }
 
     if model_data["use_pre_trained"] and pre_trained_path:
