@@ -415,23 +415,15 @@
         "documentation": {}
     },
     {
-        "label": "ttk",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
-        "label": "messagebox",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
         "label": "filedialog",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
         "importPath": "tkinter",
         "description": "tkinter",
         "isExtraImport": true,
@@ -612,78 +604,43 @@
         "documentation": {}
     },
     {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
         "isExtraImport": true,
-        "detail": "typing",
+        "detail": "TTS.tts.configs.vits_config",
         "documentation": {}
     },
     {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
         "isExtraImport": true,
-        "detail": "typing",
+        "detail": "TTS.tts.models.vits",
         "documentation": {}
     },
     {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
         "isExtraImport": true,
-        "detail": "typing",
+        "detail": "TTS.tts.datasets",
         "documentation": {}
     },
     {
-        "label": "torch",
-        "kind": 6,
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
         "isExtraImport": true,
-        "importPath": "torch",
-        "description": "torch",
-        "detail": "torch",
+        "detail": "trainer",
         "documentation": {}
     },
     {
-        "label": "traceback",
-        "kind": 6,
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
         "isExtraImport": true,
-        "importPath": "traceback",
-        "description": "traceback",
-        "detail": "traceback",
-        "documentation": {}
-    },
-    {
-        "label": "Path",
-        "importPath": "pathlib",
-        "description": "pathlib",
-        "isExtraImport": true,
-        "detail": "pathlib",
-        "documentation": {}
-    },
-    {
-        "label": "RAdam",
-        "importPath": "TTS.utils.radam",
-        "description": "TTS.utils.radam",
-        "isExtraImport": true,
-        "detail": "TTS.utils.radam",
-        "documentation": {}
-    },
-    {
-        "label": "torch.serialization",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "torch.serialization",
-        "description": "torch.serialization",
-        "detail": "torch.serialization",
-        "documentation": {}
-    },
-    {
-        "label": "Coqpit",
-        "importPath": "coqpit",
-        "description": "coqpit",
-        "isExtraImport": true,
-        "detail": "coqpit",
+        "detail": "trainer",
         "documentation": {}
     },
     {
@@ -4413,65 +4370,11 @@
         "documentation": {}
     },
     {
-        "label": "import_trainer_and_args",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def import_trainer_and_args():\n    \"\"\"Attempt to import Trainer, TrainerArgs, and related functions.\"\"\"\n    try:\n        from TTS.bin.train_tts import (\n            Trainer,\n            TrainerArgs,\n            load_tts_samples,\n            setup_model,\n        )\n        logging.info(",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "find_character_configs",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}\n    base_path = Path(base_dir)\n    if not base_path.exists():\n        logging.error(f\"Base directory does not exist: {base_dir}\")\n        return configs\n    for character_dir in base_path.iterdir():\n        if character_dir.is_dir():\n            for file in character_dir.glob(\"*.json\"):",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "validate_data_paths",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def validate_data_paths(config: Dict[str, Any]) -> bool:\n    \"\"\"Validate that all required data paths exist.\"\"\"\n    required_paths = []\n    for dataset in config.get(\"datasets\", []):\n        required_paths.extend(\n            [\n                dataset.get(\"path\"),\n                dataset.get(\"meta_file_train\"),\n                dataset.get(\"meta_file_val\"),\n            ]",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
         "label": "load_config",
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def load_config(config_path: str) -> Dict[str, Any]:\n    \"\"\"Load and validate the JSON configuration file.\"\"\"\n    try:\n        with open(config_path, \"r\", encoding=\"utf-8\") as f:\n            config = json.load(f)\n        logging.info(f\"Loaded configuration from {config_path}\")\n        # Debug: Log the loaded configuration\n        logging.debug(f\"Loaded configuration content: {json.dumps(config, indent=4)}\")\n        # Validate required paths\n        if not validate_data_paths(config):",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "setup_device",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def setup_device(use_gpu: bool, gpu_type: str) -> torch.device:\n    \"\"\"Set up the computation device (CPU, CUDA, or MPS).\"\"\"\n    if not use_gpu:\n        logging.info(\"Using CPU for training.\")\n        return torch.device(\"cpu\")\n    if gpu_type == \"cuda\" and torch.cuda.is_available():\n        logging.info(f\"Using CUDA GPU (Device: {torch.cuda.get_device_name(0)})\")\n        return torch.device(\"cuda\")\n    elif gpu_type == \"mps\" and torch.backends.mps.is_available():\n        logging.info(\"Using MPS (Apple Silicon GPU)\")",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "pre_download_model",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def pre_download_model(\n    model_id: str, status_queue: Optional[queue.Queue] = None\n) -> bool:\n    \"\"\"Check if the Coqui TTS model exists in cache and download if necessary.\"\"\"\n    try:\n        # Construct expected model path in cache\n        model_dir = os.path.join(CACHE_DIR, model_id.replace(\"/\", \"--\"))\n        model_exists = os.path.exists(model_dir) and any(Path(model_dir).iterdir())\n        if model_exists:\n            logging.info(f\"Model {model_id} already exists at {model_dir}\")",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "initialize_model",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def initialize_model(\n    model_id: str, config: Dict[str, Any], device: torch.device, import_source: str\n) -> Any:\n    try:\n        if import_source == \"api\":\n            # Allowlist RAdam for PyTorch 2.6+\n            torch.serialization.add_safe_globals([RAdam])\n            tts = TTS(model_id).to(device)\n            logging.info(f\"Initialized TTS model from TTS.api: {model_id}\")\n            return tts",
+        "peekOfCode": "def load_config(config_path):\n    \"\"\"Load configuration using VitsConfig.\"\"\"\n    config = VitsConfig()\n    config.load_json(config_path)\n    return config\ndef adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    meta_file_train_basename = os.path.basename(meta_file_train)\n    meta_file_val_basename = os.path.basename(meta_file_val)\n    meta_file_train_path = os.path.join(dataset_path, meta_file_train_basename)",
         "detail": "train_tts_model",
         "documentation": {}
     },
@@ -4480,7 +4383,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def adjust_metadata_paths(dataset_path: str, meta_file_train: str, meta_file_val: str) -> tuple[str, str]:\n    \"\"\"Adjust metadata file paths to ensure compatibility with the expected structure.\"\"\"\n    # Normalize meta file names to basename only to avoid double joining\n    meta_file_train_basename = os.path.basename(meta_file_train)\n    meta_file_val_basename = os.path.basename(meta_file_val)\n    # Check if metadata files exist in the dataset path\n    meta_file_train_path = os.path.join(dataset_path, meta_file_train_basename)\n    meta_file_val_path = os.path.join(dataset_path, meta_file_val_basename)\n    if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):\n        # If not found, check one directory above",
+        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    meta_file_train_basename = os.path.basename(meta_file_train)\n    meta_file_val_basename = os.path.basename(meta_file_val)\n    meta_file_train_path = os.path.join(dataset_path, meta_file_train_basename)\n    meta_file_val_path = os.path.join(dataset_path, meta_file_val_basename)\n    if not os.path.exists(meta_file_train_path) or not os.path.exists(\n        meta_file_val_path\n    ):\n        parent_dir = os.path.dirname(dataset_path)",
         "detail": "train_tts_model",
         "documentation": {}
     },
@@ -4489,25 +4392,16 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def train_model(\n    config_path: str,\n    output_dir: str,\n    use_gpu: bool,\n    gpu_type: str,\n    model_id: str,\n    restore_path: Optional[str] = None,\n    status_queue: Optional[queue.Queue] = None,\n) -> str:\n    \"\"\"Train a TTS model using the provided configuration with enhanced error handling.\"\"\"",
+        "peekOfCode": "def train_model(config_path, dataset_path, output_dir, character):\n    \"\"\"Train a VITS model for a character.\"\"\"\n    try:\n        # Load configuration\n        config = load_config(config_path)\n        # Set multi-speaker parameters\n        config.use_speaker_embedding = True\n        config.num_speakers = 1  # Single character for now\n        # Adjust metadata paths\n        dataset_config = config.datasets[0]",
         "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "test_model",
+        "label": "run_gui",
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def test_model(\n    model_path: str,\n    config_path: str,\n    text: str,\n    output_wav: str,\n    status_queue: Optional[queue.Queue] = None,\n) -> None:\n    \"\"\"Test the trained model by synthesizing a sample text.\"\"\"\n    try:\n        config = load_config(config_path)",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "main_gui",
-        "kind": 2,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "def main_gui(base_dir: str = DEFAULT_BASE_DIR) -> None:\n    window = tk.Tk()\n    window.title(\"TTS Model Trainer\")\n    window.geometry(\"600x500\")\n    # Variables\n    base_dir_var = tk.StringVar(value=base_dir)\n    character_var = tk.StringVar()\n    output_dir_var = tk.StringVar(value=DEFAULT_OUTPUT_DIR)\n    use_gpu_var = tk.BooleanVar(value=False)\n    gpu_type_var = tk.StringVar(value=\"cuda\")",
+        "peekOfCode": "def run_gui():\n    \"\"\"Run the GUI interface.\"\"\"\n    window = tk.Tk()\n    window.title(\"TTS Model Trainer\")\n    tk.Label(window, text=\"Base Directory:\").grid(row=0, column=0, padx=5, pady=5)\n    base_dir_var = tk.StringVar()\n    tk.Entry(window, textvariable=base_dir_var, width=50).grid(\n        row=0, column=1, padx=5, pady=5\n    )\n    tk.Button(",
         "detail": "train_tts_model",
         "documentation": {}
     },
@@ -4516,79 +4410,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Train custom TTS models for characters using Coqui TTS.\",\n        formatter_class=argparse.ArgumentDefaultsHelpFormatter,\n    )\n    parser.add_argument(\n        \"--base-dir\",\n        type=str,\n        default=DEFAULT_BASE_DIR,\n        help=\"Base directory containing character folders with JSON configs.\",",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "logger",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "logger = logging.getLogger()\nlogger.setLevel(logging.INFO)\nlog_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "log_format",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "log_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "console_handler",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "console_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---\ndef import_trainer_and_args():",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "file_handler",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "file_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---\ndef import_trainer_and_args():\n    \"\"\"Attempt to import Trainer, TrainerArgs, and related functions.\"\"\"\n    try:\n        from TTS.bin.train_tts import (\n            Trainer,",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "DEFAULT_BASE_DIR",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "DEFAULT_BASE_DIR = \"voice_datasets\"\nDEFAULT_OUTPUT_DIR = \"tts_output\"\nSUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "DEFAULT_OUTPUT_DIR",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "DEFAULT_OUTPUT_DIR = \"tts_output\"\nSUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "SUPPORTED_MODELS",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "SUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}",
-        "detail": "train_tts_model",
-        "documentation": {}
-    },
-    {
-        "label": "CACHE_DIR",
-        "kind": 5,
-        "importPath": "train_tts_model",
-        "description": "train_tts_model",
-        "peekOfCode": "CACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}\n    base_path = Path(base_dir)\n    if not base_path.exists():\n        logging.error(f\"Base directory does not exist: {base_dir}\")\n        return configs\n    for character_dir in base_path.iterdir():",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(description=\"Train TTS models for characters.\")\n    parser.add_argument(\n        \"--base-dir\", type=str, help=\"Base directory containing character datasets\"\n    )\n    parser.add_argument(\"--character\", type=str, help=\"Character to train\")\n    parser.add_argument(\n        \"--output-dir\",\n        type=str,\n        default=\"tts_output\",",
         "detail": "train_tts_model",
         "documentation": {}
     }
