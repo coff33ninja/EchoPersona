@@ -114,6 +114,11 @@ def load_config(config_path: str) -> Dict[str, Any]:
         with open(config_path, "r", encoding="utf-8") as f:
             config = json.load(f)
         logging.info(f"Loaded configuration from {config_path}")
+
+        # Debug: Log the loaded configuration
+        logging.debug(f"Loaded configuration content: {json.dumps(config, indent=4)}")
+
+        # Validate required paths
         if not validate_data_paths(config):
             raise ValueError(
                 "Invalid configuration: Missing or non-existent data paths."

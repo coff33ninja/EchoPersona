@@ -4444,7 +4444,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def load_config(config_path: str) -> Dict[str, Any]:\n    \"\"\"Load and validate the JSON configuration file.\"\"\"\n    try:\n        with open(config_path, \"r\", encoding=\"utf-8\") as f:\n            config = json.load(f)\n        logging.info(f\"Loaded configuration from {config_path}\")\n        if not validate_data_paths(config):\n            raise ValueError(\n                \"Invalid configuration: Missing or non-existent data paths.\"\n            )",
+        "peekOfCode": "def load_config(config_path: str) -> Dict[str, Any]:\n    \"\"\"Load and validate the JSON configuration file.\"\"\"\n    try:\n        with open(config_path, \"r\", encoding=\"utf-8\") as f:\n            config = json.load(f)\n        logging.info(f\"Loaded configuration from {config_path}\")\n        # Debug: Log the loaded configuration\n        logging.debug(f\"Loaded configuration content: {json.dumps(config, indent=4)}\")\n        # Validate required paths\n        if not validate_data_paths(config):",
         "detail": "train_tts_model",
         "documentation": {}
     },
