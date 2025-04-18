@@ -73,12 +73,11 @@ def train_model(config_path, dataset_path, output_dir, character):
 
         # Load dataset samples
         train_samples, eval_samples = load_tts_samples(
-            config,
+            config.datasets,
             eval_split=True,
             eval_split_max_size="50%",
             eval_split_size=1000,
         )
-
         # Initialize model
         model = Vits(config)
 
