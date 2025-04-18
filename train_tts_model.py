@@ -288,7 +288,7 @@ def train_model(
                     if "formatter" in dataset:
                         del dataset["formatter"]
             # Remove other top-level keys not expected by Coqpit
-            for key in ["config_path", "output_path", "restore_path", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
+            for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
                 if key in filtered_config:
                     del filtered_config[key]
             config = Coqpit(**filtered_config)
