@@ -292,18 +292,18 @@ def train_model(
                     for item in d:
                         remove_key_recursive(item, keys_to_remove)
 
-        # Deep copy config to avoid modifying original
-        filtered_config = copy.deepcopy(config)
-        # Recursively remove all 'formatter' and 'ignored_speakers' keys
-        remove_key_recursive(filtered_config, ["formatter", "ignored_speakers"])
-        # Remove other top-level keys not expected by Coqpit
-        for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
-            if key in filtered_config:
-                del filtered_config[key]
-        # Convert filtered_config dict to Coqpit object
-        config = Coqpit(**filtered_config)
-        # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
-        config = dict(config)
+            # Deep copy config to avoid modifying original
+            filtered_config = copy.deepcopy(config)
+            # Recursively remove all 'formatter' and 'ignored_speakers' keys
+            remove_key_recursive(filtered_config, ["formatter", "ignored_speakers"])
+            # Remove other top-level keys not expected by Coqpit
+            for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
+                if key in filtered_config:
+                    del filtered_config[key]
+            # Convert filtered_config dict to Coqpit object
+            config = Coqpit(**filtered_config)
+            # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
+            config = dict(config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
@@ -322,6 +322,7 @@ def train_model(
                             "dataset_name": dataset_name,
                             "ignored_speakers": [],
                             "language": "en",
+                            "audio_path": "",  # Removed "wavs" to fix path issue
                         }
                     ],
                     eval_split=True,
