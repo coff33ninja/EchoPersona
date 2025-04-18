@@ -4148,7 +4148,7 @@
         "kind": 2,
         "importPath": "genshin_voice_downloader1",
         "description": "genshin_voice_downloader1",
-        "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_queue=None):\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", file_name)\n    ogg_file_name = (\n        safe_file_name\n        if safe_file_name.lower().endswith(\".ogg\")\n        else f\"{safe_file_name}.ogg\"\n    )\n    wav_file_name = os.path.splitext(ogg_file_name)[0] + \".wav\"\n    ogg_path = os.path.join(output_dir, \"temp_\" + ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)",
+        "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_queue=None):\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>| ]', \"_\", file_name)  # Replace spaces with underscores\n    ogg_file_name = (\n        safe_file_name\n        if safe_file_name.lower().endswith(\".ogg\")\n        else f\"{safe_file_name}.ogg\"\n    )\n    wav_file_name = os.path.splitext(ogg_file_name)[0] + \".wav\"\n    ogg_path = os.path.join(output_dir, \"temp_\" + ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)",
         "detail": "genshin_voice_downloader1",
         "documentation": {}
     },

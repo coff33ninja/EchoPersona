@@ -242,7 +242,7 @@ def get_file_url(file_title):
         return None
 
 def download_and_convert(file_url, output_dir, file_name, status_queue=None):
-    safe_file_name = re.sub(r'[\\/*?:"<>|]', "_", file_name)
+    safe_file_name = re.sub(r'[\\/*?:"<>| ]', "_", file_name)  # Replace spaces with underscores
     ogg_file_name = (
         safe_file_name
         if safe_file_name.lower().endswith(".ogg")
@@ -934,7 +934,7 @@ def process_character_voices(
                 logging.warning(f"Could not parse file name from title: {file_title}")
                 failed_count += 1
                 continue
-            file_name = match.group(1).strip()
+            file_name = re.sub(r'[\\/*?:"<>| ]', "_", match.group(1).strip())  # Sanitize file name
             file_url = get_file_url(file_title)
             if file_url:
                 wav_file_path = download_and_convert(
