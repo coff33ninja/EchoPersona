@@ -246,6 +246,73 @@ Test the model by synthesizing audio from text.
 
 ---
 
+## Troubleshooting: Training Issues
+
+### Issue: `PermissionError: [WinError 32] The process cannot access the file because it is being used by another process`
+
+#### Cause:
+This error occurs when the training process tries to access or delete a file (e.g., `trainer_0_log.txt`) that is locked by another process. This can happen due to:
+- The file being open in another application (e.g., a text editor or log viewer).
+- Background services like antivirus or indexing interfering with file access.
+- The training process itself holding a lock on the file.
+
+#### Solution:
+1. **Retry Logic for File Deletion**:
+   - The training script has been updated to include retry logic for deleting files. If the file cannot be deleted after multiple retries, a new log file will be created instead.
+
+2. **Disable Antivirus or Indexing Temporarily**:
+   - Temporarily disable antivirus software or Windows indexing services for the workspace directory.
+
+3. **Use Unique Log Directories**:
+   - Ensure that each training run uses a unique log directory to avoid conflicts. This can be configured in the `zhongli_config.json` file:
+     ```json
+     {
+         "output_path": "voice_datasets\\Zhongli\\tts_output\\run-unique",
+         ...
+     }
+     ```
+
+4. **Close Open Applications**:
+   - Ensure that no other applications (e.g., VS Code, Notepad) are accessing the log files.
+
+5. **Debug File Locks**:
+   - Use tools like [Sysinternals Process Explorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer) to identify which process is holding a lock on the file.
+
+---
+
+### Issue: `AttributeError: 'NoneType' object has no attribute 'use_phonemes'`
+
+#### Cause:
+This error occurs when the selected TTS model does not support phoneme-based training, and the configuration still enables `use_phonemes`.
+
+#### Solution:
+1. **Dynamic Configuration Update**:
+   - The training script has been updated to dynamically disable `use_phonemes` if the selected model does not support it. A warning will be logged:
+     ```
+     WARNING - Selected model does not support phoneme-based training. Disabling phonemes.
+     ```
+
+2. **Switch to a Compatible Model**:
+   - If phoneme-based training is required, use a model that supports it, such as `tts_models/en/ljspeech/tacotron2-DDC`.
+
+3. **Update Configuration**:
+   - Ensure the `zhongli_config.json` file reflects the model's capabilities. For example:
+     ```json
+     {
+         "model": "tts_models/en/ljspeech/tacotron2-DDC",
+         "use_phonemes": true,
+         "phoneme_language": "en-us"
+     }
+     ```
+
+---
+
+### Additional Notes:
+- The training script now includes enhanced logging to help debug issues with model initialization and file access.
+- If issues persist, consider running the training script in isolation (e.g., from a terminal with no other applications open).
+
+---
+
 ## 🧾 Dependencies (`requirements.txt`)
 
 - `TTS` (Coqui TTS)
