@@ -4942,7 +4942,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
+        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            logging.warning(f\"Retrying deletion of {experiment_path} due to PermissionError: {e}\")\n            if attempt < retries - 1:\n                time.sleep(delay)",
         "detail": "train_tts_model",
         "documentation": {}
     },

@@ -58,6 +58,7 @@ def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):
                 shutil.rmtree(experiment_path)
             break
         except PermissionError as e:
+            logging.warning(f"Retrying deletion of {experiment_path} due to PermissionError: {e}")
             if attempt < retries - 1:
                 time.sleep(delay)
             else:
@@ -90,8 +91,10 @@ def train_model(config_path, dataset_path, output_dir, character):
             eval_split_max_size="50%",
             eval_split_size=1000,
         )
-        # Initialize model
+        # Initialize model with tokenizer settings
         model = Vits(config)
+        model.tokenizer.use_phonemes = config.use_phonemes
+        model.tokenizer.phoneme_language = config.phoneme_language
 
         # Set up trainer
         trainer_args = TrainerArgs()
