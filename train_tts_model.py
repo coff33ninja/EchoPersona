@@ -89,6 +89,14 @@ def train_model(config_path, dataset_path, output_dir, character):
         dataset_config.meta_file_train = meta_file_train_path
         dataset_config.meta_file_val = meta_file_val_path
 
+        # Check if the model supports phonemes
+        if config.model == "tts_models/en/vctk/vits":
+            logging.warning(
+                "Selected model does not support phoneme-based training. Disabling phonemes."
+            )
+            config.use_phonemes = False
+            config.phoneme_language = None
+
         # Load dataset samples
         train_samples, eval_samples = load_tts_samples(
             config.datasets,
@@ -101,13 +109,14 @@ def train_model(config_path, dataset_path, output_dir, character):
         model = Vits(config)
 
         # Check if tokenizer is initialized
-        if model.tokenizer is None:
+        if config.use_phonemes and model.tokenizer is None:
             logging.error("Tokenizer is not initialized in the model.")
             raise ValueError("Tokenizer is not initialized in the model.")
 
-        # Set tokenizer settings
-        model.tokenizer.use_phonemes = config.use_phonemes
-        model.tokenizer.phoneme_language = config.phoneme_language
+        # Set tokenizer settings if phonemes are enabled
+        if config.use_phonemes:
+            model.tokenizer.use_phonemes = config.use_phonemes
+            model.tokenizer.phoneme_language = config.phoneme_language
 
         # Set up trainer
         trainer_args = TrainerArgs()

@@ -1700,3 +1700,7 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 17:26:26,302 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
 2025-04-18 17:26:27,108 - ERROR - Tokenizer is not initialized in the model.
 2025-04-18 17:26:27,109 - ERROR - Training failed for Zhongli: Tokenizer is not initialized in the model.
+2025-04-18 17:29:03,487 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:29:03,488 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:29:03,488 - WARNING - Selected model does not support phoneme-based training. Disabling phonemes.
+2025-04-18 17:29:07,520 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+29PM-fca756d\\trainer_0_log.txt'
