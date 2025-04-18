@@ -1677,3 +1677,4 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 16:57:20,449 - ERROR - Training failed for Zhongli: [Errno 2] No such file or directory: 'voice_datasets\\Zhongli\\wavs\\voice_datasets\\Zhongli\\metadata.csv'
 2025-04-18 16:58:28,246 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\wavs\voice_datasets\Zhongli\metadata.csv
 2025-04-18 17:00:00,754 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:01:52,666 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv
