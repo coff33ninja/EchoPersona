@@ -250,3 +250,20 @@ Traceback (most recent call last):
     raise RuntimeError("All Trainer.fit attempts failed")
 RuntimeError: All Trainer.fit attempts failed
 
+2025-04-18 14:44:07,508 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 14:44:13,235 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:44:13,235 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 14:44:19,153 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:44:19,155 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:44:19,156 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 14:44:19,168 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 14:44:19,169 - INFO - Using CPU for training.
+2025-04-18 14:44:19,170 - ERROR - Training failed: Metadata files not found in expected locations: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv, voice_datasets\Zhongli\voice_datasets\Zhongli\valid.csv
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 271, in train_model
+    meta_file_train_path, meta_file_val_path = adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 214, in adjust_metadata_paths
+    raise FileNotFoundError(
+FileNotFoundError: Metadata files not found in expected locations: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv, voice_datasets\Zhongli\voice_datasets\Zhongli\valid.csv
+
