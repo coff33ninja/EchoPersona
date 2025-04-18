@@ -4472,7 +4472,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def train_model(\n    config_path: str,\n    output_dir: str,\n    use_gpu: bool,\n    gpu_type: str,\n    model_id: str,\n    restore_path: Optional[str] = None,\n    status_queue: Optional[queue.Queue] = None,\n) -> str:\n    \"\"\"Train a TTS model using the provided configuration with enhanced if/else logic.\"\"\"",
+        "peekOfCode": "def train_model(\n    config_path: str,\n    output_dir: str,\n    use_gpu: bool,\n    gpu_type: str,\n    model_id: str,\n    restore_path: Optional[str] = None,\n    status_queue: Optional[queue.Queue] = None,\n) -> str:\n    \"\"\"Train a TTS model using the provided configuration with enhanced error handling.\"\"\"",
         "detail": "train_tts_model",
         "documentation": {}
     },

@@ -207,7 +207,7 @@ def train_model(
     restore_path: Optional[str] = None,
     status_queue: Optional[queue.Queue] = None,
 ) -> str:
-    """Train a TTS model using the provided configuration with enhanced if/else logic."""
+    """Train a TTS model using the provided configuration with enhanced error handling."""
     try:
         config = load_config(config_path)
         if status_queue:
@@ -230,7 +230,27 @@ def train_model(
         epochs = config.get("num_epochs", 100)
         run_eval = config.get("run_eval", True)
 
-        # Training logic with if/else
+        # Verify dataset paths
+        dataset_path = dataset_config.get("path")
+        meta_file_train = dataset_config.get("meta_file_train")
+        meta_file_val = dataset_config.get("meta_file_val")
+        dataset_name = dataset_config.get("dataset_name", "default_dataset")
+        if not all([dataset_path, meta_file_train, meta_file_val]):
+            raise ValueError(
+                "Dataset configuration missing required fields: path, meta_file_train, meta_file_val"
+            )
+        if not os.path.exists(dataset_path):
+            raise FileNotFoundError(f"Dataset path not found: {dataset_path}")
+        if not os.path.exists(meta_file_train):
+            raise FileNotFoundError(
+                f"Training metadata file not found: {meta_file_train}"
+            )
+        if not os.path.exists(meta_file_val):
+            raise FileNotFoundError(
+                f"Validation metadata file not found: {meta_file_val}"
+            )
+
+        # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
             logging.info(
                 "Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts"
@@ -240,29 +260,35 @@ def train_model(
                 train_samples, eval_samples = load_tts_samples(
                     datasets=[
                         {
-                            "path": dataset_config.get("path"),
-                            "meta_file_train": dataset_config.get("meta_file_train"),
-                            "meta_file_val": dataset_config.get("meta_file_val"),
+                            "path": dataset_path,
+                            "meta_file_train": meta_file_train,
+                            "meta_file_val": meta_file_val,
+                            "formatter": "ljspeech",
+                            "dataset_name": dataset_name,
                         }
                     ],
                     eval_split=True,
-                    formatter=None,  # Default formatter for LJSpeech-style datasets
                 )
+                if not train_samples or not eval_samples:
+                    raise ValueError("No training or evaluation samples loaded")
                 logging.info(
                     f"Loaded {len(train_samples)} training samples and {len(eval_samples)} evaluation samples"
                 )
 
-                # Initialize model with setup_model
+                # Initialize model
                 model_config = load_config(config_path)
                 model = setup_model(model_config, samples=train_samples + eval_samples)
                 logging.info(f"Model initialized with setup_model: {model_id}")
 
                 # Setup Trainer
                 trainer_args = TrainerArgs(
-                    output_path=output_dir,
                     continue_path=restore_path,
                 )
-                trainer = Trainer(trainer_args, config=model_config).to(device)
+                trainer = Trainer(
+                    output_path=output_dir,  # Pass output_path here
+                    trainer_args=trainer_args,
+                    config=model_config,
+                ).to(device)
 
                 # Train using fit
                 trainer.fit(
@@ -278,20 +304,21 @@ def train_model(
                 logging.warning(
                     f"Trainer.fit with preprocessing failed: {e}\n{traceback.format_exc()}"
                 )
-                logging.info("Attempting manual dataset handling.")
-                # Fallback: Manual dataset handling with Trainer.fit
+                logging.info("Attempting manual dataset handling with Trainer.fit")
+                # Fallback: Manual dataset handling
                 try:
                     trainer_args = TrainerArgs(
-                        output_path=output_dir,
                         continue_path=restore_path,
                     )
-                    trainer = Trainer(trainer_args, config=load_config(config_path)).to(
-                        device
-                    )
+                    trainer = Trainer(
+                        output_path=output_dir,  # Pass output_path here
+                        trainer_args=trainer_args,
+                        config=load_config(config_path),
+                    ).to(device)
                     trainer.fit(
-                        dataset_path=dataset_config.get("path"),
-                        meta_file_train=dataset_config.get("meta_file_train"),
-                        meta_file_val=dataset_config.get("meta_file_val"),
+                        dataset_path=dataset_path,
+                        meta_file_train=meta_file_train,
+                        meta_file_val=meta_file_val,
                         batch_size=batch_size,
                         epochs=epochs,
                         checkpoint_dir=checkpoint_dir,
@@ -299,45 +326,20 @@ def train_model(
                         evaluate=run_eval,
                     )
                 except Exception as e:
-                    logging.warning(
+                    logging.error(
                         f"Manual dataset handling failed: {e}\n{traceback.format_exc()}"
                     )
-                    logging.info("Falling back to TTS.train from TTS.api")
-                    # Tertiary fallback: TTS.api
-                    model = initialize_model(model_id, config, device, "api")
-                    model.train(
-                        output_path=output_dir,
-                        dataset_path=dataset_config.get("path"),
-                        meta_file_train=dataset_config.get("meta_file_train"),
-                        meta_file_val=dataset_config.get("meta_file_val"),
-                        batch_size=batch_size,
-                        epochs=epochs,
-                        checkpoint_path=checkpoint_dir,
-                        restore_path=restore_path,
-                        evaluate=run_eval,
-                        mixed_precision=gpu_type == "cuda" and use_gpu,
-                    )
+                    raise RuntimeError("All Trainer.fit attempts failed")
         else:
-            logging.info("Using TTS.train from TTS.api")
-            model = initialize_model(model_id, config, device, import_source)
-            model.train(
-                output_path=output_dir,
-                dataset_path=dataset_config.get("path"),
-                meta_file_train=dataset_config.get("meta_file_train"),
-                meta_file_val=dataset_config.get("meta_file_val"),
-                batch_size=batch_size,
-                epochs=epochs,
-                checkpoint_path=checkpoint_dir,
-                restore_path=restore_path,
-                evaluate=run_eval,
-                mixed_precision=gpu_type == "cuda" and use_gpu,
+            raise RuntimeError(
+                "Required TTS.bin.train_tts imports (Trainer, load_tts_samples, setup_model) are unavailable"
             )
 
         if status_queue:
             status_queue.put("Starting training process...")
 
         final_model_path = os.path.join(output_dir, "final_model.pth")
-        torch.save(model.model.state_dict(), final_model_path)
+        torch.save(model.state_dict(), final_model_path)
         logging.info(f"Final model saved to {final_model_path}")
         if status_queue:
             status_queue.put(f"Final model saved to {final_model_path}")
@@ -405,7 +407,7 @@ def main_gui(base_dir: str = DEFAULT_BASE_DIR) -> None:
     gpu_type_var = tk.StringVar(value="cuda")
     restore_path_var = tk.StringVar(value="")
     test_text_var = tk.StringVar(
-        value="Hiya, I’m Hu Tao, director of the Wangsheng Funeral Parlor!"
+        value="Hiya, I’m Hu Tao, director of the Wangsheng Funeral Parlor! Now talking from this computer!"
     )
     test_output_var = tk.StringVar(value="hu_tao_test.wav")
     status_queue = queue.Queue()

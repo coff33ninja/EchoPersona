@@ -280,3 +280,10 @@ The voice downloader (`genshin_voice_downloader1.py`) is a **technical proof-of-
 MIT License — hack, build, remix responsibly.
 
 ---
+
+Troubleshooting
+Load with weights_only=False If you trust the model checkpoint source (e.g., it’s downloaded from Coqui TTS’s official repository), you can bypass the weights_only restriction by setting weights_only=False in torch.load. Modify the TTS library’s utils/io.py file (around line 54) or patch it in your script. However, this is less secure and not recommended unless necessary:
+# In venv/.venv/python-path 
+TTS/utils/io.py, line 54 in my case set this to False
+return torch.load(f, map_location=map_location, weights_only=False, **kwargs)
+# Warning: Setting weights_only=False can lead to arbitrary code execution if the checkpoint is from an untrusted source. Use this only if you’re certain of the checkpoint’s origin.

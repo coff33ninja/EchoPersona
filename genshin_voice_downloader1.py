@@ -1121,14 +1121,16 @@ def generate_character_config(
             return None
 
     model_data = AVAILABLE_MODELS[selected_model]
+    safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character).lower()
     config = {
         "output_path": os.path.join(character_dir, "tts_output"),
         "datasets": [
             {
-                "name": "ljspeech",
+                "dataset_name": safe_character_name,  # Use character-specific dataset name
                 "path": os.path.join(character_dir, "wavs"),
                 "meta_file_train": os.path.join(character_dir, "metadata.csv"),
                 "meta_file_val": os.path.join(character_dir, "valid.csv"),
+                "formatter": "ljspeech"  # Explicitly set formatter
             }
         ],
         "audio": {
@@ -1143,8 +1145,8 @@ def generate_character_config(
         "model": model_data["model_id"],
         "batch_size": 16,
         "num_epochs": 100,
-        "use_precomputed_alignments": False,
         "run_eval": True,
+        "formatter": "ljspeech"  # Top-level formatter for compatibility
     }
 
     if model_data["use_pre_trained"] and pre_trained_path:
