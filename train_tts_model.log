@@ -1651,3 +1651,6 @@ Traceback (most recent call last):
 RuntimeError: All Trainer.fit attempts failed
 
 2025-04-18 15:46:40,960 - ERROR - Failed to process Zhongli: All Trainer.fit attempts failed
+2025-04-18 16:32:26,026 - INFO - Resolved training metadata file: voice_datasets\Zhongli\metadata.csv
+2025-04-18 16:32:26,026 - INFO - Resolved validation metadata file: voice_datasets\Zhongli\valid.csv
+2025-04-18 16:32:26,035 - ERROR - Training failed for Zhongli: 'dict' object has no attribute 'meta_file_attn_mask'
