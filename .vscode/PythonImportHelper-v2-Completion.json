@@ -464,6 +464,22 @@
         "documentation": {}
     },
     {
+        "label": "filedialog",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "ttk",
         "importPath": "tkinter",
         "description": "tkinter",
@@ -544,6 +560,22 @@
         "documentation": {}
     },
     {
+        "label": "VitsConfig",
+        "importPath": "TTS.tts.configs.vits_config",
+        "description": "TTS.tts.configs.vits_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.vits_config",
+        "documentation": {}
+    },
+    {
+        "label": "Vits",
+        "importPath": "TTS.tts.models.vits",
+        "description": "TTS.tts.models.vits",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.vits",
+        "documentation": {}
+    },
+    {
         "label": "Vits",
         "importPath": "TTS.tts.models.vits",
         "description": "TTS.tts.models.vits",
@@ -621,6 +653,30 @@
         "description": "TTS.tts.datasets",
         "isExtraImport": true,
         "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
         "documentation": {}
     },
     {
@@ -4477,6 +4533,60 @@
         "documentation": {}
     },
     {
+        "label": "load_config",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def load_config(config_path):\n    \"\"\"Load configuration using VitsConfig.\"\"\"\n    config = VitsConfig()\n    config.load_json(config_path)\n    return config\ndef adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths to absolute paths.\"\"\"\n    # Resolve meta_file_train to an absolute path\n    meta_file_train_path = (\n        meta_file_train if os.path.isabs(meta_file_train) else os.path.abspath(meta_file_train)",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "adjust_metadata_paths",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths to absolute paths.\"\"\"\n    # Resolve meta_file_train to an absolute path\n    meta_file_train_path = (\n        meta_file_train if os.path.isabs(meta_file_train) else os.path.abspath(meta_file_train)\n    )\n    # Resolve meta_file_val to an absolute path\n    meta_file_val_path = (\n        meta_file_val if os.path.isabs(meta_file_val) else os.path.abspath(meta_file_val)\n    )",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "remove_experiment_folder_with_retry",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "train_model",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def train_model(config_path, dataset_path, output_dir, character):\n    try:\n        # Load configuration\n        config = load_config(config_path)\n        # Assuming there's only one dataset\n        if len(config.datasets) == 0:\n            raise ValueError(\"No datasets found in config\")\n        dataset_config = config.datasets[0]\n        # Adjust metadata paths\n        meta_file_train_path, meta_file_val_path = adjust_metadata_paths(",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "run_gui",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def run_gui():\n    \"\"\"Run the GUI interface.\"\"\"\n    window = tk.Tk()\n    window.title(\"TTS Model Trainer\")\n    tk.Label(window, text=\"Base Directory:\").grid(row=0, column=0, padx=5, pady=5)\n    base_dir_var = tk.StringVar()\n    tk.Entry(window, textvariable=base_dir_var, width=50).grid(\n        row=0, column=1, padx=5, pady=5\n    )\n    tk.Button(",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "description": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(description=\"Train TTS models for characters.\")\n    parser.add_argument(\n        \"--base-dir\", type=str, help=\"Base directory containing character datasets\"\n    )\n    parser.add_argument(\"--character\", type=str, help=\"Character to train\")\n    parser.add_argument(\n        \"--output-dir\",\n        type=str,\n        default=\"tts_output\",",
+        "detail": "voice_datasets.Zhongli.tts_output.run-April-18-2025_05+21PM-d387e77.train_tts_model",
+        "documentation": {}
+    },
+    {
         "label": "SpeechToText",
         "kind": 6,
         "importPath": "genshin_voice_downloader1",
@@ -4832,7 +4942,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            fs = fsspec.filesystem(\"file\")  # Define the fs variable\n            fs.rm(experiment_path, recursive=True)\n            break\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
+        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
         "detail": "train_tts_model",
         "documentation": {}
     },
