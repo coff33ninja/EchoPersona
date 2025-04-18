@@ -4,6 +4,8 @@ import requests
 import json
 import re
 import os
+import sys
+import time
 import subprocess
 import argparse
 import logging
@@ -18,40 +20,7 @@ import threading
 import queue
 from gruut import sentences
 import pygame
-import platform
-
-# --- SpeechToText Class ---
-class SpeechToText:
-    def __init__(
-        self,
-        use_microphone=False,
-        audio_file=None,
-        engine="whisper",
-        whisper_model_size="base",
-    ):
-        try:
-            import whisper
-            self.model = whisper.load_model(whisper_model_size)
-            self.audio_file = audio_file
-            self.use_microphone = use_microphone
-        except ImportError:
-            logging.error(
-                "OpenAI Whisper not installed. Install with 'pip install openai-whisper'."
-            )
-            raise
-
-    def process_audio(self, language="en"):
-        if not self.audio_file or not os.path.exists(self.audio_file):
-            logging.error(
-                f"No valid audio file provided for transcription: {self.audio_file}"
-            )
-            return ""
-        try:
-            result = self.model.transcribe(self.audio_file, language=language)
-            return result["text"].strip()
-        except Exception as e:
-            logging.error(f"Whisper transcription failed for {self.audio_file}: {e}")
-            return ""
+from TTS.utils.manage import ModelManager
 
 # --- Logging Configuration ---
 logging.basicConfig(
@@ -65,6 +34,59 @@ logging.basicConfig(
 DEFAULT_DATA_DIR = "voice_datasets"
 WIKI_API_URL = "https://genshin-impact.fandom.com/api.php"
 JMP_API_URL_BASE = "https://genshin.jmp.blue"
+
+# --- Dynamic TTS Model Listing ---
+def get_available_tts_models():
+    """Fetch available TTS models from Coqui TTS ModelManager."""
+    for attempt in range(3):
+        try:
+            manager = ModelManager()
+            # Access the model manifest (dictionary of model IDs and metadata)
+            model_manifest = manager.list_models()
+            available_models = {}
+            for model_id in model_manifest:
+                # Filter for English TTS models (e.g., 'tts_models/en/...')
+                if model_id.startswith("tts_models/en/"):
+                    model_name = model_id.split("/")[-1].replace("-", " ").title()
+                    available_models[model_name] = {
+                        "model_id": model_id,
+                        "use_pre_trained": True,  # Assume pre-trained support
+                    }
+            if not available_models:
+                logging.warning("No English TTS models found in Coqui TTS manifest. Using defaults.")
+                return {
+                    "Fast Tacotron2": {
+                        "model_id": "tts_models/en/ljspeech/tacotron2-DDC",
+                        "use_pre_trained": True,
+                    },
+                    "High-Quality VITS": {
+                        "model_id": "tts_models/en/ljspeech/vits",
+                        "use_pre_trained": True,
+                    },
+                }
+            logging.info(f"Found {len(available_models)} English TTS models: {list(available_models.keys())}")
+            return available_models
+        except Exception as e:
+            logging.warning(f"Attempt {attempt+1} failed to fetch models: {e}")
+            if attempt == 2:
+                logging.error("Failed to fetch models after 3 attempts. Using defaults.")
+                return {
+                "Fast Tacotron2": {
+                    "model_id": "tts_models/en/ljspeech/tacotron2-DDC",
+                    "use_pre_trained": True,
+                },
+                "High-Quality VITS": {
+                    "model_id": "tts_models/en/ljspeech/vits",
+                    "use_pre_trained": True,
+                },
+            }
+            else:
+                logging.info("Retrying in 5 seconds...")
+                time.sleep(5)
+
+# --- Class Definitions ---
+# Coqui TTS model configurations (populated dynamically)
+AVAILABLE_MODELS = get_available_tts_models()
 
 # --- Helper Functions ---
 
@@ -96,7 +118,7 @@ def segment_audio_file(
         audio = AudioSegment.from_file(audio_path)
         os.makedirs(output_dir, exist_ok=True)
         wav_files = []
-
+        
         # Use gruut to estimate word boundaries if transcription is provided
         word_boundaries = []
         if transcription:
@@ -317,15 +339,13 @@ def fetch_character_list_from_api():
 def is_silent_audio(file_path, silence_threshold=-50.0, min_silence_duration=0.5):
     try:
         audio = AudioSegment.from_wav(file_path)
-        # Split audio into chunks and check for sustained silence
-        chunk_size_ms = 100  # Analyze in 100ms chunks
+        chunk_size_ms = 100
         silent_chunks = 0
-        total_duration = len(audio) / 1000.0  # Duration in seconds
+        total_duration = len(audio) / 1000.0
         for i in range(0, len(audio), chunk_size_ms):
             chunk = audio[i:i + chunk_size_ms]
             if chunk.max_dBFS < silence_threshold:
                 silent_chunks += 1
-        # Consider audio silent if a significant portion is below threshold
         silence_duration = (silent_chunks * chunk_size_ms) / 1000.0
         is_silent = silence_duration >= min_silence_duration and silence_duration > total_duration * 0.5
         if is_silent:
@@ -363,7 +383,7 @@ def clean_metadata_file(metadata_path):
                 invalid_lines_removed += 1
                 continue
             fields = original_line.split("|")
-            if len(fields) >= 2 and all(field.strip() for field in fields[:2]):  # text and audio_file required
+            if len(fields) >= 2 and all(field.strip() for field in fields[:2]):
                 cleaned_lines.append("|".join(fields) + "\n")
             else:
                 logging.warning(
@@ -445,6 +465,109 @@ def generate_valid_csv(metadata_path, valid_ratio=0.2):
         logging.error(f"Error generating validation split from {metadata_path}: {e}")
         return None
 
+def regenerate_csv(csv_path, new_headers, status_text=None):
+    """Regenerate a CSV with new headers, preserving data for matching columns."""
+    if not new_headers:
+        logging.error(f"Cannot regenerate {csv_path}: No headers provided.")
+        if status_text:
+            status_text.insert(tk.END, f"Error: No headers provided for {csv_path}\n")
+            status_text.see(tk.END)
+        return False
+    # Validate headers
+    new_headers = [h.strip() for h in new_headers]
+    if not all(new_headers):
+        logging.error(f"Cannot regenerate {csv_path}: Empty header names found.")
+        if status_text:
+            status_text.insert(tk.END, f"Error: Empty header names in {csv_path}\n")
+            status_text.see(tk.END)
+        return False
+    if len(new_headers) != len(set(new_headers)):
+        logging.error(f"Cannot regenerate {csv_path}: Duplicate header names found.")
+        if status_text:
+            status_text.insert(tk.END, f"Error: Duplicate headers in {csv_path}\n")
+            status_text.see(tk.END)
+        return False
+    # Ensure required headers for TTS
+    required_headers = ["text", "audio_file"]
+    if not all(h in new_headers for h in required_headers):
+        logging.error(f"Cannot regenerate {csv_path}: Missing required headers {required_headers}.")
+        if status_text:
+            status_text.insert(tk.END, f"Error: Missing required headers {required_headers} in {csv_path}\n")
+            status_text.see(tk.END)
+        return False
+    try:
+        # Read existing CSV if it exists
+        if os.path.exists(csv_path):
+            df = pd.read_csv(csv_path, sep="|", encoding="utf-8", on_bad_lines="skip")
+            old_headers = df.columns.tolist()
+            # Create new DataFrame with new headers
+            new_df = pd.DataFrame(columns=new_headers)
+            # Copy data for matching headers
+            for new_header in new_headers:
+                if new_header in old_headers:
+                    new_df[new_header] = df[new_header]
+            # Write new CSV
+            new_df.to_csv(
+                csv_path,
+                sep="|",
+                index=False,
+                encoding="utf-8",
+                quoting=csv.QUOTE_MINIMAL,
+            )
+            logging.info(f"Regenerated {csv_path} with headers: {new_headers}")
+            if status_text:
+                status_text.insert(tk.END, f"Regenerated {csv_path} with headers: {new_headers}\n")
+                status_text.see(tk.END)
+        else:
+            # Create empty CSV with new headers
+            with open(csv_path, "w", encoding="utf-8", newline="") as f:
+                writer = csv.writer(f, delimiter="|", lineterminator="\n")
+                writer.writerow(new_headers)
+            logging.info(f"Created new {csv_path} with headers: {new_headers}")
+            if status_text:
+                status_text.insert(tk.END, f"Created {csv_path} with headers: {new_headers}\n")
+                status_text.see(tk.END)
+        return True
+    except Exception as e:
+        logging.error(f"Error regenerating {csv_path}: {e}")
+        if status_text:
+            status_text.insert(tk.END, f"Error regenerating {csv_path}: {e}\n")
+            status_text.see(tk.END)
+        return False
+
+# --- SpeechToText Class ---
+class SpeechToText:
+    def __init__(
+        self,
+        use_microphone=False,
+        audio_file=None,
+        engine="whisper",
+        whisper_model_size="base",
+    ):
+        try:
+            import whisper
+            self.model = whisper.load_model(whisper_model_size)
+            self.audio_file = audio_file
+            self.use_microphone = use_microphone
+        except ImportError:
+            logging.error(
+                "OpenAI Whisper not installed. Install with 'pip install openai-whisper'."
+            )
+            raise
+
+    def process_audio(self, language="en"):
+        if not self.audio_file or not os.path.exists(self.audio_file):
+            logging.error(
+                f"No valid audio file provided for transcription: {self.audio_file}"
+            )
+            return ""
+        try:
+            result = self.model.transcribe(self.audio_file, language=language)
+            return result["text"].strip()
+        except Exception as e:
+            logging.error(f"Whisper transcription failed for {self.audio_file}: {e}")
+            return ""
+
 def transcribe_character_audio(
     character_output_dir,
     whisper_model="base",
@@ -514,7 +637,6 @@ def transcribe_character_audio(
             if use_segmentation and hf_token:
                 if status_queue:
                     status_queue.put(f"Transcribing for segmentation: {file}")
-                # Pre-transcribe to guide segmentation
                 try:
                     stt = SpeechToText(
                         use_microphone=False,
@@ -731,7 +853,7 @@ def validate_metadata_layout(metadata_path):
             for i, row in enumerate(reader):
                 if i >= 5:
                     break
-                if len(row) < 2:  # text and audio_file required
+                if len(row) < 2:
                     logging.error(
                         f"Incorrect column count ({len(row)}) found at line {i+2} in {metadata_path}. Expected at least 2."
                     )
@@ -746,6 +868,7 @@ def validate_metadata_layout(metadata_path):
         logging.error(f"Error validating layout of {metadata_path}: {e}")
         return False
 
+
 def process_character_voices(
     character,
     language,
@@ -756,8 +879,11 @@ def process_character_voices(
     hf_token="",
     strict_ascii=False,
     min_silence_duration=0.5,
+    csv_headers="text,audio_file,phonemes",
     status_queue=None,
     stop_event=None,
+    tts_model="Fast Tacotron2",
+    pre_trained_path=None,
 ):
     if stop_event and stop_event.is_set():
         logging.info("Processing cancelled before starting.")
@@ -875,8 +1001,52 @@ def process_character_voices(
         if status_queue:
             status_queue.put(f"Transcription failed for {character}.")
         return None
+
+    # Download TTS model and validate paths
+    if tts_model in AVAILABLE_MODELS:
+        download_tts_model(AVAILABLE_MODELS[tts_model]["model_id"])
+        for path in [
+            os.path.join(character_folder, "wavs"),
+            os.path.join(character_folder, "metadata.csv"),
+            os.path.join(character_folder, "valid.csv")
+        ]:
+            if not os.path.exists(path):
+                logging.error(f"Required path missing: {path}")
+                if status_queue:
+                    status_queue.put(f"Error: Required path missing: {path}")
+                return None
+
+    # Apply custom headers to metadata files
     metadata_path = os.path.join(character_folder, "metadata.csv")
     valid_metadata_path = os.path.join(character_folder, "valid.csv")
+    headers = [h.strip() for h in csv_headers.split(",")]
+    if os.path.exists(metadata_path):
+        regenerate_csv(metadata_path, headers)
+    if os.path.exists(valid_metadata_path):
+        regenerate_csv(valid_metadata_path, headers)
+    logging.info(f"Applied custom headers {headers} to CSV files")
+    if status_queue:
+        status_queue.put(f"Applied headers: {headers}")
+
+    # Generate Coqui TTS config
+    sample_rate = json_config.get("sample_rate", 22050) if json_config else 22050
+    config_path = generate_character_config(
+        character=character,
+        character_dir=character_folder,
+        sample_rate=sample_rate,
+        selected_model=tts_model,
+        pre_trained_path=pre_trained_path
+    )
+    if config_path:
+        logging.info(f"Generated Coqui TTS config: {config_path}")
+        if status_queue:
+            status_queue.put(f"Generated Coqui TTS config: {config_path}")
+    else:
+        logging.warning(f"Failed to generate Coqui TTS config for {character}")
+        if status_queue:
+            status_queue.put("Warning: Failed to generate Coqui TTS config")
+
+    # Check if metadata and valid files exist after transcription
     if not os.path.exists(metadata_path) or not os.path.exists(valid_metadata_path):
         logging.error(
             f"Metadata or validation file missing after transcription for {character}. Check logs."
@@ -884,9 +1054,8 @@ def process_character_voices(
         if status_queue:
             status_queue.put("Metadata generation failed post-transcription.")
         return None
-    logging.info(
-        f"--- Successfully processed voices for {character}. ---"
-    )
+
+    logging.info(f"--- Successfully processed voices for {character}. ---")
     if status_queue:
         status_queue.put(f"Processing complete for {character}.")
     return character_folder
@@ -916,10 +1085,86 @@ def backup_file(path, suffix="backup"):
     else:
         logging.warning(f"Cannot backup non-existent path: {path}")
 
+
+def download_tts_model(model_id):
+    """Download a Coqui TTS model by its ID."""
+    manager = ModelManager()
+    try:
+        manager.download_model(model_id)
+        logging.info(f"Downloaded Coqui TTS model: {model_id}")
+        return True
+    except Exception as e:
+        logging.error(f"Failed to download model {model_id}: {e}")
+        return False
+
+def generate_character_config(
+    character,
+    character_dir,
+    sample_rate,
+    selected_model,
+    pre_trained_path=None,
+):
+    """Generates a Coqui TTS config.json for a specific character."""
+    if selected_model not in AVAILABLE_MODELS:
+        logging.error(f"Invalid model selected: {selected_model}")
+        return None
+
+    # Validate required paths
+    required_paths = [
+        os.path.join(character_dir, "wavs"),
+        os.path.join(character_dir, "metadata.csv"),
+        os.path.join(character_dir, "valid.csv")
+    ]
+    for path in required_paths:
+        if not os.path.exists(path):
+            logging.error(f"Required path missing for config generation: {path}")
+            return None
+
+    model_data = AVAILABLE_MODELS[selected_model]
+    config = {
+        "output_path": os.path.join(character_dir, "tts_output"),
+        "datasets": [
+            {
+                "name": "ljspeech",
+                "path": os.path.join(character_dir, "wavs"),
+                "meta_file_train": os.path.join(character_dir, "metadata.csv"),
+                "meta_file_val": os.path.join(character_dir, "valid.csv"),
+            }
+        ],
+        "audio": {
+            "sample_rate": sample_rate,
+            "fft_size": 1024,
+            "win_length": 1024,
+            "hop_length": 256,
+            "num_mels": 80,
+            "mel_fmin": 0.0,
+            "mel_fmax": 8000.0,
+        },
+        "model": model_data["model_id"],
+        "batch_size": 16,
+        "num_epochs": 100,
+        "use_precomputed_alignments": False,
+        "run_eval": True,
+    }
+
+    if model_data["use_pre_trained"] and pre_trained_path:
+        config["restore_path"] = pre_trained_path
+
+    config_path = os.path.join(character_dir, f"{character}_config.json")
+
+    try:
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=4)
+        logging.info(f"Config file generated: {config_path}")
+        return config_path
+    except Exception as e:
+        logging.error(f"Error generating config for {character}: {e}")
+        return None
+
 # --- GUI ---
 
 def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):
-    # Clear existing items and columns
     treeview.delete(*treeview.get_children())
     for col in treeview["columns"]:
         treeview.heading(col, text="")
@@ -932,15 +1177,9 @@ def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):
 
     try:
         df = pd.read_csv(csv_path, sep="|", encoding="utf-8", on_bad_lines="skip")
-        if not all(col in df.columns for col in ["text", "audio_file"]):
-            logging.warning(f"Invalid columns in {csv_path}. Expected at least 'text' and 'audio_file'.")
-            return
-
-        # Define columns: all CSV columns + "Play"
         columns = list(df.columns) + ["Play"]
         treeview["columns"] = columns
 
-        # Configure column headings and widths
         for col in columns:
             treeview.heading(col, text=col if col != "Play" else "Play")
             if col == "Play":
@@ -948,11 +1187,9 @@ def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):
             else:
                 treeview.column(col, width=150, anchor=tk.W)
 
-        # Sort by audio_file if present
         if "audio_file" in df.columns:
             df = df.sort_values(by="audio_file")
 
-        # Insert rows
         for idx, row in df.iterrows():
             values = []
             audio_path = None
@@ -961,7 +1198,6 @@ def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):
                 values.append(value)
                 if col == "audio_file":
                     audio_path = os.path.join(base_dir, value) if value else None
-            # Append empty value for Play button
             values.append("Play")
             treeview.insert("", tk.END, iid=idx, values=values, tags=(audio_path,))
         logging.info(f"Loaded {len(df)} rows into Treeview from {csv_path}")
@@ -996,20 +1232,161 @@ def create_json_frame(notebook, tab_name):
     frame.rowconfigure(0, weight=1)
     return frame, json_text
 
-def main_gui():
+class HeaderEditor:
+    def __init__(self, parent, character_folder, json_config, csv_files, tables, json_text_widget, status_text, update_callback):
+        self.character_folder = character_folder
+        self.json_config = json_config
+        self.csv_files = csv_files
+        self.tables = tables
+        self.json_text_widget = json_text_widget
+        self.status_text = status_text
+        self.update_callback = update_callback
+        self.window = tk.Toplevel(parent)
+        self.window.title("Header Editor")
+        self.window.geometry("400x600")
+        self.window.transient(parent)
+        self.window.grab_set()
+
+        # Variables
+        self.selected_csv = tk.StringVar(value=csv_files[0] if csv_files else "")
+        self.headers = tk.StringVar()
+        self.new_header = tk.StringVar()
+        self.suggested_headers = ["text", "audio_file", "phonemes", "speaker", "duration", "emotion", "pitch"]
+
+        # Main Frame
+        main_frame = ttk.Frame(self.window, padding="10")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+
+        # CSV Selection
+        ttk.Label(main_frame, text="Select CSV:").grid(row=0, column=0, sticky=tk.W, pady=2)
+        csv_combobox = ttk.Combobox(main_frame, textvariable=self.selected_csv, values=self.csv_files, state="readonly")
+        csv_combobox.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2)
+        csv_combobox.bind("<<ComboboxSelected>>", self.load_headers)
+
+        # Headers List
+        ttk.Label(main_frame, text="Current Headers:").grid(row=1, column=0, columnspan=2, sticky=tk.W, pady=2)
+        self.header_listbox = tk.Listbox(main_frame, height=10, width=30)
+        self.header_listbox.grid(row=2, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=2)
+        scrollbar = ttk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.header_listbox.yview)
+        scrollbar.grid(row=2, column=2, sticky=(tk.N, tk.S))
+        self.header_listbox["yscrollcommand"] = scrollbar.set
+
+        # Add Header
+        ttk.Label(main_frame, text="New/Edit Header:").grid(row=3, column=0, sticky=tk.W, pady=2)
+        header_combobox = ttk.Combobox(main_frame, textvariable=self.new_header, values=self.suggested_headers)
+        header_combobox.grid(row=3, column=1, sticky=(tk.W, tk.E), pady=2)
+        ttk.Button(main_frame, text="Add Header", command=self.add_header).grid(row=4, column=0, pady=2)
+        ttk.Button(main_frame, text="Remove Selected", command=self.remove_header).grid(row=4, column=1, pady=2)
+
+        # Apply Changes
+        ttk.Button(main_frame, text="Apply Changes", command=self.apply_changes).grid(row=5, column=0, columnspan=2, pady=10)
+
+        # Note about required headers
+        ttk.Label(main_frame, text="Note: 'text' and 'audio_file' are required for TTS.", wraplength=350).grid(row=6, column=0, columnspan=2, sticky=tk.W, pady=2)
+
+        main_frame.columnconfigure(1, weight=1)
+        self.load_headers()
+
+    def load_headers(self, event=None):
+        self.header_listbox.delete(0, tk.END)
+        csv_file = self.selected_csv.get()
+        if not self.character_folder or not csv_file:
+            return
+        csv_path = os.path.join(self.character_folder, csv_file)
+        if os.path.exists(csv_path):
+            try:
+                with open(csv_path, "r", encoding="utf-8") as f:
+                    reader = csv.reader(f, delimiter="|")
+                    headers = next(reader)
+                    for header in headers:
+                        self.header_listbox.insert(tk.END, header)
+            except Exception as e:
+                self.status_text.insert(tk.END, f"Error loading headers from {csv_path}: {e}\n")
+                self.status_text.see(tk.END)
+                logging.error(f"Error loading headers from {csv_path}: {e}")
+
+    def add_header(self):
+        header = self.new_header.get().strip()
+        if not header:
+            messagebox.showerror("Invalid Header", "Header name cannot be empty.", parent=self.window)
+            return
+        if header in self.header_listbox.get(0, tk.END):
+            messagebox.showerror("Duplicate Header", "Header already exists.", parent=self.window)
+            return
+        self.header_listbox.insert(tk.END, header)
+        self.new_header.set("")
+        self.status_text.insert(tk.END, f"Added header: {header}\n")
+        self.status_text.see(tk.END)
+
+    def remove_header(self):
+        selected = self.header_listbox.curselection()
+        if not selected:
+            messagebox.showwarning("No Selection", "Please select a header to remove.", parent=self.window)
+            return
+        header = self.header_listbox.get(selected[0])
+        if header in ["text", "audio_file"]:
+            messagebox.showerror("Cannot Remove", f"Header '{header}' is required for TTS.", parent=self.window)
+            return
+        self.header_listbox.delete(selected[0])
+        self.status_text.insert(tk.END, f"Removed header: {header}\n")
+        self.status_text.see(tk.END)
+
+    def apply_changes(self):
+        csv_file = self.selected_csv.get()
+        if not csv_file:
+            messagebox.showerror("No CSV", "Please select a CSV file.", parent=self.window)
+            return
+        new_headers = list(self.header_listbox.get(0, tk.END))
+        if not new_headers:
+            messagebox.showerror("No Headers", "At least one header is required.", parent=self.window)
+            return
+        csv_path = os.path.join(self.character_folder, csv_file)
+        if regenerate_csv(csv_path, new_headers, self.status_text):
+            # Update Treeview
+            if csv_file in self.tables:
+                load_csv_to_treeview(self.tables[csv_file], csv_path, self.character_folder, None)
+            # Update JSON if metadata.csv
+            if csv_file == "metadata.csv" and self.json_text_widget:
+                self.json_text_widget.delete("1.0", tk.END)
+                if os.path.exists(csv_path):
+                    try:
+                        df = pd.read_csv(csv_path, sep="|", encoding="utf-8", on_bad_lines="skip")
+                        json_data = df.to_dict(orient="records")
+                        json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
+                        self.json_text_widget.insert("1.0", json_str)
+                        self.status_text.insert(tk.END, f"Updated JSON data from {csv_path}\n")
+                        self.status_text.see(tk.END)
+                    except Exception as e:
+                        self.status_text.insert(tk.END, f"Error updating JSON from {csv_path}: {e}\n")
+                        self.status_text.see(tk.END)
+            self.update_callback()
+            self.window.destroy()
+
+def main_gui(json_config_path=None):
     global window
     window = tk.Tk()
     window.title("Genshin Voice Downloader")
     window.geometry("600x500")
 
-    # Initialize pygame mixer
     pygame.mixer.init()
-    current_playing = [None]  # Track currently playing audio
+    current_playing = [None]
+
+    # Load JSON configuration
+    json_config = {}
+    if json_config_path and os.path.exists(json_config_path):
+        try:
+            with open(json_config_path, "r", encoding="utf-8") as f:
+                json_config = json.load(f)
+            logging.info(f"Loaded JSON configuration from {json_config_path}")
+        except Exception as e:
+            logging.error(f"Error loading JSON configuration from {json_config_path}: {e}")
 
     # Variables
     character_var = tk.StringVar()
-    output_dir_var = tk.StringVar(value=DEFAULT_DATA_DIR)
-    additional_csvs_var = tk.StringVar(value="")  # Comma-separated CSV filenames
+    output_dir_var = tk.StringVar(value=json_config.get("output_path", DEFAULT_DATA_DIR) if json_config else DEFAULT_DATA_DIR)
+    additional_csvs_var = tk.StringVar(value="")
     language_var = tk.StringVar(value="English")
     whisper_model_var = tk.StringVar(value="base")
     use_segmentation_var = tk.BooleanVar(value=False)
@@ -1020,9 +1397,9 @@ def main_gui():
     stop_event = threading.Event()
     current_thread = [None]
     current_character_folder = [None]
-    notebook = [None]  # Store notebook for dynamic updates
-    tables = {}  # Store Treeview widgets for each CSV
-    json_text_widget = [None]  # Store JSON Text widget
+    notebook = [None]
+    tables = {}
+    json_text_widget = [None]
 
     # Frames
     main_frame = ttk.Frame(window, padding="10")
@@ -1034,24 +1411,20 @@ def main_gui():
     input_frame = ttk.Frame(main_frame)
     input_frame.grid(row=0, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=5)
 
-    # Character Selection
     ttk.Label(input_frame, text="Character:").grid(row=0, column=0, sticky=tk.W, pady=2)
     character_combobox = ttk.Combobox(input_frame, textvariable=character_var, width=30)
     character_combobox.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=2)
     character_combobox["values"] = fetch_character_list_from_api()
     character_combobox["state"] = "readonly"
 
-    # Output Directory
     ttk.Label(input_frame, text="Output Directory:").grid(row=1, column=0, sticky=tk.W, pady=2)
     output_dir_entry = ttk.Entry(input_frame, textvariable=output_dir_var, width=25)
     output_dir_entry.grid(row=1, column=1, sticky=(tk.W, tk.E), pady=2)
     ttk.Button(input_frame, text="Browse", command=lambda: browse_output_dir(output_dir_var)).grid(row=1, column=2, padx=5, pady=2)
 
-    # Additional CSVs
     ttk.Label(input_frame, text="Additional CSVs (comma-separated):").grid(row=2, column=0, sticky=tk.W, pady=2)
     ttk.Entry(input_frame, textvariable=additional_csvs_var, width=30).grid(row=2, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2)
 
-    # Language Selection
     ttk.Label(input_frame, text="Language:").grid(row=3, column=0, sticky=tk.W, pady=2)
     language_combobox = ttk.Combobox(
         input_frame,
@@ -1062,7 +1435,6 @@ def main_gui():
     )
     language_combobox.grid(row=3, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2)
 
-    # Whisper Model Selection
     ttk.Label(input_frame, text="Whisper Model:").grid(row=4, column=0, sticky=tk.W, pady=2)
     whisper_combobox = ttk.Combobox(
         input_frame,
@@ -1073,7 +1445,6 @@ def main_gui():
     )
     whisper_combobox.grid(row=4, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2)
 
-    # Segmentation and Token
     ttk.Checkbutton(
         input_frame,
         text="Use Audio Segmentation (requires HF token)",
@@ -1084,17 +1455,32 @@ def main_gui():
         row=6, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2
     )
 
-    # Strict ASCII
     ttk.Checkbutton(
         input_frame,
         text="Strict ASCII Transcription",
         variable=strict_ascii_var,
     ).grid(row=7, column=0, columnspan=3, sticky=tk.W, pady=2)
 
-    # Minimum Silence Duration
     ttk.Label(input_frame, text="Min Silence Duration (s):").grid(row=8, column=0, sticky=tk.W, pady=2)
     ttk.Entry(input_frame, textvariable=min_silence_duration_var, width=33).grid(
         row=8, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2
+    )
+
+    ttk.Label(input_frame, text="TTS Model:").grid(row=9, column=0, sticky=tk.W, pady=2)
+    tts_model_var = tk.StringVar(value=list(AVAILABLE_MODELS.keys())[0] if AVAILABLE_MODELS else "Fast Tacotron2")
+    tts_model_combobox = ttk.Combobox(
+        input_frame,
+        textvariable=tts_model_var,
+        values=list(AVAILABLE_MODELS.keys()),
+        state="readonly",
+        width=30,
+    )
+    tts_model_combobox.grid(row=9, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2)
+
+    ttk.Label(input_frame, text="Pre-trained Model Path:").grid(row=10, column=0, sticky=tk.W, pady=2)
+    pre_trained_path_var = tk.StringVar()
+    ttk.Entry(input_frame, textvariable=pre_trained_path_var, width=33).grid(
+        row=10, column=1, columnspan=2, sticky=(tk.W, tk.E), pady=2
     )
 
     input_frame.columnconfigure(1, weight=1)
@@ -1118,7 +1504,6 @@ def main_gui():
     status_frame.columnconfigure(0, weight=1)
     status_frame.rowconfigure(0, weight=1)
 
-    # Audio Playback Callback
     def play_audio(event):
         tree = event.widget
         item = tree.identify_row(event.y)
@@ -1134,11 +1519,9 @@ def main_gui():
             status_text.see(tk.END)
             return
         try:
-            # Stop any currently playing audio
             if current_playing[0]:
                 pygame.mixer.music.stop()
                 current_playing[0] = None
-            # Play new audio
             pygame.mixer.music.load(audio_path)
             pygame.mixer.music.play()
             current_playing[0] = audio_path
@@ -1149,7 +1532,6 @@ def main_gui():
             status_text.insert(tk.END, f"Error playing {audio_path}: {e}\n")
             status_text.see(tk.END)
 
-    # Save JSON Callback
     def save_json():
         if not current_character_folder[0]:
             messagebox.showerror("No Character", "Please select a character first.", parent=window)
@@ -1159,7 +1541,6 @@ def main_gui():
             messagebox.showerror("Empty JSON", "JSON content is empty.", parent=window)
             return
         try:
-            # Validate JSON syntax
             json.loads(json_content)
         except json.JSONDecodeError as e:
             messagebox.showerror("Invalid JSON", f"Invalid JSON format: {e}", parent=window)
@@ -1177,44 +1558,80 @@ def main_gui():
             logging.error(f"Error saving JSON to {json_path}: {e}")
             messagebox.showerror("Save Error", f"Failed to save JSON: {e}", parent=window)
 
-    # Initialize Default Tables and JSON Tab
+    def open_header_editor():
+        if not current_character_folder[0]:
+            messagebox.showerror("No Character", "Please select a character first.", parent=window)
+            return
+        csv_files = []
+        # Add CSVs from JSON configuration
+        if json_config and "datasets" in json_config:
+            for dataset in json_config["datasets"]:
+                if "meta_file_train" in dataset:
+                    csv_files.append(os.path.basename(dataset["meta_file_train"]))
+                if "meta_file_val" in dataset:
+                    csv_files.append(os.path.basename(dataset["meta_file_val"]))
+        # Add default CSVs if not in JSON
+        if "metadata.csv" not in csv_files:
+            csv_files.append("metadata.csv")
+        if "valid.csv" not in csv_files:
+            csv_files.append("valid.csv")
+        # Add additional CSVs
+        additional_csvs = [csv.strip() for csv in additional_csvs_var.get().split(",") if csv.strip()]
+        for csv_file in additional_csvs:
+            if csv_file.endswith(".csv") and csv_file not in csv_files:
+                csv_files.append(csv_file)
+        if not csv_files:
+            messagebox.showerror("No CSVs", "No CSV files available to edit.", parent=window)
+            return
+        HeaderEditor(window, current_character_folder[0], json_config, csv_files, tables, json_text_widget[0], status_text, update_character_tables)
+
     def update_notebook_tabs():
-        # Remove existing tabs except Status
         for tab_id in notebook[0].tabs():
             if notebook[0].tab(tab_id, "text") != "Status":
                 notebook[0].forget(tab_id)
         tables.clear()
         json_text_widget[0] = None
-        # Add default tables
-        csv_files = ["metadata.csv", "valid.csv"]
-        tab_names = ["Transcriptions", "Validation"]
+        csv_files = []
+        tab_names = []
+        # Add CSVs from JSON configuration
+        if json_config and "datasets" in json_config:
+            for dataset in json_config["datasets"]:
+                if "meta_file_train" in dataset:
+                    csv_files.append(os.path.basename(dataset["meta_file_train"]))
+                    tab_names.append("Transcriptions")
+                if "meta_file_val" in dataset:
+                    csv_files.append(os.path.basename(dataset["meta_file_val"]))
+                    tab_names.append("Validation")
+        # Add default CSVs if not in JSON
+        if "metadata.csv" not in csv_files:
+            csv_files.append("metadata.csv")
+            tab_names.append("Transcriptions")
+        if "valid.csv" not in csv_files:
+            csv_files.append("valid.csv")
+            tab_names.append("Validation")
         # Add additional CSVs
         additional_csvs = [csv.strip() for csv in additional_csvs_var.get().split(",") if csv.strip()]
         for csv_file in additional_csvs:
             if csv_file.endswith(".csv") and csv_file not in csv_files:
                 csv_files.append(csv_file)
                 tab_names.append(os.path.splitext(csv_file)[0].capitalize())
-        # Create CSV tabs
         for csv_file, tab_name in zip(csv_files, tab_names):
             frame, tree = create_table_frame(notebook[0], tab_name)
             notebook[0].add(frame, text=tab_name)
             tables[csv_file] = tree
             tree.bind("<ButtonRelease-1>", play_audio)
-        # Create JSON tab
         json_frame, json_text = create_json_frame(notebook[0], "JSON Data")
         notebook[0].add(json_frame, text="JSON Data")
         json_text_widget[0] = json_text
 
     update_notebook_tabs()
 
-    # Browse Output Directory
     def browse_output_dir(output_dir_var):
         directory = filedialog.askdirectory(initialdir=output_dir_var.get() or os.getcwd())
         if directory:
             output_dir_var.set(directory)
             update_character_tables()
 
-    # Update Tables and JSON on Character Selection
     def update_character_tables(*args):
         character = character_var.get()
         output_dir = output_dir_var.get()
@@ -1229,33 +1646,25 @@ def main_gui():
         safe_character_name = re.sub(r'[\\/*?:"<>|]', "_", character)
         character_folder = os.path.join(output_dir, safe_character_name)
         current_character_folder[0] = character_folder
-        # Stop any playing audio
         if current_playing[0]:
             pygame.mixer.music.stop()
             current_playing[0] = None
             status_text.insert(tk.END, "Stopped audio playback due to character change.\n")
             status_text.see(tk.END)
-        # Update CSV tables
         for csv_file, tree in tables.items():
             csv_path = os.path.join(character_folder, csv_file)
             load_csv_to_treeview(tree, csv_path, character_folder, play_audio)
-        # Update JSON tab
         if json_text_widget[0]:
             json_text_widget[0].delete("1.0", tk.END)
             metadata_path = os.path.join(character_folder, "metadata.csv")
             if os.path.exists(metadata_path):
                 try:
                     df = pd.read_csv(metadata_path, sep="|", encoding="utf-8", on_bad_lines="skip")
-                    if all(col in df.columns for col in ["text", "audio_file"]):
-                        # Convert DataFrame to JSON
-                        json_data = df.to_dict(orient="records")
-                        json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
-                        json_text_widget[0].insert("1.0", json_str)
-                        status_text.insert(tk.END, f"Loaded JSON data from {metadata_path}\n")
-                        status_text.see(tk.END)
-                    else:
-                        status_text.insert(tk.END, f"Invalid columns in {metadata_path} for JSON\n")
-                        status_text.see(tk.END)
+                    json_data = df.to_dict(orient="records")
+                    json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
+                    json_text_widget[0].insert("1.0", json_str)
+                    status_text.insert(tk.END, f"Loaded JSON data from {metadata_path}\n")
+                    status_text.see(tk.END)
                 except Exception as e:
                     status_text.insert(tk.END, f"Error loading JSON from {metadata_path}: {e}\n")
                     status_text.see(tk.END)
@@ -1264,34 +1673,27 @@ def main_gui():
     character_var.trace("w", update_character_tables)
     additional_csvs_var.trace("w", lambda *args: update_notebook_tabs() or update_character_tables())
 
-    # Update Status and Tables
     def update_status():
         while True:
             try:
                 message = status_queue.get_nowait()
                 status_text.insert(tk.END, message + "\n")
                 status_text.see(tk.END)
-                # Check for completion to update tables and JSON
                 if "Processing complete for" in message and current_character_folder[0]:
                     for csv_file, tree in tables.items():
                         csv_path = os.path.join(current_character_folder[0], csv_file)
                         load_csv_to_treeview(tree, csv_path, current_character_folder[0], play_audio)
-                    # Update JSON tab
                     if json_text_widget[0]:
                         json_text_widget[0].delete("1.0", tk.END)
                         metadata_path = os.path.join(current_character_folder[0], "metadata.csv")
                         if os.path.exists(metadata_path):
                             try:
                                 df = pd.read_csv(metadata_path, sep="|", encoding="utf-8", on_bad_lines="skip")
-                                if all(col in df.columns for col in ["text", "audio_file"]):
-                                    json_data = df.to_dict(orient="records")
-                                    json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
-                                    json_text_widget[0].insert("1.0", json_str)
-                                    status_text.insert(tk.END, f"Reloaded JSON data from {metadata_path}\n")
-                                    status_text.see(tk.END)
-                                else:
-                                    status_text.insert(tk.END, f"Invalid columns in {metadata_path} for JSON\n")
-                                    status_text.see(tk.END)
+                                json_data = df.to_dict(orient="records")
+                                json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
+                                json_text_widget[0].insert("1.0", json_str)
+                                status_text.insert(tk.END, f"Reloaded JSON data from {metadata_path}\n")
+                                status_text.see(tk.END)
                             except Exception as e:
                                 status_text.insert(tk.END, f"Error reloading JSON from {metadata_path}: {e}\n")
                                 status_text.see(tk.END)
@@ -1299,7 +1701,6 @@ def main_gui():
                 break
         window.after(100, update_status)
 
-    # Refresh Tables and JSON on Tab Selection
     def on_tab_change(event):
         if current_character_folder[0]:
             selected_tab = notebook[0].select()
@@ -1310,15 +1711,11 @@ def main_gui():
                 if os.path.exists(metadata_path):
                     try:
                         df = pd.read_csv(metadata_path, sep="|", encoding="utf-8", on_bad_lines="skip")
-                        if all(col in df.columns for col in ["text", "audio_file"]):
-                            json_data = df.to_dict(orient="records")
-                            json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
-                            json_text_widget[0].insert("1.0", json_str)
-                            status_text.insert(tk.END, f"Refreshed JSON data from {metadata_path}\n")
-                            status_text.see(tk.END)
-                        else:
-                            status_text.insert(tk.END, f"Invalid columns in {metadata_path} for JSON\n")
-                            status_text.see(tk.END)
+                        json_data = df.to_dict(orient="records")
+                        json_str = json.dumps(json_data, indent=2, ensure_ascii=False)
+                        json_text_widget[0].insert("1.0", json_str)
+                        status_text.insert(tk.END, f"Refreshed JSON data from {metadata_path}\n")
+                        status_text.see(tk.END)
                     except Exception as e:
                         status_text.insert(tk.END, f"Error refreshing JSON from {metadata_path}: {e}\n")
                         status_text.see(tk.END)
@@ -1360,7 +1757,6 @@ def main_gui():
                 parent=window,
             )
             return
-        # Create output directory if it doesn't exist
         try:
             os.makedirs(output_dir, exist_ok=True)
         except OSError as e:
@@ -1368,13 +1764,11 @@ def main_gui():
             return
         stop_event.clear()
         status_text.delete(1.0, tk.END)
-        # Clear tables and JSON
         for tree in tables.values():
             tree.delete(*tree.get_children())
             tree["columns"] = ()
         if json_text_widget[0]:
             json_text_widget[0].delete("1.0", tk.END)
-        # Stop any playing audio
         if current_playing[0]:
             pygame.mixer.music.stop()
             current_playing[0] = None
@@ -1392,6 +1786,8 @@ def main_gui():
                 min_silence_duration=min_silence_duration,
                 status_queue=status_queue,
                 stop_event=stop_event,
+                tts_model=tts_model_var.get(),
+                pre_trained_path=pre_trained_path_var.get() or None
             )
 
         current_thread[0] = threading.Thread(target=process_thread, daemon=True)
@@ -1402,22 +1798,16 @@ def main_gui():
             stop_event.set()
             status_text.insert(tk.END, "Stopping process...\n")
             status_text.see(tk.END)
-        # Stop any playing audio
         if current_playing[0]:
             pygame.mixer.music.stop()
             current_playing[0] = None
             status_text.insert(tk.END, "Stopped audio playback.\n")
             status_text.see(tk.END)
 
-    ttk.Button(button_frame, text="Start Processing", command=start_processing).grid(
-        row=0, column=0, padx=5
-    )
-    ttk.Button(button_frame, text="Stop", command=stop_processing).grid(
-        row=0, column=1, padx=5
-    )
-    ttk.Button(button_frame, text="Save JSON", command=save_json).grid(
-        row=0, column=2, padx=5
-    )
+    ttk.Button(button_frame, text="Start Processing", command=start_processing).grid(row=0, column=0, padx=5)
+    ttk.Button(button_frame, text="Stop", command=stop_processing).grid(row=0, column=1, padx=5)
+    ttk.Button(button_frame, text="Save JSON", command=save_json).grid(row=0, column=2, padx=5)
+    ttk.Button(button_frame, text="Header Editor", command=open_header_editor).grid(row=0, column=3, padx=5)
 
     main_frame.columnconfigure(0, weight=1)
     main_frame.rowconfigure(1, weight=1)
@@ -1427,89 +1817,143 @@ def main_gui():
 # --- Main Execution ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Genshin Impact Voice Downloader: Download and transcribe voice data with phonemes.",
+        description="Genshin Voice Downloader: Download and transcribe voice data with phonemes.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "--json_config",
+        type=str,
+        default=None,
+        help="Path to JSON configuration file for TTS training."
     )
     subparsers = parser.add_subparsers(dest='command', help='Action to perform (leave blank for GUI)')
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument(
-        "--character", type=str, required=True, help="Character name (e.g., 'Arlecchino')."
+        "--character",
+        type=str,
+        required=True,
+        help="Character name (e.g., 'Arlecchino', 'Zhongli')"
     )
     parent_parser.add_argument(
-        "--output_dir", type=str, default=DEFAULT_DATA_DIR, help="Base output directory for character data."
-    )
-    parser_process = subparsers.add_parser(
-        'process',
-        help='Download and transcribe voice data.',
-        parents=[parent_parser],
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser_process.add_argument(
         "--language",
         type=str,
         default="English",
         choices=["English", "Japanese", "Chinese", "Korean"],
-        help="Voice language for Wiki category selection."
+        help="Language for voice data"
     )
-    parser_process.add_argument(
-        "--whisper_model",
+    parent_parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=DEFAULT_DATA_DIR,
+        help="Output directory for voice data and metadata"
+    )
+    parent_parser.add_argument(
+        "--whisper-model",
         type=str,
         default="base",
         choices=["base", "small", "medium", "large-v2"],
-        help="Whisper model size for transcription."
+        help="Whisper model size for transcription"
     )
-    parser_process.add_argument(
-        "--use_segmentation",
+    parent_parser.add_argument(
+        "--use-segmentation",
         action="store_true",
-        help="Use PyAnnote segmentation (requires --hf_token and library install)."
+        help="Use audio segmentation (requires HF token)"
     )
-    parser_process.add_argument(
-        "--strict_ascii",
-        action="store_true",
-        help="Force ASCII-only transcriptions (may lose data)."
-    )
-    parser_process.add_argument(
-        "--hf_token",
+    parent_parser.add_argument(
+        "--hf-token",
         type=str,
         default="",
-        help="Hugging Face token (required if --use_segmentation)."
+        help="Hugging Face token for audio segmentation"
     )
-    parser_process.add_argument(
-        "--skip_wiki_download",
+    parent_parser.add_argument(
+        "--strict-ascii",
         action="store_true",
-        help="Skip downloading audio from the Wiki (only transcribe existing files)."
+        help="Enforce strict ASCII transcription"
     )
-    parser_process.add_argument(
-        "--min_silence_duration",
+    parent_parser.add_argument(
+        "--min-silence-duration",
         type=float,
         default=0.5,
-        help="Minimum duration (seconds) of silence to classify audio as silent."
+        help="Minimum silence duration (seconds) for silence detection"
+    )
+    parent_parser.add_argument(
+        "--no-wiki-download",
+        action="store_true",
+        help="Skip downloading audio from Wiki"
+    )
+    parent_parser.add_argument(
+        "--csv-headers",
+        type=str,
+        default="text,audio_file,phonemes",
+        help="Comma-separated list of CSV headers (e.g., 'text,audio_file,phonemes,speaker')"
+    )
+    parent_parser.add_argument(
+        "--tts-model",
+        type=str,
+        default=list(AVAILABLE_MODELS.keys())[0] if AVAILABLE_MODELS else "Fast Tacotron2",
+        choices=list(AVAILABLE_MODELS.keys()),
+        help="Coqui TTS model for config generation"
+    )
+    parent_parser.add_argument(
+        "--pre-trained-path",
+        type=str,
+        default=None,
+        help="Path to pre-trained Coqui TTS model (optional)"
+    )
+
+    # Subcommand: process
+    process_parser = subparsers.add_parser(
+        'process',
+        parents=[parent_parser],
+        help='Process voice data for a character via CLI',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
     args = parser.parse_args()
 
-    if args.command is None:
-        logging.info("No command specified, launching GUI...")
-        main_gui()
-    else:
-        logging.info(f"Executing command '{args.command}' for character '{args.character}' via CLI...")
-        cli_status_queue = queue.Queue()
-        if not os.path.isdir(args.output_dir):
-            try:
-                os.makedirs(args.output_dir, exist_ok=True)
-                logging.info(f"Created base output directory: {args.output_dir}")
-            except OSError as e:
-                logging.error(f"Failed to create output directory {args.output_dir}: {e}")
-                exit(1)
-        process_character_voices(
+    # Load JSON configuration if provided
+    json_config = {}
+    if args.json_config and os.path.exists(args.json_config):
+        try:
+            with open(args.json_config, "r", encoding="utf-8") as f:
+                json_config = json.load(f)
+            logging.info(f"Loaded JSON configuration from {args.json_config}")
+            # Override defaults with JSON values if not specified in CLI
+            if not args.output_dir and "output_path" in json_config:
+                args.output_dir = json_config["output_path"]
+            if not hasattr(args, 'min_silence_duration') or args.min_silence_duration == 0.5:
+                args.min_silence_duration = json_config.get("min_silence_duration", 0.5)
+        except Exception as e:
+            logging.error(f"Error loading JSON configuration from {args.json_config}: {e}")
+
+    if args.command == 'process':
+        # CLI mode: Process character voices
+        status_queue = queue.Queue()
+        stop_event = threading.Event()
+        character_folder = process_character_voices(
             character=args.character,
             language=args.language,
             base_output_dir=args.output_dir,
-            download_wiki_audio=not args.skip_wiki_download,
+            download_wiki_audio=not args.no_wiki_download,
             whisper_model=args.whisper_model,
             use_segmentation=args.use_segmentation,
             hf_token=args.hf_token,
             strict_ascii=args.strict_ascii,
             min_silence_duration=args.min_silence_duration,
-            status_queue=cli_status_queue,
+            csv_headers=args.csv_headers,
+            status_queue=status_queue,
+            stop_event=stop_event,
+            tts_model=args.tts_model,
+            pre_trained_path=args.pre_trained_path
         )
+        if character_folder:
+            logging.info(f"Successfully processed voices for {args.character} in {character_folder}")
+            # Print status messages
+            while not status_queue.empty():
+                print(status_queue.get())
+        else:
+            logging.error(f"Failed to process voices for {args.character}")
+            sys.exit(1)
+    else:
+        # GUI mode
+        main_gui(json_config_path=args.json_config)

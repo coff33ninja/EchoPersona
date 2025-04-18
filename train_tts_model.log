@@ -1,0 +1,222 @@
+2025-04-18 12:15:42,925 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 12:15:48,254 - INFO - Found config for Hu Tao: voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:15:48,255 - INFO - Found config for Xiao: voice_datasets\Xiao\Xiao_config.json
+2025-04-18 12:15:48,255 - INFO - Found 2 character configs in voice_datasets
+2025-04-18 12:15:57,829 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:15:57,833 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:15:57,833 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 12:15:57,855 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 12:15:57,856 - INFO - Using CPU for training.
+2025-04-18 12:15:57,857 - INFO - Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts
+2025-04-18 12:15:57,858 - WARNING - Trainer.fit with preprocessing failed: 'formatter'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 238, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 108, in load_tts_samples
+    formatter_name = dataset["formatter"]
+                     ~~~~~~~^^^^^^^^^^^^^
+KeyError: 'formatter'
+
+2025-04-18 12:15:57,858 - INFO - Attempting manual dataset handling.
+2025-04-18 12:15:57,859 - WARNING - Manual dataset handling failed: TrainerArgs.__init__() got an unexpected keyword argument 'output_path'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 238, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 108, in load_tts_samples
+    formatter_name = dataset["formatter"]
+                     ~~~~~~~^^^^^^^^^^^^^
+KeyError: 'formatter'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 282, in train_model
+    trainer_args = TrainerArgs(
+                   ^^^^^^^^^^^^
+TypeError: TrainerArgs.__init__() got an unexpected keyword argument 'output_path'
+
+2025-04-18 12:15:57,860 - INFO - Falling back to TTS.train from TTS.api
+2025-04-18 12:16:17,100 - ERROR - Failed to initialize model tts_models/en/ek1/tacotron2: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL TTS.utils.radam.RAdam was not an allowed global by default. Please use `torch.serialization.add_safe_globals([RAdam])` or the `torch.serialization.safe_globals([RAdam])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 180, in initialize_model
+    tts = TTS(model_id).to(device)
+          ^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 74, in __init__
+    self.load_tts_model_by_name(model_name, gpu)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 177, in load_tts_model_by_name
+    self.synthesizer = Synthesizer(
+                       ^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 93, in __init__
+    self._load_tts(tts_checkpoint, tts_config_path, use_cuda)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 192, in _load_tts
+    self.tts_model.load_checkpoint(self.tts_config, tts_checkpoint, eval=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\base_tacotron.py", line 105, in load_checkpoint
+    state = load_fsspec(checkpoint_path, map_location=torch.device("cpu"), cache=cache)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\io.py", line 54, in load_fsspec
+    return torch.load(f, map_location=map_location, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL TTS.utils.radam.RAdam was not an allowed global by default. Please use `torch.serialization.add_safe_globals([RAdam])` or the `torch.serialization.safe_globals([RAdam])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-18 12:16:17,102 - ERROR - Training failed: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL TTS.utils.radam.RAdam was not an allowed global by default. Please use `torch.serialization.add_safe_globals([RAdam])` or the `torch.serialization.safe_globals([RAdam])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 305, in train_model
+    model = initialize_model(model_id, config, device, "api")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 180, in initialize_model
+    tts = TTS(model_id).to(device)
+          ^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 74, in __init__
+    self.load_tts_model_by_name(model_name, gpu)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 177, in load_tts_model_by_name
+    self.synthesizer = Synthesizer(
+                       ^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 93, in __init__
+    self._load_tts(tts_checkpoint, tts_config_path, use_cuda)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 192, in _load_tts
+    self.tts_model.load_checkpoint(self.tts_config, tts_checkpoint, eval=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\base_tacotron.py", line 105, in load_checkpoint
+    state = load_fsspec(checkpoint_path, map_location=torch.device("cpu"), cache=cache)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\io.py", line 54, in load_fsspec
+    return torch.load(f, map_location=map_location, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL TTS.utils.radam.RAdam was not an allowed global by default. Please use `torch.serialization.add_safe_globals([RAdam])` or the `torch.serialization.safe_globals([RAdam])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-18 12:30:54,448 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 12:30:59,429 - INFO - Found config for Hu Tao: voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:30:59,430 - INFO - Found config for Xiao: voice_datasets\Xiao\Xiao_config.json
+2025-04-18 12:30:59,430 - INFO - Found 2 character configs in voice_datasets
+2025-04-18 12:32:38,639 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:32:38,642 - INFO - Loaded configuration from voice_datasets\Hu Tao\Hu Tao_config.json
+2025-04-18 12:32:38,643 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 12:32:38,662 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 12:32:38,663 - INFO - Using CPU for training.
+2025-04-18 12:32:38,664 - INFO - Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts
+2025-04-18 12:32:38,665 - WARNING - Trainer.fit with preprocessing failed: 'formatter'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 240, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 108, in load_tts_samples
+    formatter_name = dataset["formatter"]
+                     ~~~~~~~^^^^^^^^^^^^^
+KeyError: 'formatter'
+
+2025-04-18 12:32:38,665 - INFO - Attempting manual dataset handling.
+2025-04-18 12:32:38,666 - WARNING - Manual dataset handling failed: TrainerArgs.__init__() got an unexpected keyword argument 'output_path'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 240, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 108, in load_tts_samples
+    formatter_name = dataset["formatter"]
+                     ~~~~~~~^^^^^^^^^^^^^
+KeyError: 'formatter'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 284, in train_model
+    trainer_args = TrainerArgs(
+                   ^^^^^^^^^^^^
+TypeError: TrainerArgs.__init__() got an unexpected keyword argument 'output_path'
+
+2025-04-18 12:32:38,667 - INFO - Falling back to TTS.train from TTS.api
+2025-04-18 12:32:39,121 - ERROR - Failed to initialize model tts_models/en/ek1/tacotron2: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL collections.defaultdict was not an allowed global by default. Please use `torch.serialization.add_safe_globals([defaultdict])` or the `torch.serialization.safe_globals([defaultdict])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 183, in initialize_model
+    tts = TTS(model_id).to(device)
+          ^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 74, in __init__
+    self.load_tts_model_by_name(model_name, gpu)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 177, in load_tts_model_by_name
+    self.synthesizer = Synthesizer(
+                       ^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 93, in __init__
+    self._load_tts(tts_checkpoint, tts_config_path, use_cuda)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 192, in _load_tts
+    self.tts_model.load_checkpoint(self.tts_config, tts_checkpoint, eval=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\base_tacotron.py", line 105, in load_checkpoint
+    state = load_fsspec(checkpoint_path, map_location=torch.device("cpu"), cache=cache)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\io.py", line 54, in load_fsspec
+    return torch.load(f, map_location=map_location, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL collections.defaultdict was not an allowed global by default. Please use `torch.serialization.add_safe_globals([defaultdict])` or the `torch.serialization.safe_globals([defaultdict])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+
+2025-04-18 12:32:39,124 - ERROR - Training failed: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL collections.defaultdict was not an allowed global by default. Please use `torch.serialization.add_safe_globals([defaultdict])` or the `torch.serialization.safe_globals([defaultdict])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 307, in train_model
+    model = initialize_model(model_id, config, device, "api")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 183, in initialize_model
+    tts = TTS(model_id).to(device)
+          ^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 74, in __init__
+    self.load_tts_model_by_name(model_name, gpu)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\api.py", line 177, in load_tts_model_by_name
+    self.synthesizer = Synthesizer(
+                       ^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 93, in __init__
+    self._load_tts(tts_checkpoint, tts_config_path, use_cuda)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\synthesizer.py", line 192, in _load_tts
+    self.tts_model.load_checkpoint(self.tts_config, tts_checkpoint, eval=True)
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\models\base_tacotron.py", line 105, in load_checkpoint
+    state = load_fsspec(checkpoint_path, map_location=torch.device("cpu"), cache=cache)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\utils\io.py", line 54, in load_fsspec
+    return torch.load(f, map_location=map_location, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\torch\serialization.py", line 1470, in load
+    raise pickle.UnpicklingError(_get_wo_message(str(e))) from None
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded, to do so you have two options, [1mdo those steps only if you trust the source of the checkpoint[0m. 
+	(1) In PyTorch 2.6, we changed the default value of the `weights_only` argument in `torch.load` from `False` to `True`. Re-running `torch.load` with `weights_only` set to `False` will likely succeed, but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+	(2) Alternatively, to load with `weights_only=True` please check the recommended steps in the following error message.
+	WeightsUnpickler error: Unsupported global: GLOBAL collections.defaultdict was not an allowed global by default. Please use `torch.serialization.add_safe_globals([defaultdict])` or the `torch.serialization.safe_globals([defaultdict])` context manager to allowlist this global if you trust this class/function.
+
+Check the documentation of torch.load to learn more about types accepted by default with weights_only https://pytorch.org/docs/stable/generated/torch.load.html.
+

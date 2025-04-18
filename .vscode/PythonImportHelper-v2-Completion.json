@@ -1,5 +1,95 @@
 [
     {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "glob",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "glob",
+        "description": "glob",
+        "detail": "glob",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "sysconfig",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sysconfig",
+        "description": "sysconfig",
+        "detail": "sysconfig",
+        "documentation": {}
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {}
+    },
+    {
+        "label": "winreg",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "winreg",
+        "description": "winreg",
+        "detail": "winreg",
+        "documentation": {}
+    },
+    {
+        "label": "site",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "site",
+        "description": "site",
+        "detail": "site",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
         "label": "networkx",
         "kind": 6,
         "isExtraImport": true,
@@ -65,15 +155,6 @@
         "importPath": "math",
         "description": "math",
         "detail": "math",
-        "documentation": {}
-    },
-    {
-        "label": "random",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "random",
-        "description": "random",
-        "detail": "random",
         "documentation": {}
     },
     {
@@ -241,14 +322,6 @@
         "documentation": {}
     },
     {
-        "label": "BytesIO",
-        "importPath": "io",
-        "description": "io",
-        "isExtraImport": true,
-        "detail": "io",
-        "documentation": {}
-    },
-    {
         "label": "networkx.algorithms.approximation",
         "kind": 6,
         "isExtraImport": true,
@@ -309,42 +382,6 @@
         "documentation": {}
     },
     {
-        "label": "sys",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "sys",
-        "description": "sys",
-        "detail": "sys",
-        "documentation": {}
-    },
-    {
-        "label": "logging",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "logging",
-        "description": "logging",
-        "detail": "logging",
-        "documentation": {}
-    },
-    {
-        "label": "os",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "logging.config",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "logging.config",
-        "description": "logging.config",
-        "detail": "logging.config",
-        "documentation": {}
-    },
-    {
         "label": "tkinter",
         "kind": 6,
         "isExtraImport": true,
@@ -370,6 +407,14 @@
         "documentation": {}
     },
     {
+        "label": "filedialog",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "ttk",
         "importPath": "tkinter",
         "description": "tkinter",
@@ -387,38 +432,6 @@
     },
     {
         "label": "filedialog",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
-        "label": "filedialog",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
-        "label": "messagebox",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
-        "label": "simpledialog",
-        "importPath": "tkinter",
-        "description": "tkinter",
-        "isExtraImport": true,
-        "detail": "tkinter",
-        "documentation": {}
-    },
-    {
-        "label": "ttk",
         "importPath": "tkinter",
         "description": "tkinter",
         "isExtraImport": true,
@@ -444,30 +457,12 @@
         "documentation": {}
     },
     {
-        "label": "subprocess",
+        "label": "logging",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "subprocess",
-        "description": "subprocess",
-        "detail": "subprocess",
-        "documentation": {}
-    },
-    {
-        "label": "argparse",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "argparse",
-        "description": "argparse",
-        "detail": "argparse",
-        "documentation": {}
-    },
-    {
-        "label": "shutil",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "shutil",
-        "description": "shutil",
-        "detail": "shutil",
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
         "documentation": {}
     },
     {
@@ -497,30 +492,6 @@
         "documentation": {}
     },
     {
-        "label": "AudioSegment",
-        "importPath": "pydub",
-        "description": "pydub",
-        "isExtraImport": true,
-        "detail": "pydub",
-        "documentation": {}
-    },
-    {
-        "label": "AudioSegment",
-        "importPath": "pydub",
-        "description": "pydub",
-        "isExtraImport": true,
-        "detail": "pydub",
-        "documentation": {}
-    },
-    {
-        "label": "tqdm",
-        "importPath": "tqdm",
-        "description": "tqdm",
-        "isExtraImport": true,
-        "detail": "tqdm",
-        "documentation": {}
-    },
-    {
         "label": "tqdm",
         "importPath": "tqdm",
         "description": "tqdm",
@@ -535,15 +506,6 @@
         "importPath": "unicodedata",
         "description": "unicodedata",
         "detail": "unicodedata",
-        "documentation": {}
-    },
-    {
-        "label": "datetime",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "datetime",
-        "description": "datetime",
-        "detail": "datetime",
         "documentation": {}
     },
     {
@@ -582,187 +544,47 @@
         "documentation": {}
     },
     {
-        "label": "platform",
-        "kind": 6,
+        "label": "ModelManager",
+        "importPath": "TTS.utils.manage",
+        "description": "TTS.utils.manage",
         "isExtraImport": true,
-        "importPath": "platform",
-        "description": "platform",
-        "detail": "platform",
+        "detail": "TTS.utils.manage",
         "documentation": {}
     },
     {
-        "label": "torch",
+        "label": "importlib",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "torch",
-        "description": "torch",
-        "detail": "torch",
+        "importPath": "importlib",
+        "description": "importlib",
+        "detail": "importlib",
+        "documentation": {}
+    },
+    {
+        "label": "inspect",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "inspect",
+        "description": "inspect",
+        "detail": "inspect",
+        "documentation": {}
+    },
+    {
+        "label": "pkgutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pkgutil",
+        "description": "pkgutil",
+        "detail": "pkgutil",
         "documentation": {}
     },
     {
         "label": "TTS",
-        "importPath": "TTS.api",
-        "description": "TTS.api",
-        "isExtraImport": true,
-        "detail": "TTS.api",
-        "documentation": {}
-    },
-    {
-        "label": "unittest",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "unittest",
-        "description": "unittest",
-        "detail": "unittest",
-        "documentation": {}
-    },
-    {
-        "label": "VoiceTrainer",
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "isExtraImport": true,
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "soundfile",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "soundfile",
-        "description": "soundfile",
-        "detail": "soundfile",
-        "documentation": {}
-    },
-    {
-        "label": "Trainer",
-        "importPath": "trainer",
-        "description": "trainer",
-        "isExtraImport": true,
-        "detail": "trainer",
-        "documentation": {}
-    },
-    {
-        "label": "TrainerArgs",
-        "importPath": "trainer",
-        "description": "trainer",
-        "isExtraImport": true,
-        "detail": "trainer",
-        "documentation": {}
-    },
-    {
-        "label": "BaseAudioConfig",
-        "importPath": "TTS.config",
-        "description": "TTS.config",
-        "isExtraImport": true,
-        "detail": "TTS.config",
-        "documentation": {}
-    },
-    {
-        "label": "BaseDatasetConfig",
-        "importPath": "TTS.config",
-        "description": "TTS.config",
-        "isExtraImport": true,
-        "detail": "TTS.config",
-        "documentation": {}
-    },
-    {
-        "label": "VitsConfig",
-        "importPath": "TTS.tts.configs.vits_config",
-        "description": "TTS.tts.configs.vits_config",
-        "isExtraImport": true,
-        "detail": "TTS.tts.configs.vits_config",
-        "documentation": {}
-    },
-    {
-        "label": "load_tts_samples",
-        "importPath": "TTS.tts.datasets",
-        "description": "TTS.tts.datasets",
-        "isExtraImport": true,
-        "detail": "TTS.tts.datasets",
-        "documentation": {}
-    },
-    {
-        "label": "Vits",
-        "importPath": "TTS.tts.models.vits",
-        "description": "TTS.tts.models.vits",
-        "isExtraImport": true,
-        "detail": "TTS.tts.models.vits",
-        "documentation": {}
-    },
-    {
-        "label": "AudioProcessor",
-        "importPath": "TTS.utils.audio",
-        "description": "TTS.utils.audio",
-        "isExtraImport": true,
-        "detail": "TTS.utils.audio",
-        "documentation": {}
-    },
-    {
-        "label": "TTSTokenizer",
-        "importPath": "TTS.tts.utils.text.tokenizer",
-        "description": "TTS.tts.utils.text.tokenizer",
-        "isExtraImport": true,
-        "detail": "TTS.tts.utils.text.tokenizer",
-        "documentation": {}
-    },
-    {
-        "label": "BaseCharacters",
-        "importPath": "TTS.tts.utils.text.characters",
-        "description": "TTS.tts.utils.text.characters",
-        "isExtraImport": true,
-        "detail": "TTS.tts.utils.text.characters",
-        "documentation": {}
-    },
-    {
-        "label": "speech_recognition",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "speech_recognition",
-        "description": "speech_recognition",
-        "detail": "speech_recognition",
-        "documentation": {}
-    },
-    {
-        "label": "pyttsx3",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "pyttsx3",
-        "description": "pyttsx3",
-        "detail": "pyttsx3",
-        "documentation": {}
-    },
-    {
-        "label": "sounddevice",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "sounddevice",
-        "description": "sounddevice",
-        "detail": "sounddevice",
-        "documentation": {}
-    },
-    {
-        "label": "tempfile",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "tempfile",
-        "description": "tempfile",
-        "detail": "tempfile",
-        "documentation": {}
-    },
-    {
-        "label": "Union",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
+        "importPath": "TTS",
+        "description": "TTS",
+        "detail": "TTS",
         "documentation": {}
     },
     {
@@ -782,78 +604,357 @@
         "documentation": {}
     },
     {
-        "label": "write",
-        "importPath": "scipy.io.wavfile",
-        "description": "scipy.io.wavfile",
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "scipy.io.wavfile",
+        "detail": "typing",
         "documentation": {}
     },
     {
-        "label": "read",
-        "importPath": "scipy.io.wavfile",
-        "description": "scipy.io.wavfile",
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "scipy.io.wavfile",
+        "detail": "typing",
         "documentation": {}
     },
     {
-        "label": "gTTS",
-        "importPath": "gtts",
-        "description": "gtts",
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "gtts",
+        "detail": "typing",
         "documentation": {}
     },
     {
-        "label": "play",
-        "importPath": "pydub.playback",
-        "description": "pydub.playback",
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "pydub.playback",
+        "detail": "typing",
         "documentation": {}
     },
     {
-        "label": "speedup",
-        "importPath": "pydub.effects",
-        "description": "pydub.effects",
-        "isExtraImport": true,
-        "detail": "pydub.effects",
-        "documentation": {}
-    },
-    {
-        "label": "simpleaudio",
+        "label": "torch",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "simpleaudio",
-        "description": "simpleaudio",
-        "detail": "simpleaudio",
+        "importPath": "torch",
+        "description": "torch",
+        "detail": "torch",
         "documentation": {}
     },
     {
-        "label": "librosa",
+        "label": "traceback",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "librosa",
-        "description": "librosa",
-        "detail": "librosa",
+        "importPath": "traceback",
+        "description": "traceback",
+        "detail": "traceback",
         "documentation": {}
     },
     {
-        "label": "noisereduce",
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "RAdam",
+        "importPath": "TTS.utils.radam",
+        "description": "TTS.utils.radam",
+        "isExtraImport": true,
+        "detail": "TTS.utils.radam",
+        "documentation": {}
+    },
+    {
+        "label": "torch.serialization",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "noisereduce",
-        "description": "noisereduce",
-        "detail": "noisereduce",
+        "importPath": "torch.serialization",
+        "description": "torch.serialization",
+        "detail": "torch.serialization",
         "documentation": {}
     },
     {
-        "label": "Scale",
-        "importPath": "tkinter.ttk",
-        "description": "tkinter.ttk",
-        "isExtraImport": true,
-        "detail": "tkinter.ttk",
+        "label": "Tee",
+        "kind": 6,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "class Tee:\n    def __init__(self, file):\n        self.f = file\n    def write(self, what):\n        if self.f is not None:\n            try:\n                self.f.write(what.replace(\"\\n\", \"\\r\\n\"))\n            except OSError:\n                pass\n        tee_f.write(what)",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "get_root_hkey",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def get_root_hkey():\n    try:\n        winreg.OpenKey(\n            winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY\n        )\n        return winreg.HKEY_LOCAL_MACHINE\n    except OSError:\n        # Either not exist, or no permissions to create subkey means\n        # must be HKCU\n        return winreg.HKEY_CURRENT_USER",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "create_shortcut",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def create_shortcut(\n    path, description, filename, arguments=\"\", workdir=\"\", iconpath=\"\", iconindex=0\n):\n    import pythoncom\n    from win32com.shell import shell\n    ilink = pythoncom.CoCreateInstance(\n        shell.CLSID_ShellLink,\n        None,\n        pythoncom.CLSCTX_INPROC_SERVER,\n        shell.IID_IShellLink,",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "get_special_folder_path",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def get_special_folder_path(path_name):\n    from win32com.shell import shell, shellcon\n    for maybe in \"\"\"\n        CSIDL_COMMON_STARTMENU CSIDL_STARTMENU CSIDL_COMMON_APPDATA\n        CSIDL_LOCAL_APPDATA CSIDL_APPDATA CSIDL_COMMON_DESKTOPDIRECTORY\n        CSIDL_DESKTOPDIRECTORY CSIDL_COMMON_STARTUP CSIDL_STARTUP\n        CSIDL_COMMON_PROGRAMS CSIDL_PROGRAMS CSIDL_PROGRAM_FILES_COMMON\n        CSIDL_PROGRAM_FILES CSIDL_FONTS\"\"\".split():\n        if maybe == path_name:\n            csidl = getattr(shellcon, maybe)",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "CopyTo",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def CopyTo(desc, src, dest):\n    import win32api\n    import win32con\n    while 1:\n        try:\n            win32api.CopyFile(src, dest, 0)\n            return\n        except win32api.error as details:\n            if details.winerror == 5:  # access denied - user not admin.\n                raise",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "LoadSystemModule",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def LoadSystemModule(lib_dir, modname):\n    # See if this is a debug build.\n    import importlib.machinery\n    import importlib.util\n    suffix = \"_d\" if \"_d.pyd\" in importlib.machinery.EXTENSION_SUFFIXES else \"\"\n    filename = \"%s%d%d%s.dll\" % (\n        modname,\n        sys.version_info.major,\n        sys.version_info.minor,\n        suffix,",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "SetPyKeyVal",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def SetPyKeyVal(key_name, value_name, value):\n    root_hkey = get_root_hkey()\n    root_key = winreg.OpenKey(root_hkey, root_key_name)\n    try:\n        my_key = winreg.CreateKey(root_key, key_name)\n        try:\n            winreg.SetValueEx(my_key, value_name, 0, winreg.REG_SZ, value)\n            if verbose:\n                print(f\"-> {root_key_name}\\\\{key_name}[{value_name}]={value!r}\")\n        finally:",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "UnsetPyKeyVal",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def UnsetPyKeyVal(key_name, value_name, delete_key=False):\n    root_hkey = get_root_hkey()\n    root_key = winreg.OpenKey(root_hkey, root_key_name)\n    try:\n        my_key = winreg.OpenKey(root_key, key_name, 0, winreg.KEY_SET_VALUE)\n        try:\n            winreg.DeleteValue(my_key, value_name)\n            if verbose:\n                print(f\"-> DELETE {root_key_name}\\\\{key_name}[{value_name}]\")\n        finally:",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "RegisterCOMObjects",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def RegisterCOMObjects(register=True):\n    import win32com.server.register\n    if register:\n        func = win32com.server.register.RegisterClasses\n    else:\n        func = win32com.server.register.UnregisterClasses\n    flags = {}\n    if not verbose:\n        flags[\"quiet\"] = 1\n    for module, klass_name in com_modules:",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "RegisterHelpFile",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def RegisterHelpFile(register=True, lib_dir=None):\n    if lib_dir is None:\n        lib_dir = sysconfig.get_paths()[\"platlib\"]\n    if register:\n        # Register the .chm help file.\n        chm_file = os.path.join(lib_dir, \"PyWin32.chm\")\n        if os.path.isfile(chm_file):\n            # This isn't recursive, so if 'Help' doesn't exist, we croak\n            SetPyKeyVal(\"Help\", None, None)\n            SetPyKeyVal(\"Help\\\\Pythonwin Reference\", None, chm_file)",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "RegisterPythonwin",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def RegisterPythonwin(register=True, lib_dir=None):\n    \"\"\"Add (or remove) Pythonwin to context menu for python scripts.\n    ??? Should probably also add Edit command for pys files also.\n    Also need to remove these keys on uninstall, but there's no function\n    to add registry entries to uninstall log ???\n    \"\"\"\n    import os\n    if lib_dir is None:\n        lib_dir = sysconfig.get_paths()[\"platlib\"]\n    classes_root = get_root_hkey()",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "get_shortcuts_folder",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def get_shortcuts_folder():\n    if get_root_hkey() == winreg.HKEY_LOCAL_MACHINE:\n        try:\n            fldr = get_special_folder_path(\"CSIDL_COMMON_PROGRAMS\")\n        except OSError:\n            # No CSIDL_COMMON_PROGRAMS on this platform\n            fldr = get_special_folder_path(\"CSIDL_PROGRAMS\")\n    else:\n        # non-admin install - always goes in this user's start menu.\n        fldr = get_special_folder_path(\"CSIDL_PROGRAMS\")",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "get_system_dir",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def get_system_dir():\n    import win32api  # we assume this exists.\n    try:\n        import pythoncom\n        import win32process\n        from win32com.shell import shell, shellcon\n        try:\n            if win32process.IsWow64Process():\n                return shell.SHGetSpecialFolderPath(0, shellcon.CSIDL_SYSTEMX86)\n            return shell.SHGetSpecialFolderPath(0, shellcon.CSIDL_SYSTEM)",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "fixup_dbi",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def fixup_dbi():\n    # We used to have a dbi.pyd with our .pyd files, but now have a .py file.\n    # If the user didn't uninstall, they will find the .pyd which will cause\n    # problems - so handle that.\n    import win32api\n    import win32con\n    pyd_name = os.path.join(os.path.dirname(win32api.__file__), \"dbi.pyd\")\n    pyd_d_name = os.path.join(os.path.dirname(win32api.__file__), \"dbi_d.pyd\")\n    py_name = os.path.join(os.path.dirname(win32con.__file__), \"dbi.py\")\n    for this_pyd in (pyd_name, pyd_d_name):",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "install",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def install(lib_dir):\n    import traceback\n    # The .pth file is now installed as a regular file.\n    # Create the .pth file in the site-packages dir, and use only relative paths\n    # We used to write a .pth directly to sys.prefix - clobber it.\n    if os.path.isfile(os.path.join(sys.prefix, \"pywin32.pth\")):\n        os.unlink(os.path.join(sys.prefix, \"pywin32.pth\"))\n    # The .pth may be new and therefore not loaded in this session.\n    # Setup the paths just in case.\n    for name in \"win32 win32\\\\lib Pythonwin\".split():",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "uninstall",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def uninstall(lib_dir):\n    # First ensure our system modules are loaded from pywin32_system, so\n    # we can remove the ones we copied...\n    LoadSystemModule(lib_dir, \"pywintypes\")\n    LoadSystemModule(lib_dir, \"pythoncom\")\n    try:\n        RegisterCOMObjects(False)\n    except Exception as why:\n        print(f\"Failed to unregister COM objects: {why}\")\n    try:",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "verify_destination",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def verify_destination(location: str) -> str:\n    location = os.path.abspath(location)\n    if not os.path.isdir(location):\n        raise argparse.ArgumentTypeError(\n            f'Path \"{location}\" is not an existing directory!'\n        )\n    return location\ndef main():\n    parser = argparse.ArgumentParser(\n        formatter_class=argparse.RawDescriptionHelpFormatter,",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        description=\"\"\"A post-install script for the pywin32 extensions.\n    * Typical usage:\n    > python -m pywin32_postinstall -install\n    * or (shorter but you don't have control over which python environment is used)\n    > pywin32_postinstall -install\n    You need to execute this script, with a '-install' parameter,\n    to ensure the environment is setup correctly to install COM objects, services, etc.",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "tee_f",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "tee_f = open(\n    os.path.join(\n        tempfile.gettempdir(),  # Send output somewhere so it can be found if necessary...\n        \"pywin32_postinstall.log\",\n    ),\n    \"w\",\n)\nclass Tee:\n    def __init__(self, file):\n        self.f = file",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "sys.stderr",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "sys.stderr = Tee(sys.stderr)\nsys.stdout = Tee(sys.stdout)\ncom_modules = [\n    # module_name,                      class_names\n    (\"win32com.servers.interp\", \"Interpreter\"),\n    (\"win32com.servers.dictionary\", \"DictionaryPolicy\"),\n    (\"win32com.axscript.client.pyscript\", \"PyScript\"),\n]\n# Is this a 'silent' install - ie, avoid all dialogs.\n# Different than 'verbose'",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "sys.stdout",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "sys.stdout = Tee(sys.stdout)\ncom_modules = [\n    # module_name,                      class_names\n    (\"win32com.servers.interp\", \"Interpreter\"),\n    (\"win32com.servers.dictionary\", \"DictionaryPolicy\"),\n    (\"win32com.axscript.client.pyscript\", \"PyScript\"),\n]\n# Is this a 'silent' install - ie, avoid all dialogs.\n# Different than 'verbose'\nsilent = 0",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "com_modules",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "com_modules = [\n    # module_name,                      class_names\n    (\"win32com.servers.interp\", \"Interpreter\"),\n    (\"win32com.servers.dictionary\", \"DictionaryPolicy\"),\n    (\"win32com.axscript.client.pyscript\", \"PyScript\"),\n]\n# Is this a 'silent' install - ie, avoid all dialogs.\n# Different than 'verbose'\nsilent = 0\n# Verbosity of output messages.",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "silent",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "silent = 0\n# Verbosity of output messages.\nverbose = 1\nroot_key_name = \"Software\\\\Python\\\\PythonCore\\\\\" + sys.winver\ndef get_root_hkey():\n    try:\n        winreg.OpenKey(\n            winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY\n        )\n        return winreg.HKEY_LOCAL_MACHINE",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "verbose",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "verbose = 1\nroot_key_name = \"Software\\\\Python\\\\PythonCore\\\\\" + sys.winver\ndef get_root_hkey():\n    try:\n        winreg.OpenKey(\n            winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY\n        )\n        return winreg.HKEY_LOCAL_MACHINE\n    except OSError:\n        # Either not exist, or no permissions to create subkey means",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "root_key_name",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_postinstall",
+        "description": ".venv.Scripts.pywin32_postinstall",
+        "peekOfCode": "root_key_name = \"Software\\\\Python\\\\PythonCore\\\\\" + sys.winver\ndef get_root_hkey():\n    try:\n        winreg.OpenKey(\n            winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY\n        )\n        return winreg.HKEY_LOCAL_MACHINE\n    except OSError:\n        # Either not exist, or no permissions to create subkey means\n        # must be HKCU",
+        "detail": ".venv.Scripts.pywin32_postinstall",
+        "documentation": {}
+    },
+    {
+        "label": "run_test",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "def run_test(script, cmdline_extras):\n    dirname, scriptname = os.path.split(script)\n    # some tests prefer to be run from their directory.\n    cmd = [sys.executable, \"-u\", scriptname] + cmdline_extras\n    print(\"--- Running '%s' ---\" % script)\n    sys.stdout.flush()\n    result = subprocess.run(cmd, check=False, cwd=dirname)\n    print(f\"*** Test script '{script}' exited with {result.returncode}\")\n    sys.stdout.flush()\n    if result.returncode:",
+        "detail": ".venv.Scripts.pywin32_testall",
+        "documentation": {}
+    },
+    {
+        "label": "find_and_run",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "def find_and_run(possible_locations, extras):\n    for maybe in possible_locations:\n        if os.path.isfile(maybe):\n            run_test(maybe, extras)\n            break\n    else:\n        raise RuntimeError(\n            \"Failed to locate a test script in one of %s\" % possible_locations\n        )\ndef main():",
+        "detail": ".venv.Scripts.pywin32_testall",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "def main():\n    import argparse\n    code_directories = [project_root] + site_packages\n    parser = argparse.ArgumentParser(\n        description=\"A script to trigger tests in all subprojects of PyWin32.\"\n    )\n    parser.add_argument(\n        \"-no-user-interaction\",\n        default=False,\n        action=\"store_true\",",
+        "detail": ".venv.Scripts.pywin32_testall",
+        "documentation": {}
+    },
+    {
+        "label": "project_root",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\nsite_packages = [site.getusersitepackages()] + site.getsitepackages()\nfailures = []\n# Run a test using subprocess and wait for the result.\n# If we get an returncode != 0, we know that there was an error, but we don't\n# abort immediately - we run as many tests as we can.\ndef run_test(script, cmdline_extras):\n    dirname, scriptname = os.path.split(script)\n    # some tests prefer to be run from their directory.\n    cmd = [sys.executable, \"-u\", scriptname] + cmdline_extras",
+        "detail": ".venv.Scripts.pywin32_testall",
+        "documentation": {}
+    },
+    {
+        "label": "site_packages",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "site_packages = [site.getusersitepackages()] + site.getsitepackages()\nfailures = []\n# Run a test using subprocess and wait for the result.\n# If we get an returncode != 0, we know that there was an error, but we don't\n# abort immediately - we run as many tests as we can.\ndef run_test(script, cmdline_extras):\n    dirname, scriptname = os.path.split(script)\n    # some tests prefer to be run from their directory.\n    cmd = [sys.executable, \"-u\", scriptname] + cmdline_extras\n    print(\"--- Running '%s' ---\" % script)",
+        "detail": ".venv.Scripts.pywin32_testall",
+        "documentation": {}
+    },
+    {
+        "label": "failures",
+        "kind": 5,
+        "importPath": ".venv.Scripts.pywin32_testall",
+        "description": ".venv.Scripts.pywin32_testall",
+        "peekOfCode": "failures = []\n# Run a test using subprocess and wait for the result.\n# If we get an returncode != 0, we know that there was an error, but we don't\n# abort immediately - we run as many tests as we can.\ndef run_test(script, cmdline_extras):\n    dirname, scriptname = os.path.split(script)\n    # some tests prefer to be run from their directory.\n    cmd = [sys.executable, \"-u\", scriptname] + cmdline_extras\n    print(\"--- Running '%s' ---\" % script)\n    sys.stdout.flush()",
+        "detail": ".venv.Scripts.pywin32_testall",
         "documentation": {}
     },
     {
@@ -3971,1020 +4072,507 @@
         "documentation": {}
     },
     {
-        "label": "RetryFileHandler",
-        "kind": 6,
-        "importPath": "enhanced_logger",
-        "description": "enhanced_logger",
-        "peekOfCode": "class RetryFileHandler(logging.FileHandler):\n    def __init__(\n        self, filename, mode=\"a\", encoding=None, delay=False, retries=5, delay_s=1\n    ):\n        self.retries = retries\n        self.delay_s = delay_s\n        super().__init__(filename, mode, encoding, delay)\n    def _open(self):\n        for attempt in range(self.retries):\n            try:",
-        "detail": "enhanced_logger",
-        "documentation": {}
-    },
-    {
-        "label": "setup_logger",
-        "kind": 2,
-        "importPath": "enhanced_logger",
-        "description": "enhanced_logger",
-        "peekOfCode": "def setup_logger(log_file_path=\"app.log\", level=logging.INFO):\n    \"\"\"\n    Configures the logging system.\n    Args:\n        log_file_path (str): The full path for the log file.\n        level (int): The logging level (e.g., logging.INFO, logging.DEBUG).\n    \"\"\"\n    # Ensure UTF-8 console encoding on Windows\n    if sys.platform.startswith(\"win\"):\n        try:",
-        "detail": "enhanced_logger",
-        "documentation": {}
-    },
-    {
-        "label": "get_logger",
-        "kind": 2,
-        "importPath": "enhanced_logger",
-        "description": "enhanced_logger",
-        "peekOfCode": "def get_logger(name):\n    \"\"\"\n    Retrieves a logger instance. Call setup_logger first.\n    Args:\n        name (str): The name for the logger (usually __name__).\n    Returns:\n        logging.Logger: The logger instance.\n    \"\"\"\n    return logging.getLogger(name)\n# Example usage",
-        "detail": "enhanced_logger",
-        "documentation": {}
-    },
-    {
-        "label": "LOGGING_CONFIG",
-        "kind": 5,
-        "importPath": "enhanced_logger",
-        "description": "enhanced_logger",
-        "peekOfCode": "LOGGING_CONFIG = {\n    \"version\": 1,\n    \"disable_existing_loggers\": False,\n    \"formatters\": {\n        \"standard\": {\n            \"format\": \"%(asctime)s - %(name)s - %(levelname)s - %(message)s\",\n            \"datefmt\": \"%Y-%m-%d %H:%M:%S\",\n        },\n    },\n    \"handlers\": {",
-        "detail": "enhanced_logger",
-        "documentation": {}
-    },
-    {
-        "label": "segment_audio_file",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    \"\"\"Segment audio using PyAnnote's segmentation model.\"\"\"\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)\n        segments = pipeline(audio_path)\n        audio = AudioSegment.from_file(audio_path)",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "clean_transcript",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def clean_transcript(text, strict_ascii=False):\n    \"\"\"Clean transcription text, supporting Unicode or strict ASCII.\"\"\"\n    if not text:\n        return \"\"\n    text = unicodedata.normalize(\"NFKC\", text)\n    text = text.replace(\"|\", \" \").strip()\n    if strict_ascii:\n        text = text.encode(\"ascii\", errors=\"ignore\").decode(\"ascii\")\n    return text\ndef is_valid_for_phonemes(text):",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "is_valid_for_phonemes",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def is_valid_for_phonemes(text):\n    \"\"\"Check if text contains characters likely to cause phoneme errors.\"\"\"\n    problematic = any(ord(c) > 127 and unicodedata.category(c).startswith(\"S\") for c in text)\n    return not problematic\ndef split_metadata(metadata_path, valid_ratio=0.2):\n    \"\"\"Split metadata into train and valid sets.\"\"\"\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\")\n        n_valid = int(len(df) * valid_ratio)\n        indices = np.random.permutation(len(df))",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "split_metadata",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def split_metadata(metadata_path, valid_ratio=0.2):\n    \"\"\"Split metadata into train and valid sets.\"\"\"\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\")\n        n_valid = int(len(df) * valid_ratio)\n        indices = np.random.permutation(len(df))\n        train_df = df.iloc[indices[n_valid:]]\n        valid_df = df.iloc[indices[:n_valid]]\n        train_path = metadata_path\n        valid_path = os.path.join(os.path.dirname(metadata_path), \"valid.csv\")",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "get_category_files",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def get_category_files(category):\n    \"\"\"Fetches file titles from a Wiki category.\"\"\"\n    params = {\n        \"action\": \"query\",\n        \"list\": \"categorymembers\",\n        \"cmtype\": \"file\",\n        \"cmtitle\": category,\n        \"cmlimit\": 500,\n        \"format\": \"json\",\n    }",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "get_file_url",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def get_file_url(file_title):\n    \"\"\"Fetches the direct URL for a Wiki file.\"\"\"\n    params = {\n        \"action\": \"query\",\n        \"titles\": file_title,\n        \"prop\": \"imageinfo\",\n        \"iiprop\": \"url\",\n        \"format\": \"json\",\n    }\n    try:",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "download_and_convert",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_label=None):\n    \"\"\"Downloads OGG and converts to WAV.\"\"\"\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", file_name)\n    ogg_file_name = safe_file_name if safe_file_name.lower().endswith(\".ogg\") else f\"{safe_file_name}.ogg\"\n    wav_file_name = ogg_file_name.replace(\".ogg\", \".wav\").replace(\".OGG\", \".wav\")\n    ogg_path = os.path.join(output_dir, ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)\n    if os.path.exists(wav_path):\n        logging.info(f\"Skipping existing WAV: {wav_path}\")\n        if status_label:",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "fetch_character_list_from_api",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def fetch_character_list_from_api():\n    \"\"\"Fetches character names from jmp.blue API.\"\"\"\n    try:\n        response = requests.get(f\"{JMP_API_URL_BASE}/characters\", timeout=10)\n        response.raise_for_status()\n        character_slugs = response.json()\n        character_names = []\n        for slug in character_slugs:\n            try:\n                char_response = requests.get(f\"{JMP_API_URL_BASE}/characters/{slug}\", timeout=5)",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "transcribe_character_audio",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def transcribe_character_audio(character_output_dir, whisper_model=\"base\", use_segmentation=False, hf_token=\"\", strict_ascii=False, status_label=None):\n    \"\"\"Transcribes WAV files, with optional segmentation and Unicode support.\"\"\"\n    if SpeechToText is None:\n        logging.error(\"Transcription unavailable: SpeechToText not imported.\")\n        if status_label:\n            status_label.config(text=\"Transcription unavailable.\")\n        return\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    wavs_dir = os.path.join(character_output_dir, \"wavs\")\n    os.makedirs(wavs_dir, exist_ok=True)",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "validate_metadata_existence",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def validate_metadata_existence(character_output_dir):\n    \"\"\"Check if metadata.csv exists.\"\"\"\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")\n    if not os.path.exists(metadata_path):\n        logging.warning(f\"Metadata file missing: {metadata_path}\")\n        return False\n    return True\ndef validate_metadata_layout(metadata_path):\n    \"\"\"Validate metadata.csv format.\"\"\"\n    try:",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "validate_metadata_layout",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def validate_metadata_layout(metadata_path):\n    \"\"\"Validate metadata.csv format.\"\"\"\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if len(lines) < 2:\n            logging.error(f\"Metadata file {metadata_path} is empty.\")\n            return False\n        header = lines[0].strip()\n        expected_headers = [",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "update_character_config",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def update_character_config(character, base_output_dir, selected_model=\"Fast Tacotron2\"):\n    \"\"\"Automatically updates the JSON configuration file for a character.\"\"\"\n    character_folder = os.path.join(base_output_dir, character)\n    wavs_folder = os.path.join(character_folder, \"wavs\")\n    metadata_path = os.path.join(character_folder, \"metadata.csv\")\n    valid_metadata_path = os.path.join(character_folder, \"valid.csv\")\n    config_path = os.path.join(character_folder, f\"{character}_config.json\")\n    config = {\n        \"output_path\": os.path.join(base_output_dir, \"tts_train_output\", character),\n        \"datasets\": [",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "generate_valid_csv",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def generate_valid_csv(metadata_path, valid_ratio=0.2):\n    \"\"\"Generate a valid.csv file from metadata.csv for validation purposes.\"\"\"\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\")\n        n_valid = int(len(df) * valid_ratio)\n        indices = np.random.permutation(len(df))\n        valid_df = df.iloc[indices[:n_valid]]\n        valid_path = os.path.join(os.path.dirname(metadata_path), \"valid.csv\")\n        valid_df.to_csv(valid_path, sep=\"|\", index=False, encoding=\"utf-8\")\n        logging.info(f\"Valid CSV generated: {valid_path}\")",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "process_character_voices",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def process_character_voices(\n    character, language, base_output_dir, download_wiki_audio=True, whisper_model=\"base\",\n    use_segmentation=False, hf_token=\"\", strict_ascii=False, status_label=None\n):\n    \"\"\"Downloads and processes voice lines.\"\"\"\n    safe_character_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", character)\n    character_folder = os.path.join(base_output_dir, safe_character_name)\n    wavs_folder = os.path.join(character_folder, \"wavs\")\n    os.makedirs(wavs_folder, exist_ok=True)\n    if not download_wiki_audio:",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "generate_character_config",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def generate_character_config(\n    character,\n    character_dir,\n    sample_rate,\n    selected_model=\"Fast Tacotron2\",\n    pre_trained_path=None,\n):\n    \"\"\"Generates a Coqui TTS config.json for a specific character.\"\"\"\n    if selected_model not in AVAILABLE_MODELS:\n        logging.error(f\"Invalid model selected: {selected_model}\")",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "start_tts_training",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def start_tts_training(config_path):\n    \"\"\"Starts Coqui TTS training using a generated config file.\"\"\"\n    try:\n        subprocess.run(\n            [\"tts\", \"--config_path\", config_path],\n            check=True,\n            text=True,\n            capture_output=True\n        )\n        logging.info(f\"Training started with config: {config_path}\")",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "backup_file",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def backup_file(file_path, suffix):\n    \"\"\"Create a backup of a file with a given suffix.\"\"\"\n    if os.path.exists(file_path):\n        backup_path = f\"{file_path}.{suffix}.{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}\"\n        shutil.copy(file_path, backup_path)\n        logging.info(f\"Backup created: {backup_path}\")\n# --- GUI ---\nwindow = None\ndef main_gui():\n    global window",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "main_gui",
-        "kind": 2,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "def main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    # Configuration Frame\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    # Language Selection\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")\n    languages = [\"English\", \"Japanese\", \"Chinese\", \"Korean\"]",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "BASE_DATA_DIR",
-        "kind": 5,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "BASE_DATA_DIR = \"voice_datasets\"\nWIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged except for segment_audio_file) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    \"\"\"Segment audio using PyAnnote's segmentation model.\"\"\"\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "WIKI_API_URL",
-        "kind": 5,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "WIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged except for segment_audio_file) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    \"\"\"Segment audio using PyAnnote's segmentation model.\"\"\"\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "JMP_API_URL_BASE",
-        "kind": 5,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "JMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions (Unchanged except for segment_audio_file) ---\ndef segment_audio_file(audio_path, output_dir, onset=0.6, offset=0.4, min_duration=2.0, min_duration_off=0.0, hf_token=\"\"):\n    \"\"\"Segment audio using PyAnnote's segmentation model.\"\"\"\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided. Skipping segmentation.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\"pyannote/segmentation\", use_auth_token=hf_token)",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "AVAILABLE_MODELS",
-        "kind": 5,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "AVAILABLE_MODELS = {\n    \"Fast Tacotron2\": {\n        \"model_id\": \"tts_models/en/ljspeech/tacotron2-DDC\",\n        \"use_pre_trained\": True,\n    },\n    \"High-Quality VITS\": {\n        \"model_id\": \"tts_models/multilingual/multi-dataset/vits\",\n        \"use_pre_trained\": False,\n    },\n}",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
-        "label": "window",
-        "kind": 5,
-        "importPath": "genshin_voice_downloader-old",
-        "description": "genshin_voice_downloader-old",
-        "peekOfCode": "window = None\ndef main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Impact Voice Downloader & Transcriber\")\n    # Configuration Frame\n    config_frame = ttk.LabelFrame(window, text=\"Configuration\")\n    config_frame.grid(row=0, column=0, padx=10, pady=10, sticky=\"ew\")\n    # Language Selection\n    ttk.Label(config_frame, text=\"Language:\").grid(row=0, column=0, padx=5, pady=5, sticky=\"w\")",
-        "detail": "genshin_voice_downloader-old",
-        "documentation": {}
-    },
-    {
         "label": "SpeechToText",
         "kind": 6,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "class SpeechToText:\n    def __init__(\n        self,\n        use_microphone=False,\n        audio_file=None,\n        engine=\"whisper\",\n        whisper_model_size=\"base\",\n    ):\n        try:\n            import whisper",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "HeaderEditor",
+        "kind": 6,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "class HeaderEditor:\n    def __init__(self, parent, character_folder, json_config, csv_files, tables, json_text_widget, status_text, update_callback):\n        self.character_folder = character_folder\n        self.json_config = json_config\n        self.csv_files = csv_files\n        self.tables = tables\n        self.json_text_widget = json_text_widget\n        self.status_text = status_text\n        self.update_callback = update_callback\n        self.window = tk.Toplevel(parent)",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "get_available_tts_models",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def get_available_tts_models():\n    \"\"\"Fetch available TTS models from Coqui TTS ModelManager.\"\"\"\n    for attempt in range(3):\n        try:\n            manager = ModelManager()\n            # Access the model manifest (dictionary of model IDs and metadata)\n            model_manifest = manager.list_models()\n            available_models = {}\n            for model_id in model_manifest:\n                # Filter for English TTS models (e.g., 'tts_models/en/...')",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "get_phonemes",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def get_phonemes(text, lang=\"en-us\"):\n    try:\n        phonemes = []\n        for sent in sentences(text, lang=lang):\n            for word in sent:\n                if word.phonemes:\n                    phonemes.extend(word.phonemes)\n        return \" \".join(phonemes) if phonemes else \"\"\n    except Exception as e:\n        logging.error(f\"Error generating phonemes for '{text}': {e}\")",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "segment_audio_file",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def segment_audio_file(\n    audio_path, output_dir, transcription=\"\", onset=0.6, offset=0.4, min_duration=1.0, hf_token=\"\"\n):\n    if not hf_token:\n        logging.warning(\"No Hugging Face token provided for segmentation. Skipping.\")\n        return []\n    try:\n        from pyannote.audio import Pipeline\n        pipeline = Pipeline.from_pretrained(\n            \"pyannote/segmentation\", use_auth_token=hf_token",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "clean_transcript",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def clean_transcript(text, strict_ascii=False):\n    if not text:\n        return \"\"\n    text = unicodedata.normalize(\"NFKC\", text)\n    text = text.replace(\"|\", \" \").strip()\n    if strict_ascii:\n        text = text.encode(\"ascii\", errors=\"ignore\").decode(\"ascii\")\n    return text\ndef get_category_files(category):\n    params = {",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "get_category_files",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def get_category_files(category):\n    params = {\n        \"action\": \"query\",\n        \"list\": \"categorymembers\",\n        \"cmtype\": \"file\",\n        \"cmtitle\": category,\n        \"cmlimit\": \"max\",\n        \"format\": \"json\",\n    }\n    files = []",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "get_file_url",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def get_file_url(file_title):\n    params = {\n        \"action\": \"query\",\n        \"titles\": file_title,\n        \"prop\": \"imageinfo\",\n        \"iiprop\": \"url\",\n        \"format\": \"json\",\n    }\n    try:\n        response = requests.get(WIKI_API_URL, params=params, timeout=15)",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "download_and_convert",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def download_and_convert(file_url, output_dir, file_name, status_queue=None):\n    safe_file_name = re.sub(r'[\\\\/*?:\"<>|]', \"_\", file_name)\n    ogg_file_name = (\n        safe_file_name\n        if safe_file_name.lower().endswith(\".ogg\")\n        else f\"{safe_file_name}.ogg\"\n    )\n    wav_file_name = os.path.splitext(ogg_file_name)[0] + \".wav\"\n    ogg_path = os.path.join(output_dir, \"temp_\" + ogg_file_name)\n    wav_path = os.path.join(output_dir, wav_file_name)",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "fetch_character_list_from_api",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def fetch_character_list_from_api():\n    try:\n        response = requests.get(f\"{JMP_API_URL_BASE}/characters\", timeout=15)\n        response.raise_for_status()\n        character_slugs = response.json()\n        character_names = []\n        logging.info(f\"Fetching details for {len(character_slugs)} characters...\")\n        for slug in character_slugs:\n            char_response = requests.get(\n                f\"{JMP_API_URL_BASE}/characters/{slug}\", timeout=5",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "is_silent_audio",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "def is_silent_audio(file_path, silence_threshold=-50.0, min_silence_duration=0.5):\n    try:\n        audio = AudioSegment.from_wav(file_path)\n        # Split audio into chunks and check for sustained silence\n        chunk_size_ms = 100  # Analyze in 100ms chunks\n        silent_chunks = 0\n        total_duration = len(audio) / 1000.0  # Duration in seconds\n        for i in range(0, len(audio), chunk_size_ms):\n            chunk = audio[i:i + chunk_size_ms]\n            if chunk.max_dBFS < silence_threshold:",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def is_silent_audio(file_path, silence_threshold=-50.0, min_silence_duration=0.5):\n    try:\n        audio = AudioSegment.from_wav(file_path)\n        chunk_size_ms = 100\n        silent_chunks = 0\n        total_duration = len(audio) / 1000.0\n        for i in range(0, len(audio), chunk_size_ms):\n            chunk = audio[i:i + chunk_size_ms]\n            if chunk.max_dBFS < silence_threshold:\n                silent_chunks += 1",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "clean_metadata_file",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def clean_metadata_file(metadata_path):\n    cleaned_lines = []\n    invalid_lines_removed = 0\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            lines = f.readlines()\n        if not lines:\n            logging.error(f\"Metadata file {metadata_path} is empty.\")\n            return False\n        header_fields = lines[0].strip().split(\"|\")",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "generate_valid_csv",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def generate_valid_csv(metadata_path, valid_ratio=0.2):\n    logging.info(\n        f\"Generating validation split from {metadata_path} (ratio: {valid_ratio})\"\n    )\n    valid_path = os.path.join(os.path.dirname(metadata_path), \"valid.csv\")\n    try:\n        df = pd.read_csv(metadata_path, sep=\"|\", encoding=\"utf-8\", on_bad_lines=\"error\")\n        if len(df) < 2:\n            logging.warning(\n                f\"Not enough data ({len(df)} samples) in {metadata_path} to create a validation split. Skipping.\"",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "regenerate_csv",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def regenerate_csv(csv_path, new_headers, status_text=None):\n    \"\"\"Regenerate a CSV with new headers, preserving data for matching columns.\"\"\"\n    if not new_headers:\n        logging.error(f\"Cannot regenerate {csv_path}: No headers provided.\")\n        if status_text:\n            status_text.insert(tk.END, f\"Error: No headers provided for {csv_path}\\n\")\n            status_text.see(tk.END)\n        return False\n    # Validate headers\n    new_headers = [h.strip() for h in new_headers]",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "transcribe_character_audio",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def transcribe_character_audio(\n    character_output_dir,\n    whisper_model=\"base\",\n    use_segmentation=False,\n    hf_token=\"\",\n    strict_ascii=False,\n    min_silence_duration=0.5,\n    status_queue=None,\n):\n    metadata_path = os.path.join(character_output_dir, \"metadata.csv\")",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "validate_metadata_layout",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def validate_metadata_layout(metadata_path):\n    if not os.path.exists(metadata_path):\n        logging.warning(f\"Metadata layout check: File not found {metadata_path}\")\n        return False\n    try:\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            reader = csv.reader(f, delimiter=\"|\")\n            try:\n                header = next(reader)\n                if not all(col in header for col in [\"text\", \"audio_file\"]):",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "process_character_voices",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def process_character_voices(\n    character,\n    language,\n    base_output_dir,\n    download_wiki_audio=True,\n    whisper_model=\"base\",\n    use_segmentation=False,\n    hf_token=\"\",\n    strict_ascii=False,\n    min_silence_duration=0.5,",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "backup_file",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def backup_file(path, suffix=\"backup\"):\n    if os.path.exists(path):\n        timestamp = pd.Timestamp.now().strftime(\"%Y%m%d%H%M%S\")\n        if os.path.isfile(path):\n            base, ext = os.path.splitext(path)\n            backup_path = f\"{base}.{suffix}.{timestamp}{ext}\"\n        elif os.path.isdir(path):\n            backup_path = f\"{path}.{suffix}.{timestamp}\"\n        else:\n            logging.warning(",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "download_tts_model",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def download_tts_model(model_id):\n    \"\"\"Download a Coqui TTS model by its ID.\"\"\"\n    manager = ModelManager()\n    try:\n        manager.download_model(model_id)\n        logging.info(f\"Downloaded Coqui TTS model: {model_id}\")\n        return True\n    except Exception as e:\n        logging.error(f\"Failed to download model {model_id}: {e}\")\n        return False",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "generate_character_config",
+        "kind": 2,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def generate_character_config(\n    character,\n    character_dir,\n    sample_rate,\n    selected_model,\n    pre_trained_path=None,\n):\n    \"\"\"Generates a Coqui TTS config.json for a specific character.\"\"\"\n    if selected_model not in AVAILABLE_MODELS:\n        logging.error(f\"Invalid model selected: {selected_model}\")",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "load_csv_to_treeview",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):\n    # Clear existing items and columns\n    treeview.delete(*treeview.get_children())\n    for col in treeview[\"columns\"]:\n        treeview.heading(col, text=\"\")\n        treeview.column(col, width=0)\n    treeview[\"columns\"] = ()\n    if not os.path.exists(csv_path):\n        logging.info(f\"CSV file not found for Treeview: {csv_path}\")\n        return",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def load_csv_to_treeview(treeview, csv_path, base_dir, play_callback):\n    treeview.delete(*treeview.get_children())\n    for col in treeview[\"columns\"]:\n        treeview.heading(col, text=\"\")\n        treeview.column(col, width=0)\n    treeview[\"columns\"] = ()\n    if not os.path.exists(csv_path):\n        logging.info(f\"CSV file not found for Treeview: {csv_path}\")\n        return\n    try:",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "create_table_frame",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def create_table_frame(notebook, tab_name):\n    frame = ttk.Frame(notebook)\n    tree = ttk.Treeview(frame, show=\"headings\", height=10)\n    tree.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))\n    vscroll = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)\n    vscroll.grid(row=0, column=1, sticky=(tk.N, tk.S))\n    tree[\"yscrollcommand\"] = vscroll.set\n    hscroll = ttk.Scrollbar(frame, orient=tk.HORIZONTAL, command=tree.xview)\n    hscroll.grid(row=1, column=0, sticky=(tk.W, tk.E))\n    tree[\"xscrollcommand\"] = hscroll.set",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "create_json_frame",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
         "peekOfCode": "def create_json_frame(notebook, tab_name):\n    frame = ttk.Frame(notebook)\n    json_text = tk.Text(frame, height=10, width=50, wrap=tk.NONE)\n    json_text.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))\n    vscroll = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=json_text.yview)\n    vscroll.grid(row=0, column=1, sticky=(tk.N, tk.S))\n    json_text[\"yscrollcommand\"] = vscroll.set\n    hscroll = ttk.Scrollbar(frame, orient=tk.HORIZONTAL, command=json_text.xview)\n    hscroll.grid(row=1, column=0, sticky=(tk.W, tk.E))\n    json_text[\"xscrollcommand\"] = hscroll.set",
-        "detail": "genshin_voice_downloader",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "main_gui",
         "kind": 2,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "def main_gui():\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Voice Downloader\")\n    window.geometry(\"600x500\")\n    # Initialize pygame mixer\n    pygame.mixer.init()\n    current_playing = [None]  # Track currently playing audio\n    # Variables\n    character_var = tk.StringVar()",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "def main_gui(json_config_path=None):\n    global window\n    window = tk.Tk()\n    window.title(\"Genshin Voice Downloader\")\n    window.geometry(\"600x500\")\n    pygame.mixer.init()\n    current_playing = [None]\n    # Load JSON configuration\n    json_config = {}\n    if json_config_path and os.path.exists(json_config_path):",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "DEFAULT_DATA_DIR",
         "kind": 5,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "DEFAULT_DATA_DIR = \"voice_datasets\"\nWIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef get_phonemes(text, lang=\"en-us\"):\n    try:\n        phonemes = []\n        for sent in sentences(text, lang=lang):\n            for word in sent:\n                if word.phonemes:",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "DEFAULT_DATA_DIR = \"voice_datasets\"\nWIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Dynamic TTS Model Listing ---\ndef get_available_tts_models():\n    \"\"\"Fetch available TTS models from Coqui TTS ModelManager.\"\"\"\n    for attempt in range(3):\n        try:\n            manager = ModelManager()\n            # Access the model manifest (dictionary of model IDs and metadata)",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "WIKI_API_URL",
         "kind": 5,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "WIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef get_phonemes(text, lang=\"en-us\"):\n    try:\n        phonemes = []\n        for sent in sentences(text, lang=lang):\n            for word in sent:\n                if word.phonemes:\n                    phonemes.extend(word.phonemes)",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "WIKI_API_URL = \"https://genshin-impact.fandom.com/api.php\"\nJMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Dynamic TTS Model Listing ---\ndef get_available_tts_models():\n    \"\"\"Fetch available TTS models from Coqui TTS ModelManager.\"\"\"\n    for attempt in range(3):\n        try:\n            manager = ModelManager()\n            # Access the model manifest (dictionary of model IDs and metadata)\n            model_manifest = manager.list_models()",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
         "label": "JMP_API_URL_BASE",
         "kind": 5,
-        "importPath": "genshin_voice_downloader",
-        "description": "genshin_voice_downloader",
-        "peekOfCode": "JMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Helper Functions ---\ndef get_phonemes(text, lang=\"en-us\"):\n    try:\n        phonemes = []\n        for sent in sentences(text, lang=lang):\n            for word in sent:\n                if word.phonemes:\n                    phonemes.extend(word.phonemes)\n        return \" \".join(phonemes) if phonemes else \"\"",
-        "detail": "genshin_voice_downloader",
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "JMP_API_URL_BASE = \"https://genshin.jmp.blue\"\n# --- Dynamic TTS Model Listing ---\ndef get_available_tts_models():\n    \"\"\"Fetch available TTS models from Coqui TTS ModelManager.\"\"\"\n    for attempt in range(3):\n        try:\n            manager = ModelManager()\n            # Access the model manifest (dictionary of model IDs and metadata)\n            model_manifest = manager.list_models()\n            available_models = {}",
+        "detail": "genshin_voice_downloader1",
         "documentation": {}
     },
     {
-        "label": "parse_arguments",
+        "label": "AVAILABLE_MODELS",
+        "kind": 5,
+        "importPath": "genshin_voice_downloader1",
+        "description": "genshin_voice_downloader1",
+        "peekOfCode": "AVAILABLE_MODELS = get_available_tts_models()\n# --- Helper Functions ---\ndef get_phonemes(text, lang=\"en-us\"):\n    try:\n        phonemes = []\n        for sent in sentences(text, lang=lang):\n            for word in sent:\n                if word.phonemes:\n                    phonemes.extend(word.phonemes)\n        return \" \".join(phonemes) if phonemes else \"\"",
+        "detail": "genshin_voice_downloader1",
+        "documentation": {}
+    },
+    {
+        "label": "list_tts_modules",
         "kind": 2,
-        "importPath": "test_trained_model",
-        "description": "test_trained_model",
-        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(description=\"Test a trained TTS model for a specific character.\")\n    parser.add_argument(\"--character\", type=str, required=True,\n                        help=\"Name of the character whose trained model you want to test.\")\n    parser.add_argument(\"--text\", type=str, required=True,\n                        help=\"Text to synthesize using the character's model.\")\n    parser.add_argument(\"--output_file\", type=str, default=None,\n                        help=\"Optional: Path to save the generated WAV file. If not provided, defaults to 'character_test_output.wav'.\")\n    parser.add_argument(\"--base_model_dir\", type=str, default=BASE_MODEL_DIR,\n                        help=f\"Base directory containing all trained character models (default: {BASE_MODEL_DIR})\")",
-        "detail": "test_trained_model",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "def list_tts_modules(package, prefix: str = \"\") -> List[Tuple[str, bool]]:\n    \"\"\"Recursively list all modules and submodules in the TTS package.\"\"\"\n    modules = []\n    for _, modname, ispkg in pkgutil.walk_packages(\n        package.__path__, prefix=package.__name__ + \".\"\n    ):\n        modules.append((modname, ispkg))\n        try:\n            module = importlib.import_module(modname)\n            if ispkg:",
+        "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
+        "label": "inspect_module",
+        "kind": 2,
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "def inspect_module(module_name: str) -> Dict[str, List[str]]:\n    \"\"\"Inspect a module for target classes and methods, including signatures.\"\"\"\n    result = {\"classes\": [], \"methods\": []}\n    try:\n        module = importlib.import_module(module_name)\n        logging.info(f\"\\nInspecting module: {module_name}\")\n        # Inspect classes\n        for name, obj in inspect.getmembers(module, inspect.isclass):\n            if name in TARGET_CLASSES:\n                result[\"classes\"].append(name)",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
         "label": "main",
         "kind": 2,
-        "importPath": "test_trained_model",
-        "description": "test_trained_model",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # --- Determine Paths ---\n    # Sanitize character name similar to how VoiceTrainer does it\n    character_name_sanitized = args.character # Assume CLI passes sanitized name or handle here if needed\n    character_model_dir = os.path.join(args.base_model_dir, character_name_sanitized)\n    # Expecting standard output structure from training (best_model.pth, config.json)\n    trained_model_path = os.path.join(character_model_dir, \"best_model.pth\")\n    trained_config_path = os.path.join(character_model_dir, \"config.json\")\n    # Determine output filename",
-        "detail": "test_trained_model",
-        "documentation": {}
-    },
-    {
-        "label": "BASE_MODEL_DIR",
-        "kind": 5,
-        "importPath": "test_trained_model",
-        "description": "test_trained_model",
-        "peekOfCode": "BASE_MODEL_DIR = \"trained_models\"   # Base directory where character models are saved\n# --- Argument Parser ---\ndef parse_arguments():\n    parser = argparse.ArgumentParser(description=\"Test a trained TTS model for a specific character.\")\n    parser.add_argument(\"--character\", type=str, required=True,\n                        help=\"Name of the character whose trained model you want to test.\")\n    parser.add_argument(\"--text\", type=str, required=True,\n                        help=\"Text to synthesize using the character's model.\")\n    parser.add_argument(\"--output_file\", type=str, default=None,\n                        help=\"Optional: Path to save the generated WAV file. If not provided, defaults to 'character_test_output.wav'.\")",
-        "detail": "test_trained_model",
-        "documentation": {}
-    },
-    {
-        "label": "TestVoiceTrainer",
-        "kind": 6,
-        "importPath": "test_voice_tools",
-        "description": "test_voice_tools",
-        "peekOfCode": "class TestVoiceTrainer(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Set up a temporary dataset directory for testing.\"\"\"\n        self.character_name = \"TestCharacter\"\n        self.trainer = VoiceTrainer(character_name=self.character_name)\n        os.makedirs(self.trainer.dataset_path, exist_ok=True)\n        os.makedirs(self.trainer.output_path, exist_ok=True)\n        # Create a valid test audio file\n        self.test_audio_path = os.path.join(self.trainer.dataset_path, \"test.wav\")\n        sample_rate = 22050",
-        "detail": "test_voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "RobustTokenizer",
-        "kind": 6,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "class RobustTokenizer(TTSTokenizer):\n    def __init__(self, characters=None, **kwargs):\n        if characters is None:\n            characters = BaseCharacters()\n        super().__init__(characters=characters, **kwargs)\n    def encode(self, text):\n        try:\n            return [self.characters.char_to_id(char) for char in text]\n        except KeyError as e:\n            logger.warning(f\"Skipping invalid character {repr(e)} in text: {text}\")",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "custom_formatter",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def custom_formatter(root_path, meta_file, **kwargs):\n    items = []\n    try:\n        with open(os.path.join(root_path, meta_file), \"r\", encoding=\"utf-8\") as f:\n            for line in f:\n                parts = line.strip().split(\"|\")\n                if len(parts) < 2 or parts[0] == \"audio_file\":\n                    continue\n                audio_file = os.path.join(root_path, parts[0])\n                text = clean_text(parts[1])",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "clean_text",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def clean_text(text):\n    supported_chars = set(\n        \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?'\\\"-:\"\n    )\n    original_length = len(text)\n    cleaned_text = \"\".join(c for c in text if c in supported_chars)\n    if len(cleaned_text) != original_length:\n        logger.debug(f\"Cleaned text: Original='{text}', Cleaned='{cleaned_text}'\")\n    return cleaned_text\n# Vocabulary Management",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "update_vocabulary",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def update_vocabulary(vocabulary_path, new_characters):\n    try:\n        if os.path.exists(vocabulary_path):\n            with open(vocabulary_path, \"r\", encoding=\"utf-8\") as f:\n                existing_vocab = set(f.read().strip())\n        else:\n            existing_vocab = set()\n        updated_vocab = existing_vocab.union(new_characters)\n        if updated_vocab != existing_vocab:\n            with open(vocabulary_path, \"w\", encoding=\"utf-8\") as f:",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "ensure_phoneme_vocabulary",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def ensure_phoneme_vocabulary(config):\n    logger = get_logger(\"ensure_phoneme_vocabulary\")\n    try:\n        gruut_phonemes = set(\n            [\n                \"a\", \"b\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\", \"k\", \"l\", \"m\", \"n\", \"o\",\n                \"p\", \"r\", \"s\", \"t\", \"u\", \"v\", \"w\", \"z\", \"æ\", \"ʧ\", \"ð\", \"ɛ\", \"ɪ\", \"ŋ\",\n                \"ɔ\", \"ɹ\", \"ʃ\", \"θ\", \"ʊ\", \"ʒ\", \"ɑ\", \"ɒ\", \"ʌ\", \"ː\", \"ɡ\", \"ʔ\", \"ɚ\", \"ɝ\",\n                \"ʉ\", \"ʲ\", \"ʷ\", \"ᵊ\", \"ⁿ\", \"̃\", \"̩\", \"̯\", \"̮\", \"̪\", \"̺\", \"̻\"\n            ]",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "safe_delete",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def safe_delete(file_path, retries=10, delay=3):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(file_path):\n                os.unlink(file_path)\n                logger.info(f\"Deleted file: {file_path}\")\n            return\n        except PermissionError:\n            logger.warning(\n                f\"Attempt {attempt + 1}/{retries}: PermissionError deleting {file_path}. Retrying in {delay}s...\"",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "safe_remove_experiment_folder",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def safe_remove_experiment_folder(path, retries=10, delay=3):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(path):\n                shutil.rmtree(path, ignore_errors=False)\n                logger.info(f\"Removed directory tree: {path}\")\n            return\n        except PermissionError:\n            logger.warning(\n                f\"Attempt {attempt + 1}/{retries}: PermissionError removing {path}. Retrying in {delay}s...\"",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "plot_results",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def plot_results(y_hat, y, ap, name_prefix):\n    try:\n        if isinstance(y_hat, torch.Tensor):\n            y_hat = y_hat.squeeze().detach().cpu().float().numpy()\n        if isinstance(y, torch.Tensor):\n            y = y.squeeze().detach().cpu().float().numpy()\n        if y_hat is None or y is None or y_hat.size == 0 or y.size == 0:\n            logger.warning(\"Invalid or empty audio data received for plotting.\")\n            return\n        y_hat_spec = (",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "parse_arguments",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser(\n        description=\"Train a VITS TTS model for a specific character.\"\n    )\n    parser.add_argument(\n        \"--dataset_path\", type=str, required=True, help=\"Path to dataset directory.\"\n    )\n    parser.add_argument(\n        \"--output_path\",\n        type=str,",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "main",
-        "kind": 2,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "def main():\n    args = parse_arguments()\n    # Setup Logging\n    log_level_map = {\n        \"DEBUG\": logging.DEBUG,\n        \"INFO\": logging.INFO,\n        \"WARNING\": logging.WARNING,\n        \"ERROR\": logging.ERROR,\n        \"CRITICAL\": logging.CRITICAL,\n    }",
-        "detail": "voice_clone_train",
-        "documentation": {}
-    },
-    {
-        "label": "os.environ[\"PYTHONUTF8\"]",
-        "kind": 5,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "os.environ[\"PYTHONUTF8\"] = \"1\"\n# Import enhanced_logger\ntry:\n    from enhanced_logger import setup_logger, get_logger\nexcept ImportError:\n    logging.basicConfig(\n        level=logging.INFO,\n        format=\"%(asctime)s - %(levelname)s - %(message)s\",\n        handlers=[logging.StreamHandler()],\n    )",
-        "detail": "voice_clone_train",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "def main():\n    logging.info(\"Inspecting TTS modules for training-related classes and methods...\")\n    modules = list_tts_modules(TTS)\n    # Filter to relevant modules\n    relevant_modules = [\n        modname\n        for modname, _ in modules\n        if any(\n            part in modname\n            for part in [\"bin.train_tts\", \"api\", \"utils.manage\", \"utils.synthesizer\"]",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
         "label": "logger",
         "kind": 5,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "logger = get_logger(__name__)\n# Constants\nMETADATA_FILENAME = \"metadata.csv\"\n# Robust Tokenizer to handle invalid characters\nclass RobustTokenizer(TTSTokenizer):\n    def __init__(self, characters=None, **kwargs):\n        if characters is None:\n            characters = BaseCharacters()\n        super().__init__(characters=characters, **kwargs)\n    def encode(self, text):",
-        "detail": "voice_clone_train",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "logger = logging.getLogger()\nlogger.setLevel(logging.INFO)\nlog_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"tts_inspection.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
-        "label": "METADATA_FILENAME",
+        "label": "log_format",
         "kind": 5,
-        "importPath": "voice_clone_train",
-        "description": "voice_clone_train",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"\n# Robust Tokenizer to handle invalid characters\nclass RobustTokenizer(TTSTokenizer):\n    def __init__(self, characters=None, **kwargs):\n        if characters is None:\n            characters = BaseCharacters()\n        super().__init__(characters=characters, **kwargs)\n    def encode(self, text):\n        try:\n            return [self.characters.char_to_id(char) for char in text]",
-        "detail": "voice_clone_train",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "log_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"tts_inspection.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Target Classes and Methods ---",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
-        "label": "SpeechToText",
-        "kind": 6,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "class SpeechToText:\n    \"\"\"\n    Handles Speech-to-Text (STT) with audio preprocessing and engine selection.\n    Includes noise reduction, normalization, and resampling for improved accuracy.\n    Supports engines: 'google', 'sphinx', 'whisper', 'vosk'.\n    \"\"\"\n    def __init__(\n        self,\n        use_microphone: bool = True,\n        audio_file: Optional[str] = None,",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "TextToSpeech",
-        "kind": 6,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "class TextToSpeech:\n    \"\"\" Handles standard Text-to-Speech (TTS) using pyttsx3 or gTTS. \"\"\"\n    def __init__(\n        self,\n        use_pyttsx3: bool = True,\n        voice_name: Optional[str] = None,\n        speech_rate: int = 150,\n        lang: str = \"en\",\n    ) -> None:\n        self.use_pyttsx3 = use_pyttsx3",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "ClonedVoiceTTS",
-        "kind": 6,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "class ClonedVoiceTTS:\n    \"\"\" Handles Text-to-Speech (TTS) using voice cloning models (e.g., XTTS). \"\"\"\n    def __init__(\n        self,\n        model_name: str = \"tts_models/multilingual/multi-dataset/xtts_v2\",\n        reference_wavs: Union[str, List[str]] = None,\n        use_gpu: bool = True,\n    ):\n        if CoquiTTS is None:\n            raise ImportError(\"TTS library is required for ClonedVoiceTTS but not found.\")",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "VoiceTrainer",
-        "kind": 6,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "class VoiceTrainer:\n    \"\"\" Handles voice training dataset management and interaction with training scripts for specific characters. \"\"\"\n    def __init__(self, character_name: str, base_dataset_dir: str = BASE_DATASET_DIR, base_model_dir: str = BASE_MODEL_DIR):\n        \"\"\"\n        Initializes the VoiceTrainer for a specific character.\n        Args:\n            character_name: The name of the character (used for directory paths).\n            base_dataset_dir: The root directory containing all character datasets.\n            base_model_dir: The root directory containing all trained character models.\n        \"\"\"",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "play_audio_with_pydub",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def play_audio_with_pydub(file_path):\n    \"\"\"\n    Plays an audio file using pydub. Handles various formats.\n    Args:\n        file_path: Path to the audio file to play.\n    \"\"\"\n    try:\n        audio = AudioSegment.from_file(file_path)\n        print(f\"Attempting to play audio with pydub: {file_path}\")\n        play(audio)",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "play_audio_with_simpleaudio",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def play_audio_with_simpleaudio(file_path):\n    \"\"\"\n    Plays a WAV audio file using simpleaudio.\n    Args:\n        file_path: Path to the WAV audio file to play.\n    \"\"\"\n    try:\n        print(f\"Attempting to play audio with simpleaudio: {file_path}\")\n        if not file_path.lower().endswith(\".wav\"):\n             print(\"Simpleaudio fallback requires WAV format. Skipping playback.\")",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "play_audio",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def play_audio(file_path):\n    \"\"\"\n    Plays an audio file using pydub or simpleaudio as fallback (for WAV).\n    Args:\n        file_path: Path to the audio file to play.\n    \"\"\"\n    try:\n        play_audio_with_pydub(file_path)\n    except Exception as e:\n        print(f\"Pydub playback failed ({e}). Falling back to simpleaudio for WAV if applicable.\")",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "measure_execution_time",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def measure_execution_time(func):\n    \"\"\" Decorator to measure the execution time of a function. \"\"\"\n    def wrapper(*args, **kwargs):\n        start_time = time.time()\n        result = func(*args, **kwargs)\n        end_time = time.time()\n        logging.info(f\"Function '{func.__name__}' executed in: {end_time - start_time:.2f} seconds\")\n        return result\n    return wrapper\n# Function to use `scipy.io.wavfile.read` for reading WAV files",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "read_wav_file_scipy",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def read_wav_file_scipy(file_path):\n    \"\"\" Reads a WAV file using Scipy and returns the sample rate and data. \"\"\"\n    try:\n        sample_rate, data = read_wav(file_path)\n        logging.debug(f\"Read WAV file (SciPy): {file_path} (Sample Rate: {sample_rate}, Data Shape: {data.shape})\")\n        return sample_rate, data\n    except Exception as e:\n        logging.error(f\"Error reading WAV file with SciPy: {e}\")\n        return None, None\n# Example usage of AudioProcessor (if TTS is installed)",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "process_audio_sample_coqui",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def process_audio_sample_coqui(audio_file):\n    \"\"\" Processes an audio file using Coqui TTS AudioProcessor. \"\"\"\n    if AudioProcessor is None:\n        print(\"AudioProcessor not available (TTS library missing).\")\n        return None\n    try:\n        # Example config - adjust as needed for your TTS model\n        ap = AudioProcessor(sample_rate=22050, num_mels=80)\n        processed_audio = ap.load_wav(audio_file)\n        logging.info(\"Audio processing with Coqui AudioProcessor complete.\")",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "record_and_play_sd",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def record_and_play_sd(duration=5, sample_rate=44100, device_index=None):\n    \"\"\" Records audio and plays it back using sounddevice. \"\"\"\n    logging.info(f\"Recording audio (sounddevice) for {duration} seconds...\")\n    try:\n        audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, device_index=device_index, dtype=\"int16\")\n        sd.wait()\n        logging.info(\"Finished recording. Playing back (sounddevice)...\")\n        sd.play(audio_data, samplerate=sample_rate)\n        sd.wait()\n        return audio_data",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "save_wave_file_scipy",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def save_wave_file_scipy(audio_data: np.ndarray, filename: str, sample_rate: int = 44100) -> None:\n    \"\"\" Saves audio data (numpy array) to WAV using scipy.io.wavfile. \"\"\"\n    if audio_data is None:\n        logging.error(\"No audio data provided to save.\")\n        return\n    logging.info(f\"Saving audio data (scipy) to WAV file: {filename}\")\n    try:\n        write_wav(filename, sample_rate, audio_data)\n        logging.info(\"WAV file saved successfully (scipy).\")\n    except Exception as e:",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "get_audio_device_list",
-        "kind": 2,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "def get_audio_device_list():\n    \"\"\" Prints a list of available audio input/output devices using sounddevice. \"\"\"\n    print(\"\\n--- Available Audio Devices (Sounddevice) ---\")\n    try:\n        devices = sd.query_devices()\n        default_input_idx = sd.default.device[0]\n        default_output_idx = sd.default.device[1]\n        print(\"Input Devices:\")\n        found_input = False\n        for i, device in enumerate(devices):",
-        "detail": "voice_tools",
-        "documentation": {}
-    },
-    {
-        "label": "BASE_DATASET_DIR",
+        "label": "console_handler",
         "kind": 5,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "BASE_DATASET_DIR = \"voice_datasets\" # Base directory for all character datasets\nBASE_MODEL_DIR = \"trained_models\"   # Base directory for all trained character models\nMETADATA_FILENAME = \"metadata.csv\"  # Standard metadata filename\n# --- Helper Functions ---\n# Function to play audio using pydub\ndef play_audio_with_pydub(file_path):\n    \"\"\"\n    Plays an audio file using pydub. Handles various formats.\n    Args:\n        file_path: Path to the audio file to play.",
-        "detail": "voice_tools",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "console_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"tts_inspection.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Target Classes and Methods ---\nTARGET_CLASSES = [",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
-        "label": "BASE_MODEL_DIR",
+        "label": "file_handler",
         "kind": 5,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "BASE_MODEL_DIR = \"trained_models\"   # Base directory for all trained character models\nMETADATA_FILENAME = \"metadata.csv\"  # Standard metadata filename\n# --- Helper Functions ---\n# Function to play audio using pydub\ndef play_audio_with_pydub(file_path):\n    \"\"\"\n    Plays an audio file using pydub. Handles various formats.\n    Args:\n        file_path: Path to the audio file to play.\n    \"\"\"",
-        "detail": "voice_tools",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "file_handler = logging.FileHandler(\"tts_inspection.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Target Classes and Methods ---\nTARGET_CLASSES = [\n    \"Trainer\",\n    \"TrainerArgs\",\n    \"TrainTTSArgs\",\n    \"TTS\",",
+        "detail": "list_tts_functions",
         "documentation": {}
     },
     {
-        "label": "METADATA_FILENAME",
+        "label": "TARGET_CLASSES",
         "kind": 5,
-        "importPath": "voice_tools",
-        "description": "voice_tools",
-        "peekOfCode": "METADATA_FILENAME = \"metadata.csv\"  # Standard metadata filename\n# --- Helper Functions ---\n# Function to play audio using pydub\ndef play_audio_with_pydub(file_path):\n    \"\"\"\n    Plays an audio file using pydub. Handles various formats.\n    Args:\n        file_path: Path to the audio file to play.\n    \"\"\"\n    try:",
-        "detail": "voice_tools",
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "TARGET_CLASSES = [\n    \"Trainer\",\n    \"TrainerArgs\",\n    \"TrainTTSArgs\",\n    \"TTS\",\n    \"ModelManager\",\n    \"Synthesizer\",\n]\nTARGET_METHODS = [\n    \"train\",",
+        "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_METHODS",
+        "kind": 5,
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "TARGET_METHODS = [\n    \"train\",\n    \"fit\",\n    \"tts\",\n    \"save_wav\",\n    \"download_model\",\n    \"load_config\",\n    \"load_tts_samples\",\n    \"setup_model\",\n]",
+        "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
+        "label": "import_trainer_and_args",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def import_trainer_and_args():\n    \"\"\"Attempt to import Trainer, TrainerArgs, and related functions.\"\"\"\n    try:\n        from TTS.bin.train_tts import (\n            Trainer,\n            TrainerArgs,\n            load_tts_samples,\n            setup_model,\n        )\n        logging.info(",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "find_character_configs",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}\n    base_path = Path(base_dir)\n    if not base_path.exists():\n        logging.error(f\"Base directory does not exist: {base_dir}\")\n        return configs\n    for character_dir in base_path.iterdir():\n        if character_dir.is_dir():\n            for file in character_dir.glob(\"*.json\"):",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "validate_data_paths",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def validate_data_paths(config: Dict[str, Any]) -> bool:\n    \"\"\"Validate that all required data paths exist.\"\"\"\n    required_paths = []\n    for dataset in config.get(\"datasets\", []):\n        required_paths.extend(\n            [\n                dataset.get(\"path\"),\n                dataset.get(\"meta_file_train\"),\n                dataset.get(\"meta_file_val\"),\n            ]",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "load_config",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def load_config(config_path: str) -> Dict[str, Any]:\n    \"\"\"Load and validate the JSON configuration file.\"\"\"\n    try:\n        with open(config_path, \"r\", encoding=\"utf-8\") as f:\n            config = json.load(f)\n        logging.info(f\"Loaded configuration from {config_path}\")\n        if not validate_data_paths(config):\n            raise ValueError(\n                \"Invalid configuration: Missing or non-existent data paths.\"\n            )",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "setup_device",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def setup_device(use_gpu: bool, gpu_type: str) -> torch.device:\n    \"\"\"Set up the computation device (CPU, CUDA, or MPS).\"\"\"\n    if not use_gpu:\n        logging.info(\"Using CPU for training.\")\n        return torch.device(\"cpu\")\n    if gpu_type == \"cuda\" and torch.cuda.is_available():\n        logging.info(f\"Using CUDA GPU (Device: {torch.cuda.get_device_name(0)})\")\n        return torch.device(\"cuda\")\n    elif gpu_type == \"mps\" and torch.backends.mps.is_available():\n        logging.info(\"Using MPS (Apple Silicon GPU)\")",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "pre_download_model",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def pre_download_model(\n    model_id: str, status_queue: Optional[queue.Queue] = None\n) -> bool:\n    \"\"\"Check if the Coqui TTS model exists in cache and download if necessary.\"\"\"\n    try:\n        # Construct expected model path in cache\n        model_dir = os.path.join(CACHE_DIR, model_id.replace(\"/\", \"--\"))\n        model_exists = os.path.exists(model_dir) and any(Path(model_dir).iterdir())\n        if model_exists:\n            logging.info(f\"Model {model_id} already exists at {model_dir}\")",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "initialize_model",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def initialize_model(\n    model_id: str, config: Dict[str, Any], device: torch.device, import_source: str\n) -> Any:\n    try:\n        if import_source == \"api\":\n            # Allowlist RAdam for PyTorch 2.6+\n            torch.serialization.add_safe_globals([RAdam])\n            tts = TTS(model_id).to(device)\n            logging.info(f\"Initialized TTS model from TTS.api: {model_id}\")\n            return tts",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "train_model",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def train_model(\n    config_path: str,\n    output_dir: str,\n    use_gpu: bool,\n    gpu_type: str,\n    model_id: str,\n    restore_path: Optional[str] = None,\n    status_queue: Optional[queue.Queue] = None,\n) -> str:\n    \"\"\"Train a TTS model using the provided configuration with enhanced if/else logic.\"\"\"",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "test_model",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def test_model(\n    model_path: str,\n    config_path: str,\n    text: str,\n    output_wav: str,\n    status_queue: Optional[queue.Queue] = None,\n) -> None:\n    \"\"\"Test the trained model by synthesizing a sample text.\"\"\"\n    try:\n        config = load_config(config_path)",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "main_gui",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def main_gui(base_dir: str = DEFAULT_BASE_DIR) -> None:\n    window = tk.Tk()\n    window.title(\"TTS Model Trainer\")\n    window.geometry(\"600x500\")\n    # Variables\n    base_dir_var = tk.StringVar(value=base_dir)\n    character_var = tk.StringVar()\n    output_dir_var = tk.StringVar(value=DEFAULT_OUTPUT_DIR)\n    use_gpu_var = tk.BooleanVar(value=False)\n    gpu_type_var = tk.StringVar(value=\"cuda\")",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
         "label": "main",
         "kind": 2,
-        "importPath": "voice_trainer_cli",
-        "description": "voice_trainer_cli",
-        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Voice Trainer CLI Tool - Manages datasets and training for specific characters.\",\n        formatter_class=argparse.RawTextHelpFormatter,\n    )\n    # Required Arguments\n    parser.add_argument(\n        \"--character\",\n        type=str,\n        required=True,",
-        "detail": "voice_trainer_cli",
-        "documentation": {}
-    },
-    {
-        "label": "script_dir",
-        "kind": 5,
-        "importPath": "voice_trainer_cli",
-        "description": "voice_trainer_cli",
-        "peekOfCode": "script_dir = os.path.dirname(os.path.abspath(__file__))\nos.chdir(script_dir)\nsys.path.insert(0, script_dir)  # Add script directory to sys.path\ntry:\n    from voice_tools import VoiceTrainer, BASE_DATASET_DIR, BASE_MODEL_DIR\nexcept ImportError:\n    print(\"Error: voice_tools.py not found. Make sure it's in the same directory.\")\n    logging.error(\"Failed to import from voice_tools.py\")\n    sys.exit(1)\n# Configure logging",
-        "detail": "voice_trainer_cli",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Train custom TTS models for characters using Coqui TTS.\",\n        formatter_class=argparse.ArgumentDefaultsHelpFormatter,\n    )\n    parser.add_argument(\n        \"--base-dir\",\n        type=str,\n        default=DEFAULT_BASE_DIR,\n        help=\"Base directory containing character folders with JSON configs.\",",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
         "label": "logger",
         "kind": 5,
-        "importPath": "voice_trainer_cli",
-        "description": "voice_trainer_cli",
-        "peekOfCode": "logger = logging.getLogger(__name__)\ndef main():\n    parser = argparse.ArgumentParser(\n        description=\"Voice Trainer CLI Tool - Manages datasets and training for specific characters.\",\n        formatter_class=argparse.RawTextHelpFormatter,\n    )\n    # Required Arguments\n    parser.add_argument(\n        \"--character\",\n        type=str,",
-        "detail": "voice_trainer_cli",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "logger = logging.getLogger()\nlogger.setLevel(logging.INFO)\nlog_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "run_command_with_output",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def run_command_with_output(command, output_text_widget):\n    \"\"\"\n    Run a shell command and display its output in the GUI.\n    Args:\n        command (str): The command to run.\n        output_text_widget (tk.Text): The text widget to display the output.\n    \"\"\"\n    def target():\n        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)\n        for line in process.stdout:",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "start_training",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def start_training(character, action, epochs, batch_size, learning_rate, text=None, file=None):\n    \"\"\"\n    Start the training or dataset management process with the provided parameters and display output in the GUI.\n    Args:\n        character (str): Character name.\n        action (str): Action to perform.\n        epochs (int): Number of training epochs (for training).\n        batch_size (int): Batch size for training.\n        learning_rate (float): Learning rate for training.\n        text (str, optional): Text for 'test' or 'use' actions.",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "fetch_character_list",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def fetch_character_list():\n    \"\"\"\n    Fetches a list of character names based on subdirectories in the voice_datasets folder.\n    Returns:\n        list: A sorted list of character names.\n    \"\"\"\n    base_dir = \"voice_datasets\"\n    try:\n        if not os.path.exists(base_dir):\n            return []",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "update_epochs_label",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nttk.Label(parameters_frame, text=\"Batch Size:\").grid(row=5, column=0, sticky=\"w\", padx=5, pady=5)\nbatch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.grid(row=5, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "update_batch_size_label",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nttk.Label(parameters_frame, text=\"Learning Rate:\").grid(row=6, column=0, sticky=\"w\", padx=5, pady=5)\nlearning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.grid(row=6, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "update_learning_rate_label",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    # Cast epochs to an integer before passing to start_training\n    epochs = int(epochs_scale.get())",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "on_start_training",
-        "kind": 2,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "def on_start_training():\n    character = character_var.get()\n    action = action_var.get()\n    # Cast epochs to an integer before passing to start_training\n    epochs = int(epochs_scale.get())\n    # Cast batch_size to an integer before passing to start_training\n    batch_size = int(batch_size_scale.get())\n    learning_rate = learning_rate_scale.get()\n    if not character:\n        messagebox.showerror(\"Error\", \"Please select a character.\")",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "root",
+        "label": "log_format",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "root = tk.Tk()\nroot.title(\"Voice Trainer GUI\")\nroot.geometry(\"500x400\")\n# Use a Notebook widget to organize sections\nnotebook = ttk.Notebook(root)\nnotebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)\n# Create frames for different sections\nparameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "log_format = logging.Formatter(\"%(asctime)s - %(levelname)s - %(message)s\")\nconsole_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "notebook",
+        "label": "console_handler",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "notebook = ttk.Notebook(root)\nnotebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)\n# Create frames for different sections\nparameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "console_handler = logging.StreamHandler()\nconsole_handler.setLevel(logging.INFO)\nconsole_handler.setFormatter(log_format)\nlogger.addHandler(console_handler)\nfile_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---\ndef import_trainer_and_args():",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "parameters_frame",
+        "label": "file_handler",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "parameters_frame = ttk.Frame(notebook)\noutput_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "file_handler = logging.FileHandler(\"train_tts_model.log\", encoding=\"utf-8\")\nfile_handler.setLevel(logging.INFO)\nfile_handler.setFormatter(log_format)\nlogger.addHandler(file_handler)\n# --- Conditional Imports ---\ndef import_trainer_and_args():\n    \"\"\"Attempt to import Trainer, TrainerArgs, and related functions.\"\"\"\n    try:\n        from TTS.bin.train_tts import (\n            Trainer,",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "output_frame",
+        "label": "DEFAULT_BASE_DIR",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "output_frame = ttk.Frame(notebook)\nnotebook.add(parameters_frame, text=\"Parameters\")\nnotebook.add(output_frame, text=\"Output\")\n# Character Selection\ncharacter_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "DEFAULT_BASE_DIR = \"voice_datasets\"\nDEFAULT_OUTPUT_DIR = \"tts_output\"\nSUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "character_list",
+        "label": "DEFAULT_OUTPUT_DIR",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "character_list = fetch_character_list()\ncharacter_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\nttk.Label(parameters_frame, text=\"Select Character:\").grid(row=0, column=0, sticky=\"w\", padx=5, pady=5)\ncharacter_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "DEFAULT_OUTPUT_DIR = \"tts_output\"\nSUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "character_var",
+        "label": "SUPPORTED_MODELS",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "character_var = tk.StringVar(root)\nif character_list:\n    character_var.set(character_list[0])  # Default to the first character\nelse:\n    character_var.set(\"No characters found\")\nttk.Label(parameters_frame, text=\"Select Character:\").grid(row=0, column=0, sticky=\"w\", padx=5, pady=5)\ncharacter_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions\nactions = [",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "SUPPORTED_MODELS = [\n    \"tts_models/en/ljspeech/tacotron2-DDC\",\n    \"tts_models/en/ljspeech/vits\",\n    \"tts_models/en/ek1/tacotron2\",\n]\nCACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}",
+        "detail": "train_tts_model",
         "documentation": {}
     },
     {
-        "label": "character_dropdown",
+        "label": "CACHE_DIR",
         "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "character_dropdown = ttk.Combobox(parameters_frame, textvariable=character_var, values=character_list, state=\"readonly\")\ncharacter_dropdown.grid(row=0, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a dropdown menu for selecting actions\nactions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",\n    \"trim\",",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "actions",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "actions = [\n    \"record\",\n    \"provide\",\n    \"validate\",\n    \"stats\",\n    \"augment\",\n    \"trim\",\n    \"quality\",\n    \"train\",\n    \"test\",",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "action_var",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "action_var = tk.StringVar(root)\naction_var.set(actions[0])  # Default to the first action\nttk.Label(parameters_frame, text=\"Select Action:\").grid(row=1, column=0, sticky=\"w\", padx=5, pady=5)\naction_dropdown = ttk.Combobox(parameters_frame, textvariable=action_var, values=actions, state=\"readonly\")\naction_dropdown.grid(row=1, column=1, sticky=\"ew\", padx=5, pady=5)\n# Dataset Path Display\nttk.Label(parameters_frame, text=\"Dataset Path (Default):\").grid(row=2, column=0, sticky=\"w\", padx=5, pady=5)\ndataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "action_dropdown",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "action_dropdown = ttk.Combobox(parameters_frame, textvariable=action_var, values=actions, state=\"readonly\")\naction_dropdown.grid(row=1, column=1, sticky=\"ew\", padx=5, pady=5)\n# Dataset Path Display\nttk.Label(parameters_frame, text=\"Dataset Path (Default):\").grid(row=2, column=0, sticky=\"w\", padx=5, pady=5)\ndataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display\nttk.Label(parameters_frame, text=\"Output Path (Default):\").grid(row=3, column=0, sticky=\"w\", padx=5, pady=5)\noutput_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "dataset_path_label",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "dataset_path_label = ttk.Label(parameters_frame, text=\"voice_datasets/<character>\", relief=tk.SUNKEN, anchor=\"w\")\ndataset_path_label.grid(row=2, column=1, sticky=\"ew\", padx=5, pady=5)\n# Output Path Display\nttk.Label(parameters_frame, text=\"Output Path (Default):\").grid(row=3, column=0, sticky=\"w\", padx=5, pady=5)\noutput_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)\n# Training Parameters\nttk.Label(parameters_frame, text=\"Epochs:\").grid(row=4, column=0, sticky=\"w\", padx=5, pady=5)\nepochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "output_path_label",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "output_path_label = ttk.Label(parameters_frame, text=\"trained_models/<character>\", relief=tk.SUNKEN, anchor=\"w\")\noutput_path_label.grid(row=3, column=1, sticky=\"ew\", padx=5, pady=5)\n# Training Parameters\nttk.Label(parameters_frame, text=\"Epochs:\").grid(row=4, column=0, sticky=\"w\", padx=5, pady=5)\nepochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.grid(row=4, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "epochs_scale",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "epochs_scale = Scale(parameters_frame, from_=1, to=1000, orient=tk.HORIZONTAL)\nepochs_scale.set(500)\nepochs_scale.grid(row=4, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the epochs slider\nepochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "epochs_value_label",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "epochs_value_label = ttk.Label(parameters_frame, text=f\"Epochs: {epochs_scale.get()}\")\nepochs_value_label.grid(row=4, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_epochs_label(value):\n    epochs_value_label.config(text=f\"Epochs: {value}\")\n# Configure the epochs slider to call the update function\nepochs_scale.config(command=update_epochs_label)\nttk.Label(parameters_frame, text=\"Batch Size:\").grid(row=5, column=0, sticky=\"w\", padx=5, pady=5)\nbatch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "batch_size_scale",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "batch_size_scale = Scale(parameters_frame, from_=1, to=128, orient=tk.HORIZONTAL)\nbatch_size_scale.set(16)\nbatch_size_scale.grid(row=5, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the batch size slider\nbatch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.grid(row=5, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "batch_size_value_label",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "batch_size_value_label = ttk.Label(parameters_frame, text=f\"Batch Size: {batch_size_scale.get()}\")\nbatch_size_value_label.grid(row=5, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_batch_size_label(value):\n    batch_size_value_label.config(text=f\"Batch Size: {value}\")\n# Configure the batch size slider to call the update function\nbatch_size_scale.config(command=update_batch_size_label)\nttk.Label(parameters_frame, text=\"Learning Rate:\").grid(row=6, column=0, sticky=\"w\", padx=5, pady=5)\nlearning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "learning_rate_scale",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "learning_rate_scale = tk.Scale(parameters_frame, from_=0.0001, to=0.01, resolution=0.0001, orient=tk.HORIZONTAL)\nlearning_rate_scale.set(0.0002)\nlearning_rate_scale.grid(row=6, column=1, sticky=\"ew\", padx=5, pady=5)\n# Add a label to display the current value of the learning rate slider\nlearning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.grid(row=6, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "learning_rate_value_label",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "learning_rate_value_label = ttk.Label(parameters_frame, text=f\"Learning Rate: {learning_rate_scale.get():.4f}\")\nlearning_rate_value_label.grid(row=6, column=2, sticky=\"w\", padx=5, pady=5)\n# Update the label dynamically as the slider is moved\ndef update_learning_rate_label(value):\n    learning_rate_value_label.config(text=f\"Learning Rate: {float(value):.4f}\")\n# Configure the learning rate slider to call the update function\nlearning_rate_scale.config(command=update_learning_rate_label)\n# Start Training Button\ndef on_start_training():\n    character = character_var.get()",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "start_button",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "start_button = ttk.Button(parameters_frame, text=\"Start Training\", command=on_start_training)\nstart_button.grid(row=7, column=0, columnspan=3, pady=10)\n# Add a stop button and functionality to jump to CLI output\nstop_button = ttk.Button(parameters_frame, text=\"Stop Training\", command=None)  # Placeholder for stop functionality\nstop_button.grid(row=8, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "stop_button",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "stop_button = ttk.Button(parameters_frame, text=\"Stop Training\", command=None)  # Placeholder for stop functionality\nstop_button.grid(row=8, column=0, columnspan=3, pady=10)\n# CLI Output Section\nttk.Label(output_frame, text=\"CLI Output:\").pack(anchor=\"w\", padx=5, pady=5)\noutput_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI",
-        "detail": "voice_trainer_gui",
-        "documentation": {}
-    },
-    {
-        "label": "output_text",
-        "kind": 5,
-        "importPath": "voice_trainer_gui",
-        "description": "voice_trainer_gui",
-        "peekOfCode": "output_text = tk.Text(output_frame, height=10, width=60)\noutput_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)\n# Adjust column weights for better resizing\nparameters_frame.columnconfigure(1, weight=1)\noutput_frame.columnconfigure(0, weight=1)\n# Run the GUI\nroot.mainloop()",
-        "detail": "voice_trainer_gui",
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "CACHE_DIR = os.path.expanduser(\"~/.cache/tts/\")\n# --- Helper Functions ---\ndef find_character_configs(base_dir: str) -> Dict[str, str]:\n    \"\"\"Find all character folders with a JSON config file.\"\"\"\n    configs = {}\n    base_path = Path(base_dir)\n    if not base_path.exists():\n        logging.error(f\"Base directory does not exist: {base_dir}\")\n        return configs\n    for character_dir in base_path.iterdir():",
+        "detail": "train_tts_model",
         "documentation": {}
     }
 ]
