@@ -1704,3 +1704,7 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 17:29:03,488 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
 2025-04-18 17:29:03,488 - WARNING - Selected model does not support phoneme-based training. Disabling phonemes.
 2025-04-18 17:29:07,520 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+29PM-fca756d\\trainer_0_log.txt'
+2025-04-18 17:43:07,539 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:43:07,541 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:43:07,541 - WARNING - Selected model does not support phoneme-based training. Disabling phonemes.
+2025-04-18 17:43:11,524 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+43PM-44f4a66\\trainer_0_log.txt'
