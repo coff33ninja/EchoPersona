@@ -1316,3 +1316,82 @@ Traceback (most recent call last):
     raise RuntimeError("All Trainer.fit attempts failed")
 RuntimeError: All Trainer.fit attempts failed
 
+2025-04-18 15:32:23,667 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 15:32:28,849 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:32:28,850 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 15:32:28,850 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:32:28,851 - INFO - Training model for Zhongli...
+2025-04-18 15:32:28,851 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:32:28,852 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 15:32:28,871 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 15:32:28,871 - INFO - Using CPU for training.
+2025-04-18 15:32:28,873 - INFO - Using training metadata file at: voice_datasets\Zhongli\metadata.csv
+2025-04-18 15:32:28,874 - INFO - Using validation metadata file at: voice_datasets\Zhongli\valid.csv
+2025-04-18 15:32:28,874 - INFO - Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts
+2025-04-18 15:32:28,877 - WARNING - Trainer.fit with preprocessing failed: 'dict' object has no attribute 'meta_file_attn_mask'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 327, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+2025-04-18 15:32:28,878 - INFO - Attempting manual dataset handling with Trainer.fit
+2025-04-18 15:32:28,882 - ERROR - Manual dataset handling failed: 'dict' object has no attribute 'parse_known_args'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 327, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 372, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 400, in __init__
+    config, new_fields = self.init_training(args, coqpit_overrides, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 745, in init_training
+    config.parse_known_args(coqpit_overrides, relaxed_parser=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'parse_known_args'
+
+2025-04-18 15:32:28,884 - ERROR - Training failed: All Trainer.fit attempts failed
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 327, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 372, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 400, in __init__
+    config, new_fields = self.init_training(args, coqpit_overrides, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 745, in init_training
+    config.parse_known_args(coqpit_overrides, relaxed_parser=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'parse_known_args'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 391, in train_model
+    raise RuntimeError("All Trainer.fit attempts failed")
+RuntimeError: All Trainer.fit attempts failed
+
+2025-04-18 15:32:28,885 - ERROR - Failed to process Zhongli: All Trainer.fit attempts failed
