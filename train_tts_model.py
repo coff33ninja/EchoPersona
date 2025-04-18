@@ -280,7 +280,7 @@ def train_model(
         if isinstance(config, dict):
             from coqpit import Coqpit
             # Remove keys not expected by Coqpit
-            filtered_config = {k: v for k, v in config.items() if k not in ["config_path", "output_path", "restore_path"]}
+            filtered_config = {k: v for k, v in config.items() if k not in ["config_path", "output_path", "restore_path", "datasets"]}
             config = Coqpit(**filtered_config)
 
         # Training logic
