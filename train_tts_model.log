@@ -1684,3 +1684,9 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 17:07:38,642 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
 2025-04-18 17:07:38,644 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
 2025-04-18 17:07:43,595 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+07PM-8984f07\\trainer_0_log.txt'
+2025-04-18 17:12:49,277 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:12:49,277 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:12:53,842 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+12PM-7e41684\\trainer_0_log.txt'
+2025-04-18 17:17:18,396 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:17:18,397 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:17:22,332 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+17PM-7e41684\\trainer_0_log.txt'
