@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from TTS.utils.radam import RAdam
 import torch.serialization
-from coqpit import Coqpit  # Ensure Coqpit is imported
 
 # --- Logging Configuration ---
 logger = logging.getLogger()
@@ -279,32 +278,8 @@ def train_model(
 
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
-            from coqpit import Coqpit
-            import copy
-
-            def remove_key_recursive(d, keys_to_remove):
-                if isinstance(d, dict):
-                    for key in list(d.keys()):
-                        if key in keys_to_remove:
-                            del d[key]
-                    for v in d.values():
-                        remove_key_recursive(v, keys_to_remove)
-                elif isinstance(d, list):
-                    for item in d:
-                        remove_key_recursive(item, keys_to_remove)
-
-            # Deep copy config to avoid modifying original
-            filtered_config = copy.deepcopy(config)
-            # Recursively remove all 'formatter' and 'ignored_speakers' keys
-            remove_key_recursive(filtered_config, ["formatter", "ignored_speakers"])
-            # Remove other top-level keys not expected by Coqpit
-            for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
-                if key in filtered_config:
-                    del filtered_config[key]
-            # Convert filtered_config dict to Coqpit object
-            config = Coqpit(**filtered_config)
-            # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
-            config = dict(config)
+            from coqpit import Coqpit  # Ensure Coqpit is used
+            config = Coqpit(**config)  # Convert dictionary to Coqpit object
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
