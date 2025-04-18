@@ -279,8 +279,12 @@ def train_model(
 
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
+            # Add missing attributes with default values
+            config.setdefault("output_path", output_dir)
+            config.setdefault("run_name", "default_run")  # Add a default run name if missing
+
             # Filter out invalid keys for Coqpit
-            valid_coqpit_keys = Coqpit().__dict__.keys()  # Get valid keys from an empty Coqpit instance
+            valid_coqpit_keys = Coqpit().__dict__.keys()
             filtered_config = {k: v for k, v in config.items() if k in valid_coqpit_keys}
 
             # Convert the filtered dictionary to a Coqpit object
@@ -303,7 +307,7 @@ def train_model(
                     "ignored_speakers": [],
                     "language": "en",
                     "audio_path": "wavs",
-                    "meta_file_attn_mask": False,  # Set to a default value if not used
+                    "meta_file_attn_mask": None,  # Set to None or a valid default value
                 }
                 train_samples, eval_samples = load_tts_samples(
                     datasets=[dataset_obj],

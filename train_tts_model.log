@@ -1493,3 +1493,82 @@ Traceback (most recent call last):
 RuntimeError: All Trainer.fit attempts failed
 
 2025-04-18 15:40:14,393 - ERROR - Failed to process Zhongli: All Trainer.fit attempts failed
+2025-04-18 15:42:17,132 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 15:42:22,467 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:42:22,467 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 15:42:22,468 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:42:22,468 - INFO - Training model for Zhongli...
+2025-04-18 15:42:22,469 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:42:22,469 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 15:42:22,489 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 15:42:22,490 - INFO - Using CPU for training.
+2025-04-18 15:42:22,492 - INFO - Using training metadata file at: voice_datasets\Zhongli\metadata.csv
+2025-04-18 15:42:22,492 - INFO - Using validation metadata file at: voice_datasets\Zhongli\valid.csv
+2025-04-18 15:42:22,492 - INFO - Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts
+2025-04-18 15:42:22,495 - WARNING - Trainer.fit with preprocessing failed: 'dict' object has no attribute 'meta_file_attn_mask'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 312, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+2025-04-18 15:42:22,495 - INFO - Attempting manual dataset handling with Trainer.fit
+2025-04-18 15:42:30,151 - ERROR - Manual dataset handling failed: 'Coqpit' object has no attribute 'output_path'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 312, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 359, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 414, in __init__
+    output_path = get_experiment_folder_path(config.output_path, config.run_name)
+                                             ^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\coqpit\coqpit.py", line 626, in __getattribute__
+    value = super().__getattribute__(arg)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Coqpit' object has no attribute 'output_path'
+
+2025-04-18 15:42:30,153 - ERROR - Training failed: All Trainer.fit attempts failed
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 312, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 359, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 414, in __init__
+    output_path = get_experiment_folder_path(config.output_path, config.run_name)
+                                             ^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\coqpit\coqpit.py", line 626, in __getattribute__
+    value = super().__getattribute__(arg)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Coqpit' object has no attribute 'output_path'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 378, in train_model
+    raise RuntimeError("All Trainer.fit attempts failed")
+RuntimeError: All Trainer.fit attempts failed
+
+2025-04-18 15:42:30,154 - ERROR - Failed to process Zhongli: All Trainer.fit attempts failed
