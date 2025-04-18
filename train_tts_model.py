@@ -200,15 +200,19 @@ def initialize_model(
 
 def adjust_metadata_paths(dataset_path: str, meta_file_train: str, meta_file_val: str) -> tuple[str, str]:
     """Adjust metadata file paths to ensure compatibility with the expected structure."""
+    # Normalize meta file names to basename only to avoid double joining
+    meta_file_train_basename = os.path.basename(meta_file_train)
+    meta_file_val_basename = os.path.basename(meta_file_val)
+
     # Check if metadata files exist in the dataset path
-    meta_file_train_path = os.path.join(dataset_path, meta_file_train)
-    meta_file_val_path = os.path.join(dataset_path, meta_file_val)
+    meta_file_train_path = os.path.join(dataset_path, meta_file_train_basename)
+    meta_file_val_path = os.path.join(dataset_path, meta_file_val_basename)
 
     if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):
         # If not found, check one directory above
         parent_dir = os.path.dirname(dataset_path)
-        meta_file_train_path = os.path.join(parent_dir, meta_file_train)
-        meta_file_val_path = os.path.join(parent_dir, meta_file_val)
+        meta_file_train_path = os.path.join(parent_dir, meta_file_train_basename)
+        meta_file_val_path = os.path.join(parent_dir, meta_file_val_basename)
 
     if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):
         raise FileNotFoundError(
@@ -275,7 +279,9 @@ def train_model(
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
             from coqpit import Coqpit
-            config = Coqpit(**config)
+            # Remove keys not expected by Coqpit
+            filtered_config = {k: v for k, v in config.items() if k not in ["config_path", "output_path", "restore_path"]}
+            config = Coqpit(**filtered_config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
