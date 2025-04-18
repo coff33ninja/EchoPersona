@@ -1117,7 +1117,7 @@ def generate_character_config(
     ]
     for path in required_paths:
         if not os.path.exists(path):
-            logging.error(f"Required path missing for config generation: {path}")
+            logging.error(f"Required path not found: {path}")
             return None
 
     model_data = AVAILABLE_MODELS[selected_model]
@@ -1126,10 +1126,10 @@ def generate_character_config(
         "output_path": os.path.join(character_dir, "tts_output"),
         "datasets": [
             {
-                "name": safe_character_name,  # Use character-specific dataset name
+                "dataset_name": safe_character_name,  # Use character-specific dataset name
                 "path": os.path.join(character_dir, "wavs"),
-                "meta_file_train": "..\\metadata.csv",
-                "meta_file_val": "..\\valid.csv",
+                "meta_file_train": os.path.join(character_dir, "metadata.csv"),
+                "meta_file_val": os.path.join(character_dir, "valid.csv"),
                 "formatter": "ljspeech"  # Explicitly set formatter
             }
         ],
@@ -1147,10 +1147,12 @@ def generate_character_config(
         "num_epochs": 100,
         "run_eval": True,
         "formatter": "ljspeech",  # Top-level formatter for compatibility
-        "ignored_speakers": []
+        "ignored_speakers": [],
+        "use_phonemes": True,
+        "phoneme_language": "en-us"
     }
 
-    if model_data["use_pre_trained"] and pre_trained_path:
+    if model_data.get("use_pre_trained") and pre_trained_path:
         config["restore_path"] = pre_trained_path
 
     config_path = os.path.join(character_dir, f"{safe_character_name}_config.json")
