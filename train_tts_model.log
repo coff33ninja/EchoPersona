@@ -53,3 +53,113 @@ Traceback (most recent call last):
     raise FileNotFoundError(
 FileNotFoundError: Training metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Hu Tao\wavs\metadata.csv
 
+2025-04-18 13:54:45,814 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 13:54:50,866 - INFO - Found config for Zhongli: voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:54:50,866 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 13:54:57,666 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:54:57,670 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:54:57,670 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 13:54:57,682 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 13:54:57,683 - INFO - Using CPU for training.
+2025-04-18 13:54:57,684 - INFO - Checking training metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\metadata.csv
+2025-04-18 13:54:57,684 - INFO - Checking validation metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\valid.csv
+2025-04-18 13:54:57,686 - ERROR - Training failed: Training metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\metadata.csv
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 254, in train_model
+    raise FileNotFoundError(
+FileNotFoundError: Training metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\metadata.csv
+
+2025-04-18 13:55:10,084 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:55:10,084 - ERROR - Required path does not exist: voice_datasets\Zhongli\metadata.csv
+2025-04-18 13:55:10,084 - ERROR - Failed to load configuration from voice_datasets\Zhongli\Zhongli_config.json: Invalid configuration: Missing or non-existent data paths.
+2025-04-18 13:55:56,585 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 13:56:01,543 - INFO - Found config for Zhongli: voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:01,543 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 13:56:08,065 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:08,067 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:08,068 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 13:56:08,079 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 13:56:08,080 - INFO - Using CPU for training.
+2025-04-18 13:56:08,081 - INFO - Checking training metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\metadata.csv
+2025-04-18 13:56:08,081 - INFO - Checking validation metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\valid.csv
+2025-04-18 13:56:08,081 - ERROR - Training failed: Validation metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\valid.csv
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 258, in train_model
+    raise FileNotFoundError(
+FileNotFoundError: Validation metadata file not found: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\valid.csv
+
+2025-04-18 13:56:25,477 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:25,479 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:25,480 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 13:56:25,487 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 13:56:25,487 - INFO - Using CPU for training.
+2025-04-18 13:56:25,488 - INFO - Checking training metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\metadata.csv
+2025-04-18 13:56:25,488 - INFO - Checking validation metadata file at: D:\Scripts\EchoPersona\voice_datasets\Zhongli\wavs\valid.csv
+2025-04-18 13:56:25,489 - INFO - Using Trainer.fit with dataset preprocessing from TTS.bin.train_tts
+2025-04-18 13:56:25,491 - WARNING - Trainer.fit with preprocessing failed: 'dict' object has no attribute 'meta_file_attn_mask'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 269, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+2025-04-18 13:56:25,491 - INFO - Attempting manual dataset handling with Trainer.fit
+2025-04-18 13:56:25,493 - INFO - Loaded configuration from voice_datasets\Zhongli\Zhongli_config.json
+2025-04-18 13:56:25,496 - ERROR - Manual dataset handling failed: 'dict' object has no attribute 'parse_known_args'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 269, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 324, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 400, in __init__
+    config, new_fields = self.init_training(args, coqpit_overrides, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 745, in init_training
+    config.parse_known_args(coqpit_overrides, relaxed_parser=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'parse_known_args'
+
+2025-04-18 13:56:25,499 - ERROR - Training failed: All Trainer.fit attempts failed
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 269, in train_model
+    train_samples, eval_samples = load_tts_samples(
+                                  ^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\TTS\tts\datasets\__init__.py", line 137, in load_tts_samples
+    if dataset.meta_file_attn_mask:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'meta_file_attn_mask'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 324, in train_model
+    trainer = Trainer(
+              ^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 400, in __init__
+    config, new_fields = self.init_training(args, coqpit_overrides, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Scripts\EchoPersona\.venv\Lib\site-packages\trainer\trainer.py", line 745, in init_training
+    config.parse_known_args(coqpit_overrides, relaxed_parser=True)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'parse_known_args'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 343, in train_model
+    raise RuntimeError("All Trainer.fit attempts failed")
+RuntimeError: All Trainer.fit attempts failed
+

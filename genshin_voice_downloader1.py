@@ -1153,7 +1153,7 @@ def generate_character_config(
     if model_data["use_pre_trained"] and pre_trained_path:
         config["restore_path"] = pre_trained_path
 
-    config_path = os.path.join(character_dir, f"{character}_config.json")
+    config_path = os.path.join(character_dir, f"{safe_character_name}_config.json")
 
     try:
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
