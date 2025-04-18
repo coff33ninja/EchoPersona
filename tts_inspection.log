@@ -1,135 +1,135 @@
-2025-04-18 14:37:53,470 - INFO - Inspecting TTS modules for training-related classes and methods...
-2025-04-18 14:38:05,814 - WARNING - Failed to import TTS.bin.compute_attention_masks: No module named 'TTS.tts.datasets.TTSDataset'
-2025-04-18 14:38:15,020 - WARNING - Failed to import TTS.bin.compute_attention_masks: No module named 'TTS.tts.datasets.TTSDataset'
-2025-04-18 14:38:15,498 - WARNING - Failed to import TTS.server.server:  [!] Model file not found in the output path
-2025-04-18 14:38:15,508 - WARNING - Failed to import TTS.server.server:  [!] Model file not found in the output path
-2025-04-18 14:38:37,457 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:41,116 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:41,970 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:41,974 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:42,042 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:42,046 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:42,082 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:42,084 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
-2025-04-18 14:38:42,278 - INFO - 
+2025-04-18 18:57:55,490 - INFO - Inspecting TTS modules for training-related classes and methods...
+2025-04-18 18:58:10,906 - WARNING - Failed to import TTS.bin.compute_attention_masks: No module named 'TTS.tts.datasets.TTSDataset'
+2025-04-18 18:58:20,779 - WARNING - Failed to import TTS.bin.compute_attention_masks: No module named 'TTS.tts.datasets.TTSDataset'
+2025-04-18 18:58:21,452 - WARNING - Failed to import TTS.server.server:  [!] Model file not found in the output path
+2025-04-18 18:58:21,463 - WARNING - Failed to import TTS.server.server:  [!] Model file not found in the output path
+2025-04-18 18:58:39,723 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,002 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,317 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,320 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,390 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,395 - WARNING - Failed to import TTS.tts.configs.tortoise_config: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,440 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,443 - WARNING - Failed to import TTS.tts.models.tortoise: cannot import name 'LogitsWarper' from 'transformers' (D:\Scripts\EchoPersona\.venv\Lib\site-packages\transformers\__init__.py)
+2025-04-18 18:58:44,664 - INFO - 
 Inspecting module: TTS.api
-2025-04-18 14:38:42,278 - INFO -   Class: ModelManager
-2025-04-18 14:38:42,280 - INFO -     Method: download_model(self, model_name)
-2025-04-18 14:38:42,280 - INFO -   Class: Synthesizer
-2025-04-18 14:38:42,280 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
-2025-04-18 14:38:42,280 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,281 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
-2025-04-18 14:38:42,281 - INFO -   Class: TTS
-2025-04-18 14:38:42,281 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,282 - INFO -     Method: tts(self, text: str, speaker: str = None, language: str = None, speaker_wav: str = None, emotion: str = None, speed: float = None, split_sentences: bool = True, **kwargs)
-2025-04-18 14:38:42,282 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,282 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
-2025-04-18 14:38:42,282 - INFO - 
+2025-04-18 18:58:44,664 - INFO -   Class: ModelManager
+2025-04-18 18:58:44,664 - INFO -     Method: download_model(self, model_name)
+2025-04-18 18:58:44,664 - INFO -   Class: Synthesizer
+2025-04-18 18:58:44,665 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
+2025-04-18 18:58:44,665 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,666 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
+2025-04-18 18:58:44,666 - INFO -   Class: TTS
+2025-04-18 18:58:44,666 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,666 - INFO -     Method: tts(self, text: str, speaker: str = None, language: str = None, speaker_wav: str = None, emotion: str = None, speed: float = None, split_sentences: bool = True, **kwargs)
+2025-04-18 18:58:44,666 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,667 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
+2025-04-18 18:58:44,667 - INFO - 
 Inspecting module: TTS.bin.train_tts
-2025-04-18 14:38:42,282 - INFO -   Class: TrainTTSArgs
-2025-04-18 14:38:42,283 - INFO -   Class: Trainer
-2025-04-18 14:38:42,283 - INFO -     Method: fit(self) -> None
-2025-04-18 14:38:42,283 - INFO -   Class: TrainerArgs
-2025-04-18 14:38:42,283 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,283 - INFO -   Function: load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
-2025-04-18 14:38:42,284 - INFO -   Function: setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
-2025-04-18 14:38:42,284 - INFO - 
+2025-04-18 18:58:44,667 - INFO -   Class: TrainTTSArgs
+2025-04-18 18:58:44,668 - INFO -   Class: Trainer
+2025-04-18 18:58:44,668 - INFO -     Method: fit(self) -> None
+2025-04-18 18:58:44,668 - INFO -   Class: TrainerArgs
+2025-04-18 18:58:44,668 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,669 - INFO -   Function: load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
+2025-04-18 18:58:44,669 - INFO -   Function: setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
+2025-04-18 18:58:44,669 - INFO - 
 Inspecting module: TTS.bin.train_tts
-2025-04-18 14:38:42,284 - INFO -   Class: TrainTTSArgs
-2025-04-18 14:38:42,284 - INFO -   Class: Trainer
-2025-04-18 14:38:42,284 - INFO -     Method: fit(self) -> None
-2025-04-18 14:38:42,285 - INFO -   Class: TrainerArgs
-2025-04-18 14:38:42,286 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,286 - INFO -   Function: load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
-2025-04-18 14:38:42,286 - INFO -   Function: setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
-2025-04-18 14:38:42,286 - INFO - 
+2025-04-18 18:58:44,669 - INFO -   Class: TrainTTSArgs
+2025-04-18 18:58:44,669 - INFO -   Class: Trainer
+2025-04-18 18:58:44,671 - INFO -     Method: fit(self) -> None
+2025-04-18 18:58:44,671 - INFO -   Class: TrainerArgs
+2025-04-18 18:58:44,671 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,671 - INFO -   Function: load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
+2025-04-18 18:58:44,672 - INFO -   Function: setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
+2025-04-18 18:58:44,672 - INFO - 
 Inspecting module: TTS.tts.utils.managers
-2025-04-18 14:38:42,288 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,288 - INFO -   No target classes found.
-2025-04-18 14:38:42,288 - INFO - 
+2025-04-18 18:58:44,672 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,672 - INFO -   No target classes found.
+2025-04-18 18:58:44,672 - INFO - 
 Inspecting module: TTS.tts.utils.managers
-2025-04-18 14:38:42,288 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,289 - INFO -   No target classes found.
-2025-04-18 14:38:42,289 - INFO - 
+2025-04-18 18:58:44,673 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,673 - INFO -   No target classes found.
+2025-04-18 18:58:44,673 - INFO - 
 Inspecting module: TTS.tts.utils.managers
-2025-04-18 14:38:42,290 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,290 - INFO -   No target classes found.
-2025-04-18 14:38:42,290 - INFO - 
+2025-04-18 18:58:44,673 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,673 - INFO -   No target classes found.
+2025-04-18 18:58:44,674 - INFO - 
 Inspecting module: TTS.tts.utils.managers
-2025-04-18 14:38:42,290 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,290 - INFO -   No target classes found.
-2025-04-18 14:38:42,291 - INFO - 
+2025-04-18 18:58:44,674 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,674 - INFO -   No target classes found.
+2025-04-18 18:58:44,674 - INFO - 
 Inspecting module: TTS.utils.manage
-2025-04-18 14:38:42,291 - INFO -   Class: ModelManager
-2025-04-18 14:38:42,291 - INFO -     Method: download_model(self, model_name)
-2025-04-18 14:38:42,292 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,292 - INFO - 
+2025-04-18 18:58:44,674 - INFO -   Class: ModelManager
+2025-04-18 18:58:44,675 - INFO -     Method: download_model(self, model_name)
+2025-04-18 18:58:44,675 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,675 - INFO - 
 Inspecting module: TTS.utils.synthesizer
-2025-04-18 14:38:42,292 - INFO -   Class: Synthesizer
-2025-04-18 14:38:42,292 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
-2025-04-18 14:38:42,293 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,293 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
-2025-04-18 14:38:42,293 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,293 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
-2025-04-18 14:38:42,294 - INFO - 
+2025-04-18 18:58:44,675 - INFO -   Class: Synthesizer
+2025-04-18 18:58:44,676 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
+2025-04-18 18:58:44,676 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,676 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
+2025-04-18 18:58:44,677 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,677 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
+2025-04-18 18:58:44,677 - INFO - 
 Inspecting module: TTS.utils.manage
-2025-04-18 14:38:42,294 - INFO -   Class: ModelManager
-2025-04-18 14:38:42,294 - INFO -     Method: download_model(self, model_name)
-2025-04-18 14:38:42,295 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,295 - INFO - 
+2025-04-18 18:58:44,677 - INFO -   Class: ModelManager
+2025-04-18 18:58:44,678 - INFO -     Method: download_model(self, model_name)
+2025-04-18 18:58:44,678 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,678 - INFO - 
 Inspecting module: TTS.utils.synthesizer
-2025-04-18 14:38:42,295 - INFO -   Class: Synthesizer
-2025-04-18 14:38:42,295 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
-2025-04-18 14:38:42,296 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,297 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
-2025-04-18 14:38:42,297 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,298 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
-2025-04-18 14:38:42,305 - INFO - 
+2025-04-18 18:58:44,678 - INFO -   Class: Synthesizer
+2025-04-18 18:58:44,679 - INFO -     Method: save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
+2025-04-18 18:58:44,679 - INFO -     Method: train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,679 - INFO -     Method: tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
+2025-04-18 18:58:44,679 - INFO -   Function: load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,680 - INFO -   Function: save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
+2025-04-18 18:58:44,680 - INFO - 
 Summary of Training Components:
-2025-04-18 14:38:42,310 - INFO - 
+2025-04-18 18:58:44,680 - INFO - 
 Module: TTS.api
-2025-04-18 14:38:42,311 - INFO -   Classes:
-2025-04-18 14:38:42,311 - INFO -     - ModelManager
-2025-04-18 14:38:42,311 - INFO -     - Synthesizer
-2025-04-18 14:38:42,311 - INFO -     - TTS
-2025-04-18 14:38:42,312 - INFO -   Methods/Functions:
-2025-04-18 14:38:42,312 - INFO -     - ModelManager.download_model(self, model_name)
-2025-04-18 14:38:42,312 - INFO -     - Synthesizer.save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
-2025-04-18 14:38:42,314 - INFO -     - Synthesizer.train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,314 - INFO -     - Synthesizer.tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
-2025-04-18 14:38:42,314 - INFO -     - TTS.train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,315 - INFO -     - TTS.tts(self, text: str, speaker: str = None, language: str = None, speaker_wav: str = None, emotion: str = None, speed: float = None, split_sentences: bool = True, **kwargs)
-2025-04-18 14:38:42,315 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,315 - INFO -     - save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
-2025-04-18 14:38:42,316 - INFO - 
+2025-04-18 18:58:44,680 - INFO -   Classes:
+2025-04-18 18:58:44,680 - INFO -     - ModelManager
+2025-04-18 18:58:44,681 - INFO -     - Synthesizer
+2025-04-18 18:58:44,681 - INFO -     - TTS
+2025-04-18 18:58:44,681 - INFO -   Methods/Functions:
+2025-04-18 18:58:44,681 - INFO -     - ModelManager.download_model(self, model_name)
+2025-04-18 18:58:44,681 - INFO -     - Synthesizer.save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
+2025-04-18 18:58:44,682 - INFO -     - Synthesizer.train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,682 - INFO -     - Synthesizer.tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
+2025-04-18 18:58:44,682 - INFO -     - TTS.train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,682 - INFO -     - TTS.tts(self, text: str, speaker: str = None, language: str = None, speaker_wav: str = None, emotion: str = None, speed: float = None, split_sentences: bool = True, **kwargs)
+2025-04-18 18:58:44,682 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,682 - INFO -     - save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
+2025-04-18 18:58:44,683 - INFO - 
 Module: TTS.bin.train_tts
-2025-04-18 14:38:42,316 - INFO -   Classes:
-2025-04-18 14:38:42,317 - INFO -     - TrainTTSArgs
-2025-04-18 14:38:42,317 - INFO -     - Trainer
-2025-04-18 14:38:42,318 - INFO -     - TrainerArgs
-2025-04-18 14:38:42,318 - INFO -   Methods/Functions:
-2025-04-18 14:38:42,323 - INFO -     - Trainer.fit(self) -> None
-2025-04-18 14:38:42,324 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,325 - INFO -     - load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
-2025-04-18 14:38:42,325 - INFO -     - setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
-2025-04-18 14:38:42,327 - INFO - 
+2025-04-18 18:58:44,683 - INFO -   Classes:
+2025-04-18 18:58:44,683 - INFO -     - TrainTTSArgs
+2025-04-18 18:58:44,683 - INFO -     - Trainer
+2025-04-18 18:58:44,684 - INFO -     - TrainerArgs
+2025-04-18 18:58:44,684 - INFO -   Methods/Functions:
+2025-04-18 18:58:44,684 - INFO -     - Trainer.fit(self) -> None
+2025-04-18 18:58:44,684 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,684 - INFO -     - load_tts_samples(datasets: Union[List[Dict], Dict], eval_split=True, formatter: Callable = None, eval_split_max_size=None, eval_split_size=0.01) -> Tuple[List[List], List[List]]
+2025-04-18 18:58:44,685 - INFO -     - setup_model(config: 'Coqpit', samples: Union[List[List], List[Dict]] = None) -> 'BaseTTS'
+2025-04-18 18:58:44,685 - INFO - 
 Module: TTS.tts.utils.managers
-2025-04-18 14:38:42,327 - INFO -   Methods/Functions:
-2025-04-18 14:38:42,327 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,328 - INFO - 
+2025-04-18 18:58:44,685 - INFO -   Methods/Functions:
+2025-04-18 18:58:44,685 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,686 - INFO - 
 Module: TTS.utils.manage
-2025-04-18 14:38:42,328 - INFO -   Classes:
-2025-04-18 14:38:42,328 - INFO -     - ModelManager
-2025-04-18 14:38:42,328 - INFO -   Methods/Functions:
-2025-04-18 14:38:42,328 - INFO -     - ModelManager.download_model(self, model_name)
-2025-04-18 14:38:42,329 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,331 - INFO - 
+2025-04-18 18:58:44,686 - INFO -   Classes:
+2025-04-18 18:58:44,686 - INFO -     - ModelManager
+2025-04-18 18:58:44,686 - INFO -   Methods/Functions:
+2025-04-18 18:58:44,686 - INFO -     - ModelManager.download_model(self, model_name)
+2025-04-18 18:58:44,687 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,687 - INFO - 
 Module: TTS.utils.synthesizer
-2025-04-18 14:38:42,332 - INFO -   Classes:
-2025-04-18 14:38:42,332 - INFO -     - Synthesizer
-2025-04-18 14:38:42,333 - INFO -   Methods/Functions:
-2025-04-18 14:38:42,333 - INFO -     - Synthesizer.save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
-2025-04-18 14:38:42,333 - INFO -     - Synthesizer.train(self: ~T, mode: bool = True) -> ~T
-2025-04-18 14:38:42,334 - INFO -     - Synthesizer.tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
-2025-04-18 14:38:42,334 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
-2025-04-18 14:38:42,334 - INFO -     - save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None
+2025-04-18 18:58:44,687 - INFO -   Classes:
+2025-04-18 18:58:44,687 - INFO -     - Synthesizer
+2025-04-18 18:58:44,687 - INFO -   Methods/Functions:
+2025-04-18 18:58:44,688 - INFO -     - Synthesizer.save_wav(self, wav: List[int], path: str, pipe_out=None) -> None
+2025-04-18 18:58:44,688 - INFO -     - Synthesizer.train(self: ~T, mode: bool = True) -> ~T
+2025-04-18 18:58:44,688 - INFO -     - Synthesizer.tts(self, text: str = '', speaker_name: str = '', language_name: str = '', speaker_wav=None, style_wav=None, style_text=None, reference_wav=None, reference_speaker_name=None, split_sentences: bool = True, **kwargs) -> List[int]
+2025-04-18 18:58:44,688 - INFO -     - load_config(config_path: str) -> coqpit.coqpit.Coqpit
+2025-04-18 18:58:44,688 - INFO -     - save_wav(*, wav: numpy.ndarray, path: str, sample_rate: int = None, pipe_out=None, **kwargs) -> None

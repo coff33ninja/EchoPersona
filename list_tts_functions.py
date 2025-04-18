@@ -3,6 +3,7 @@ import inspect
 import logging
 import pkgutil
 import TTS
+import tensorboard
 from typing import List, Tuple, Dict
 
 # --- Logging Configuration ---
@@ -95,8 +96,23 @@ def inspect_module(module_name: str) -> Dict[str, List[str]]:
         return result
 
 
+def detect_tensorboard_conflicts():
+    """Detect if TensorBoard is running and causing conflicts."""
+    import psutil
+    for process in psutil.process_iter(['pid', 'name']):
+        if 'tensorboard' in process.info['name'].lower():
+            logging.warning(f"TensorBoard is already running with PID {process.info['pid']}. This might cause conflicts.")
+            return True
+    return False
+
+
 def main():
     logging.info("Inspecting TTS modules for training-related classes and methods...")
+
+    # Detect TensorBoard conflicts
+    if detect_tensorboard_conflicts():
+        logging.warning("TensorBoard conflicts detected. Consider stopping existing TensorBoard instances.")
+
     modules = list_tts_modules(TTS)
 
     # Filter to relevant modules

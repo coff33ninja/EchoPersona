@@ -1341,6 +1341,15 @@
         "documentation": {}
     },
     {
+        "label": "tensorboard",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tensorboard",
+        "description": "tensorboard",
+        "detail": "tensorboard",
+        "documentation": {}
+    },
+    {
         "label": "List",
         "importPath": "typing",
         "description": "typing",
@@ -5523,11 +5532,20 @@
         "documentation": {}
     },
     {
+        "label": "detect_tensorboard_conflicts",
+        "kind": 2,
+        "importPath": "list_tts_functions",
+        "description": "list_tts_functions",
+        "peekOfCode": "def detect_tensorboard_conflicts():\n    \"\"\"Detect if TensorBoard is running and causing conflicts.\"\"\"\n    import psutil\n    for process in psutil.process_iter(['pid', 'name']):\n        if 'tensorboard' in process.info['name'].lower():\n            logging.warning(f\"TensorBoard is already running with PID {process.info['pid']}. This might cause conflicts.\")\n            return True\n    return False\ndef main():\n    logging.info(\"Inspecting TTS modules for training-related classes and methods...\")",
+        "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
         "label": "main",
         "kind": 2,
         "importPath": "list_tts_functions",
         "description": "list_tts_functions",
-        "peekOfCode": "def main():\n    logging.info(\"Inspecting TTS modules for training-related classes and methods...\")\n    modules = list_tts_modules(TTS)\n    # Filter to relevant modules\n    relevant_modules = [\n        modname\n        for modname, _ in modules\n        if any(\n            part in modname\n            for part in [\"bin.train_tts\", \"api\", \"utils.manage\", \"utils.synthesizer\"]",
+        "peekOfCode": "def main():\n    logging.info(\"Inspecting TTS modules for training-related classes and methods...\")\n    # Detect TensorBoard conflicts\n    if detect_tensorboard_conflicts():\n        logging.warning(\"TensorBoard conflicts detected. Consider stopping existing TensorBoard instances.\")\n    modules = list_tts_modules(TTS)\n    # Filter to relevant modules\n    relevant_modules = [\n        modname\n        for modname, _ in modules",
         "detail": "list_tts_functions",
         "documentation": {}
     },
