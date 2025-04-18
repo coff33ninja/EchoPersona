@@ -53,35 +53,27 @@ def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):
 
 
 def train_model(config_path, dataset_path, output_dir, character):
-    """Train a VITS model for a character."""
     try:
         # Load configuration
         config = load_config(config_path)
 
-        # Set multi-speaker parameters
-        config.use_speaker_embedding = True
-        config.num_speakers = 1  # Single character for now
+        # Assuming there's only one dataset
+        if len(config.datasets) == 0:
+            raise ValueError("No datasets found in config")
+        dataset_config = config.datasets[0]
 
         # Adjust metadata paths
-        dataset_config = config.datasets[0]
         meta_file_train_path, meta_file_val_path = adjust_metadata_paths(
             dataset_path, dataset_config.meta_file_train, dataset_config.meta_file_val
         )
 
-        # Load dataset
-        dataset_obj = {
-            "path": os.path.dirname(dataset_path),
-            "meta_file_train": os.path.basename(meta_file_train_path),
-            "meta_file_val": os.path.basename(meta_file_val_path),
-            "formatter": "ljspeech",
-            "dataset_name": f"{character}_dataset",
-            "ignored_speakers": [],
-            "language": "en",
-            "audio_path": "wavs",
-            "meta_file_attn_mask": None,
-        }
+        # Update config with adjusted paths
+        dataset_config.meta_file_train = meta_file_train_path
+        dataset_config.meta_file_val = meta_file_val_path
+
+        # Load dataset samples
         train_samples, eval_samples = load_tts_samples(
-            datasets=[dataset_obj],
+            config,
             eval_split=True,
             eval_split_max_size="50%",
             eval_split_size=1000,

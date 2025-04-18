@@ -1654,3 +1654,6 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 16:32:26,026 - INFO - Resolved training metadata file: voice_datasets\Zhongli\metadata.csv
 2025-04-18 16:32:26,026 - INFO - Resolved validation metadata file: voice_datasets\Zhongli\valid.csv
 2025-04-18 16:32:26,035 - ERROR - Training failed for Zhongli: 'dict' object has no attribute 'meta_file_attn_mask'
+2025-04-18 16:36:52,543 - INFO - Resolved training metadata file: voice_datasets\Zhongli\metadata.csv
+2025-04-18 16:36:52,543 - INFO - Resolved validation metadata file: voice_datasets\Zhongli\valid.csv
+2025-04-18 16:36:52,543 - ERROR - Training failed for Zhongli: 'formatter'

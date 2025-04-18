@@ -4392,7 +4392,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def train_model(config_path, dataset_path, output_dir, character):\n    \"\"\"Train a VITS model for a character.\"\"\"\n    try:\n        # Load configuration\n        config = load_config(config_path)\n        # Set multi-speaker parameters\n        config.use_speaker_embedding = True\n        config.num_speakers = 1  # Single character for now\n        # Adjust metadata paths\n        dataset_config = config.datasets[0]",
+        "peekOfCode": "def train_model(config_path, dataset_path, output_dir, character):\n    try:\n        # Load configuration\n        config = load_config(config_path)\n        # Assuming there's only one dataset\n        if len(config.datasets) == 0:\n            raise ValueError(\"No datasets found in config\")\n        dataset_config = config.datasets[0]\n        # Adjust metadata paths\n        meta_file_train_path, meta_file_val_path = adjust_metadata_paths(",
         "detail": "train_tts_model",
         "documentation": {}
     },
