@@ -679,6 +679,14 @@
         "documentation": {}
     },
     {
+        "label": "Coqpit",
+        "importPath": "coqpit",
+        "description": "coqpit",
+        "isExtraImport": true,
+        "detail": "coqpit",
+        "documentation": {}
+    },
+    {
         "label": "Tee",
         "kind": 6,
         "importPath": ".venv.Scripts.pywin32_postinstall",

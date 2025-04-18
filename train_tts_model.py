@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from TTS.utils.radam import RAdam
 import torch.serialization
+from coqpit import Coqpit  # Ensure Coqpit is imported
 
 # --- Logging Configuration ---
 logger = logging.getLogger()
@@ -322,14 +323,16 @@ def train_model(
                     "ignored_speakers": [],
                     "language": "en",
                     "audio_path": "wavs",
-                    "meta_file_attn_mask": None,
+                    "meta_file_attn_mask": False,  # Set to a default value if not used
                 }
                 train_samples, eval_samples = load_tts_samples(
                     datasets=[dataset_obj],
                     eval_split=True,
                 )
+
                 if not train_samples or not eval_samples:
                     raise ValueError("No training or evaluation samples loaded")
+
                 logging.info(
                     f"Loaded {len(train_samples)} training samples and {len(eval_samples)} evaluation samples"
                 )
@@ -345,8 +348,8 @@ def train_model(
                 )
                 trainer = Trainer(
                     trainer_args,
-                    output_path=output_dir,  # Pass output_path here
-                    config=model_config,
+                    output_path=output_dir,
+                    config=model_config,  # Pass the corrected Coqpit object
                 ).to(device)
 
                 # Train using fit
