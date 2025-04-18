@@ -280,13 +280,21 @@ def train_model(
         if isinstance(config, dict):
             from coqpit import Coqpit
             import copy
+
+            def remove_key_recursive(d, key_to_remove):
+                if isinstance(d, dict):
+                    if key_to_remove in d:
+                        del d[key_to_remove]
+                    for v in d.values():
+                        remove_key_recursive(v, key_to_remove)
+                elif isinstance(d, list):
+                    for item in d:
+                        remove_key_recursive(item, key_to_remove)
+
             # Deep copy config to avoid modifying original
             filtered_config = copy.deepcopy(config)
-            # Remove 'formatter' key from each dataset dict if present
-            if "datasets" in filtered_config:
-                for dataset in filtered_config["datasets"]:
-                    if "formatter" in dataset:
-                        del dataset["formatter"]
+            # Recursively remove all 'formatter' keys
+            remove_key_recursive(filtered_config, "formatter")
             # Remove other top-level keys not expected by Coqpit
             for key in ["config_path", "output_path", "restore_path", "datasets", "audio", "model", "batch_size", "num_epochs", "run_eval"]:
                 if key in filtered_config:
