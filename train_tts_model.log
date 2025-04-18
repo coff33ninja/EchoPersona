@@ -369,3 +369,37 @@ Traceback (most recent call last):
              ^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: Coqpit.__init__() got an unexpected keyword argument 'num_epochs'
 
+2025-04-18 14:53:33,271 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 14:53:38,254 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:53:38,254 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 14:53:44,097 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:53:44,099 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:53:44,100 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 14:53:44,112 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 14:53:44,112 - INFO - Using CPU for training.
+2025-04-18 14:53:44,114 - INFO - Using training metadata file at: voice_datasets\Zhongli\metadata.csv
+2025-04-18 14:53:44,114 - INFO - Using validation metadata file at: voice_datasets\Zhongli\valid.csv
+2025-04-18 14:53:44,115 - ERROR - Training failed: Coqpit.__init__() got an unexpected keyword argument 'run_eval'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 284, in train_model
+    config = Coqpit(**filtered_config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Coqpit.__init__() got an unexpected keyword argument 'run_eval'
+
+2025-04-18 14:54:21,529 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 14:54:26,694 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:54:26,695 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 14:54:32,243 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:54:32,247 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 14:54:32,248 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 14:54:32,262 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 14:54:32,263 - INFO - Using CPU for training.
+2025-04-18 14:54:32,264 - INFO - Using training metadata file at: voice_datasets\Zhongli\metadata.csv
+2025-04-18 14:54:32,265 - INFO - Using validation metadata file at: voice_datasets\Zhongli\valid.csv
+2025-04-18 14:54:32,265 - ERROR - Training failed: Coqpit.__init__() got an unexpected keyword argument 'formatter'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 284, in train_model
+    config = Coqpit(**filtered_config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Coqpit.__init__() got an unexpected keyword argument 'formatter'
+
