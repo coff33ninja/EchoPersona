@@ -198,6 +198,26 @@ def initialize_model(
         raise
 
 
+def adjust_metadata_paths(dataset_path: str, meta_file_train: str, meta_file_val: str) -> tuple[str, str]:
+    """Adjust metadata file paths to ensure compatibility with the expected structure."""
+    # Check if metadata files exist in the dataset path
+    meta_file_train_path = os.path.join(dataset_path, meta_file_train)
+    meta_file_val_path = os.path.join(dataset_path, meta_file_val)
+
+    if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):
+        # If not found, check one directory above
+        parent_dir = os.path.dirname(dataset_path)
+        meta_file_train_path = os.path.join(parent_dir, meta_file_train)
+        meta_file_val_path = os.path.join(parent_dir, meta_file_val)
+
+    if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):
+        raise FileNotFoundError(
+            f"Metadata files not found in expected locations: {meta_file_train_path}, {meta_file_val_path}"
+        )
+
+    return meta_file_train_path, meta_file_val_path
+
+
 def train_model(
     config_path: str,
     output_dir: str,
@@ -246,18 +266,9 @@ def train_model(
         # Adjust meta_file_train and meta_file_val to be basenames only and join properly
         meta_file_train_basename = Path(meta_file_train).name
         meta_file_val_basename = Path(meta_file_val).name
-        meta_file_train_path = str(Path(dataset_path_abs) / meta_file_train_basename)
-        meta_file_val_path = str(Path(dataset_path_abs) / meta_file_val_basename)
-        logging.info(f"Checking training metadata file at: {meta_file_train_path}")
-        logging.info(f"Checking validation metadata file at: {meta_file_val_path}")
-        if not os.path.exists(meta_file_train_path):
-            raise FileNotFoundError(
-                f"Training metadata file not found: {meta_file_train_path}"
-            )
-        if not os.path.exists(meta_file_val_path):
-            raise FileNotFoundError(
-                f"Validation metadata file not found: {meta_file_val_path}"
-            )
+        meta_file_train_path, meta_file_val_path = adjust_metadata_paths(dataset_path, meta_file_train_basename, meta_file_val_basename)
+        logging.info(f"Using training metadata file at: {meta_file_train_path}")
+        logging.info(f"Using validation metadata file at: {meta_file_val_path}")
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:

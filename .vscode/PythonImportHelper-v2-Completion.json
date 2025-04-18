@@ -4468,6 +4468,15 @@
         "documentation": {}
     },
     {
+        "label": "adjust_metadata_paths",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def adjust_metadata_paths(dataset_path: str, meta_file_train: str, meta_file_val: str) -> tuple[str, str]:\n    \"\"\"Adjust metadata file paths to ensure compatibility with the expected structure.\"\"\"\n    # Check if metadata files exist in the dataset path\n    meta_file_train_path = os.path.join(dataset_path, meta_file_train)\n    meta_file_val_path = os.path.join(dataset_path, meta_file_val)\n    if not os.path.exists(meta_file_train_path) or not os.path.exists(meta_file_val_path):\n        # If not found, check one directory above\n        parent_dir = os.path.dirname(dataset_path)\n        meta_file_train_path = os.path.join(parent_dir, meta_file_train)\n        meta_file_val_path = os.path.join(parent_dir, meta_file_val)",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
         "label": "train_model",
         "kind": 2,
         "importPath": "train_tts_model",
