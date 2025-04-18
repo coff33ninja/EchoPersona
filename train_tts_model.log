@@ -1678,3 +1678,6 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 16:58:28,246 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\wavs\voice_datasets\Zhongli\metadata.csv
 2025-04-18 17:00:00,754 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv
 2025-04-18 17:01:52,666 - ERROR - Training failed for Zhongli: Training metadata file not found: voice_datasets\Zhongli\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:03:09,501 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:03:09,502 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:03:27,694 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+03PM-d4ef2fb\\trainer_0_log.txt'

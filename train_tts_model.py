@@ -27,17 +27,16 @@ def load_config(config_path):
 
 
 def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):
-    """Adjust metadata file paths."""
-    # Use the provided paths directly if they are absolute
-    if os.path.isabs(meta_file_train):
-        meta_file_train_path = meta_file_train
-    else:
-        meta_file_train_path = os.path.join(os.path.dirname(dataset_path), meta_file_train)
+    """Adjust metadata file paths to absolute paths."""
+    # Resolve meta_file_train to an absolute path
+    meta_file_train_path = (
+        meta_file_train if os.path.isabs(meta_file_train) else os.path.abspath(meta_file_train)
+    )
 
-    if os.path.isabs(meta_file_val):
-        meta_file_val_path = meta_file_val
-    else:
-        meta_file_val_path = os.path.join(os.path.dirname(dataset_path), meta_file_val)
+    # Resolve meta_file_val to an absolute path
+    meta_file_val_path = (
+        meta_file_val if os.path.isabs(meta_file_val) else os.path.abspath(meta_file_val)
+    )
 
     # Validate the resolved paths
     if not os.path.exists(meta_file_train_path):
