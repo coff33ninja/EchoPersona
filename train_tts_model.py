@@ -315,14 +315,14 @@ def train_model(
                 train_samples, eval_samples = load_tts_samples(
                     datasets=[
                         {
-                            "path": dataset_path,
+                            "path": os.path.dirname(dataset_path),  # Use parent directory
                             "meta_file_train": os.path.basename(meta_file_train_path),
                             "meta_file_val": os.path.basename(meta_file_val_path),
                             "formatter": "ljspeech",
                             "dataset_name": dataset_name,
                             "ignored_speakers": [],
                             "language": "en",
-                            "audio_path": "",  # Removed "wavs" to fix path issue
+                            "audio_path": "wavs",  # Keep "wavs" as audio subdirectory
                         }
                     ],
                     eval_split=True,
