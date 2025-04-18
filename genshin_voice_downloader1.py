@@ -1128,8 +1128,8 @@ def generate_character_config(
             {
                 "name": safe_character_name,  # Use character-specific dataset name
                 "path": os.path.join(character_dir, "wavs"),
-                "meta_file_train": os.path.join(character_dir, "metadata.csv"),
-                "meta_file_val": os.path.join(character_dir, "valid.csv"),
+                "meta_file_train": os.path.relpath(os.path.join(character_dir, "metadata.csv"), start=os.path.join(character_dir, "wavs")),
+                "meta_file_val": os.path.relpath(os.path.join(character_dir, "valid.csv"), start=os.path.join(character_dir, "wavs")),
                 "formatter": "ljspeech"  # Explicitly set formatter
             }
         ],
