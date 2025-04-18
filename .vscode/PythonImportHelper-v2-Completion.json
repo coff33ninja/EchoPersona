@@ -744,6 +744,30 @@
         "documentation": {}
     },
     {
+        "label": "load_tts_samples",
+        "importPath": "TTS.tts.datasets",
+        "description": "TTS.tts.datasets",
+        "isExtraImport": true,
+        "detail": "TTS.tts.datasets",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
+        "label": "TrainerArgs",
+        "importPath": "trainer",
+        "description": "trainer",
+        "isExtraImport": true,
+        "detail": "trainer",
+        "documentation": {}
+    },
+    {
         "label": "Trainer",
         "importPath": "trainer",
         "description": "trainer",
@@ -1042,6 +1066,46 @@
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "GlowTTSConfig",
+        "importPath": "TTS.tts.configs.glow_tts_config",
+        "description": "TTS.tts.configs.glow_tts_config",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.glow_tts_config",
+        "documentation": {}
+    },
+    {
+        "label": "BaseDatasetConfig",
+        "importPath": "TTS.tts.configs.shared_configs",
+        "description": "TTS.tts.configs.shared_configs",
+        "isExtraImport": true,
+        "detail": "TTS.tts.configs.shared_configs",
+        "documentation": {}
+    },
+    {
+        "label": "GlowTTS",
+        "importPath": "TTS.tts.models.glow_tts",
+        "description": "TTS.tts.models.glow_tts",
+        "isExtraImport": true,
+        "detail": "TTS.tts.models.glow_tts",
+        "documentation": {}
+    },
+    {
+        "label": "TTSTokenizer",
+        "importPath": "TTS.tts.utils.text.tokenizer",
+        "description": "TTS.tts.utils.text.tokenizer",
+        "isExtraImport": true,
+        "detail": "TTS.tts.utils.text.tokenizer",
+        "documentation": {}
+    },
+    {
+        "label": "AudioProcessor",
+        "importPath": "TTS.utils.audio",
+        "description": "TTS.utils.audio",
+        "isExtraImport": true,
+        "detail": "TTS.utils.audio",
         "documentation": {}
     },
     {
@@ -5137,6 +5201,60 @@
         "description": "list_tts_functions",
         "peekOfCode": "TARGET_METHODS = [\n    \"train\",\n    \"fit\",\n    \"tts\",\n    \"save_wav\",\n    \"download_model\",\n    \"load_config\",\n    \"load_tts_samples\",\n    \"setup_model\",\n]",
         "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
+        "label": "output_path",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "output_path = os.path.dirname(os.path.abspath(__file__))\n# Define dataset configuration\ndataset_config = BaseDatasetConfig(\n    formatter=\"ljspeech\",\n    meta_file_train=\"voice_datasets/Zhongli/metadata.csv\",\n    meta_file_val=\"voice_datasets/Zhongli/valid.csv\",\n    path=\"voice_datasets/Zhongli/wavs\"\n)\n# Initialize training configuration\nconfig = GlowTTSConfig(",
+        "detail": "train_glowtts",
+        "documentation": {}
+    },
+    {
+        "label": "dataset_config",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "dataset_config = BaseDatasetConfig(\n    formatter=\"ljspeech\",\n    meta_file_train=\"voice_datasets/Zhongli/metadata.csv\",\n    meta_file_val=\"voice_datasets/Zhongli/valid.csv\",\n    path=\"voice_datasets/Zhongli/wavs\"\n)\n# Initialize training configuration\nconfig = GlowTTSConfig(\n    batch_size=16,\n    eval_batch_size=8,",
+        "detail": "train_glowtts",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "config = GlowTTSConfig(\n    batch_size=16,\n    eval_batch_size=8,\n    num_loader_workers=4,\n    num_eval_loader_workers=4,\n    run_eval=True,\n    test_delay_epochs=-1,\n    epochs=1000,\n    text_cleaner=\"phoneme_cleaners\",\n    use_phonemes=True,",
+        "detail": "train_glowtts",
+        "documentation": {}
+    },
+    {
+        "label": "ap",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "ap = AudioProcessor.init_from_config(config)\n# Initialize the tokenizer\ntokenizer, config = TTSTokenizer.init_from_config(config)\n# Load data samples\ntrain_samples, eval_samples = load_tts_samples(\n    dataset_config,\n    eval_split=True,\n    eval_split_max_size=config.eval_split_max_size,\n    eval_split_size=config.eval_split_size,\n)",
+        "detail": "train_glowtts",
+        "documentation": {}
+    },
+    {
+        "label": "model",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "model = GlowTTS(config, ap, tokenizer, speaker_manager=None)\n# Initialize the trainer\ntrainer = Trainer(\n    TrainerArgs(), config, output_path, model=model, train_samples=train_samples, eval_samples=eval_samples\n)\n# Start training\ntrainer.fit()",
+        "detail": "train_glowtts",
+        "documentation": {}
+    },
+    {
+        "label": "trainer",
+        "kind": 5,
+        "importPath": "train_glowtts",
+        "description": "train_glowtts",
+        "peekOfCode": "trainer = Trainer(\n    TrainerArgs(), config, output_path, model=model, train_samples=train_samples, eval_samples=eval_samples\n)\n# Start training\ntrainer.fit()",
+        "detail": "train_glowtts",
         "documentation": {}
     },
     {
