@@ -302,8 +302,8 @@ def train_model(
                     del filtered_config[key]
             # Convert filtered_config dict to Coqpit object
             config = Coqpit(**filtered_config)
-            # Fix for parse_known_args error: convert Coqpit object to dict for Trainer
-            config = dict(config)
+            # Fix for parse_known_args error: keep as Coqpit object for Trainer
+            # config = dict(config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
@@ -312,19 +312,19 @@ def train_model(
             )
             try:
                 # Preprocess dataset
+                # Use dict instead of SimpleNamespace for dataset config
+                dataset_obj = {
+                    "path": os.path.dirname(dataset_path),
+                    "meta_file_train": os.path.basename(meta_file_train_path),
+                    "meta_file_val": os.path.basename(meta_file_val_path),
+                    "formatter": "ljspeech",
+                    "dataset_name": dataset_name,
+                    "ignored_speakers": [],
+                    "language": "en",
+                    "audio_path": "wavs",
+                }
                 train_samples, eval_samples = load_tts_samples(
-                    datasets=[
-                        {
-                            "path": os.path.dirname(dataset_path),  # Use parent directory
-                            "meta_file_train": os.path.basename(meta_file_train_path),
-                            "meta_file_val": os.path.basename(meta_file_val_path),
-                            "formatter": "ljspeech",
-                            "dataset_name": dataset_name,
-                            "ignored_speakers": [],
-                            "language": "en",
-                            "audio_path": "wavs",  # Keep "wavs" as audio subdirectory
-                        }
-                    ],
+                    datasets=[dataset_obj],
                     eval_split=True,
                 )
                 if not train_samples or not eval_samples:
