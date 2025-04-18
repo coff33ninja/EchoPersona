@@ -439,3 +439,22 @@ Traceback (most recent call last):
 TypeError: Coqpit.__init__() got an unexpected keyword argument 'formatter'
 
 2025-04-18 14:57:49,512 - ERROR - Failed to process Zhongli: Coqpit.__init__() got an unexpected keyword argument 'formatter'
+2025-04-18 15:00:19,035 - INFO - Successfully imported Trainer, TrainerArgs, load_tts_samples, setup_model from TTS.bin.train_tts
+2025-04-18 15:00:23,927 - INFO - Found config for Zhongli: voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:00:23,927 - INFO - Found 1 character configs in voice_datasets
+2025-04-18 15:00:23,927 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:00:23,928 - INFO - Training model for Zhongli...
+2025-04-18 15:00:23,928 - INFO - Loaded configuration from voice_datasets\Zhongli\zhongli_config.json
+2025-04-18 15:00:23,929 - INFO - Model tts_models/en/ek1/tacotron2 not found in cache. Attempting to download.
+2025-04-18 15:00:23,948 - INFO - Successfully downloaded model: tts_models/en/ek1/tacotron2 to C:\Users\DRAGOHN/.cache/tts/tts_models--en--ek1--tacotron2
+2025-04-18 15:00:23,948 - INFO - Using CPU for training.
+2025-04-18 15:00:23,950 - INFO - Using training metadata file at: voice_datasets\Zhongli\metadata.csv
+2025-04-18 15:00:23,950 - INFO - Using validation metadata file at: voice_datasets\Zhongli\valid.csv
+2025-04-18 15:00:23,951 - ERROR - Training failed: Coqpit.__init__() got an unexpected keyword argument 'formatter'
+Traceback (most recent call last):
+  File "D:\Scripts\EchoPersona\train_tts_model.py", line 294, in train_model
+    config = Coqpit(**filtered_config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Coqpit.__init__() got an unexpected keyword argument 'formatter'
+
+2025-04-18 15:00:23,952 - ERROR - Failed to process Zhongli: Coqpit.__init__() got an unexpected keyword argument 'formatter'

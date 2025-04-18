@@ -4,3 +4,4 @@ tts_train_output/
 /output
 /.venv
 train_tts_model.log
+*.log
