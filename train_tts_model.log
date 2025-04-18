@@ -1693,3 +1693,6 @@ RuntimeError: All Trainer.fit attempts failed
 2025-04-18 17:21:03,734 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
 2025-04-18 17:21:03,735 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
 2025-04-18 17:21:07,866 - ERROR - Training failed for Zhongli: [WinError 32] The process cannot access the file because it is being used by another process: 'D:/Scripts/EchoPersona/voice_datasets/Zhongli/tts_output/run-April-18-2025_05+21PM-d387e77\\trainer_0_log.txt'
+2025-04-18 17:24:37,552 - INFO - Resolved training metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\metadata.csv
+2025-04-18 17:24:37,552 - INFO - Resolved validation metadata file: D:\Scripts\EchoPersona\voice_datasets\Zhongli\valid.csv
+2025-04-18 17:24:38,434 - ERROR - Training failed for Zhongli: 'NoneType' object has no attribute 'use_phonemes'

@@ -51,7 +51,7 @@ def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):
     return meta_file_train_path, meta_file_val_path
 
 
-def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):
+def remove_experiment_folder_with_retry_or_create_new_log(experiment_path, retries=5, delay=1):
     for attempt in range(retries):
         try:
             if os.path.exists(experiment_path):
@@ -62,7 +62,12 @@ def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):
             if attempt < retries - 1:
                 time.sleep(delay)
             else:
-                raise e
+                # If all retries fail, create a new log file instead
+                new_log_path = os.path.join(experiment_path, f"trainer_{attempt}_log.txt")
+                logging.warning(f"Creating a new log file: {new_log_path}")
+                with open(new_log_path, "w") as new_log:
+                    new_log.write("New log file created due to file access issues.")
+                return
 
 
 def train_model(config_path, dataset_path, output_dir, character):

@@ -4938,11 +4938,11 @@
         "documentation": {}
     },
     {
-        "label": "remove_experiment_folder_with_retry",
+        "label": "remove_experiment_folder_with_retry_or_create_new_log",
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            logging.warning(f\"Retrying deletion of {experiment_path} due to PermissionError: {e}\")\n            if attempt < retries - 1:\n                time.sleep(delay)",
+        "peekOfCode": "def remove_experiment_folder_with_retry_or_create_new_log(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            if os.path.exists(experiment_path):\n                shutil.rmtree(experiment_path)\n            break\n        except PermissionError as e:\n            logging.warning(f\"Retrying deletion of {experiment_path} due to PermissionError: {e}\")\n            if attempt < retries - 1:\n                time.sleep(delay)",
         "detail": "train_tts_model",
         "documentation": {}
     },
