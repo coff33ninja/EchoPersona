@@ -1126,7 +1126,7 @@ def generate_character_config(
         "output_path": os.path.join(character_dir, "tts_output"),
         "datasets": [
             {
-                "dataset_name": safe_character_name,  # Use character-specific dataset name
+                "name": safe_character_name,  # Use character-specific dataset name
                 "path": os.path.join(character_dir, "wavs"),
                 "meta_file_train": os.path.join(character_dir, "metadata.csv"),
                 "meta_file_val": os.path.join(character_dir, "valid.csv"),
