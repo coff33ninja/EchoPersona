@@ -16,8 +16,16 @@ if %errorLevel% == 0 (
 :: Activate the virtual environment
 call .venv\Scripts\activate.bat
 
+:: Disable Windows Search and Indexing temporarily
+sc stop WSearch
+if %errorlevel% neq 0 echo Failed to stop Windows Search service.
+
 :: Start the TTS trainer
 python train_tts_model.py --base-dir voice_datasets --character Zhongli --output-dir tts_output
+
+:: Re-enable Windows Search and Indexing
+sc start WSearch
+if %errorlevel% neq 0 echo Failed to start Windows Search service.
 
 :: Pause to keep the terminal open after execution
 pause
