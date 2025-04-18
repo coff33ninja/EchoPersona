@@ -4383,7 +4383,7 @@
         "kind": 2,
         "importPath": "train_tts_model",
         "description": "train_tts_model",
-        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train):\n        meta_file_train_path = meta_file_train\n    else:\n        meta_file_train_path = os.path.join(dataset_path, meta_file_train)\n    if os.path.isabs(meta_file_val):\n        meta_file_val_path = meta_file_val\n    else:",
+        "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths.\"\"\"\n    # Use the provided paths directly if they are absolute\n    if os.path.isabs(meta_file_train):\n        meta_file_train_path = meta_file_train\n    else:\n        meta_file_train_path = os.path.join(os.path.dirname(dataset_path), meta_file_train)\n    if os.path.isabs(meta_file_val):\n        meta_file_val_path = meta_file_val\n    else:",
         "detail": "train_tts_model",
         "documentation": {}
     },
