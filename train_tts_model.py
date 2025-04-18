@@ -96,8 +96,16 @@ def train_model(config_path, dataset_path, output_dir, character):
             eval_split_max_size="50%",
             eval_split_size=1000,
         )
-        # Initialize model with tokenizer settings
+
+        # Initialize model
         model = Vits(config)
+
+        # Check if tokenizer is initialized
+        if model.tokenizer is None:
+            logging.error("Tokenizer is not initialized in the model.")
+            raise ValueError("Tokenizer is not initialized in the model.")
+
+        # Set tokenizer settings
         model.tokenizer.use_phonemes = config.use_phonemes
         model.tokenizer.phoneme_language = config.phoneme_language
 
