@@ -700,6 +700,15 @@
         "documentation": {}
     },
     {
+        "label": "fsspec",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fsspec",
+        "description": "fsspec",
+        "detail": "fsspec",
+        "documentation": {}
+    },
+    {
         "label": "Tee",
         "kind": 6,
         "importPath": ".venv.Scripts.pywin32_postinstall",
@@ -4485,6 +4494,15 @@
         "importPath": "train_tts_model",
         "description": "train_tts_model",
         "peekOfCode": "def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):\n    \"\"\"Adjust metadata file paths to absolute paths.\"\"\"\n    # Resolve meta_file_train to an absolute path\n    meta_file_train_path = (\n        meta_file_train if os.path.isabs(meta_file_train) else os.path.abspath(meta_file_train)\n    )\n    # Resolve meta_file_val to an absolute path\n    meta_file_val_path = (\n        meta_file_val if os.path.isabs(meta_file_val) else os.path.abspath(meta_file_val)\n    )",
+        "detail": "train_tts_model",
+        "documentation": {}
+    },
+    {
+        "label": "remove_experiment_folder_with_retry",
+        "kind": 2,
+        "importPath": "train_tts_model",
+        "description": "train_tts_model",
+        "peekOfCode": "def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):\n    for attempt in range(retries):\n        try:\n            fs = fsspec.filesystem(\"file\")  # Define the fs variable\n            fs.rm(experiment_path, recursive=True)\n            break\n        except PermissionError as e:\n            if attempt < retries - 1:\n                time.sleep(delay)\n            else:",
         "detail": "train_tts_model",
         "documentation": {}
     },

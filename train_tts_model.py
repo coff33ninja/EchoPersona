@@ -7,6 +7,8 @@ from TTS.tts.configs.vits_config import VitsConfig
 from TTS.tts.models.vits import Vits
 from TTS.tts.datasets import load_tts_samples
 from trainer import Trainer, TrainerArgs
+import time
+import fsspec  # Add this import at the top of the script
 
 # Set up logging
 logging.basicConfig(
@@ -47,6 +49,19 @@ def adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val):
     logging.info(f"Resolved training metadata file: {meta_file_train_path}")
     logging.info(f"Resolved validation metadata file: {meta_file_val_path}")
     return meta_file_train_path, meta_file_val_path
+
+
+def remove_experiment_folder_with_retry(experiment_path, retries=5, delay=1):
+    for attempt in range(retries):
+        try:
+            fs = fsspec.filesystem("file")  # Define the fs variable
+            fs.rm(experiment_path, recursive=True)
+            break
+        except PermissionError as e:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise e
 
 
 def train_model(config_path, dataset_path, output_dir, character):
