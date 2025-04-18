@@ -266,9 +266,16 @@ def train_model(
         # Adjust meta_file_train and meta_file_val to be basenames only and join properly
         meta_file_train_basename = Path(meta_file_train).name
         meta_file_val_basename = Path(meta_file_val).name
-        meta_file_train_path, meta_file_val_path = adjust_metadata_paths(dataset_path, meta_file_train_basename, meta_file_val_basename)
+
+        # Fix metadata file path resolution
+        meta_file_train_path, meta_file_val_path = adjust_metadata_paths(dataset_path, meta_file_train, meta_file_val)
         logging.info(f"Using training metadata file at: {meta_file_train_path}")
         logging.info(f"Using validation metadata file at: {meta_file_val_path}")
+
+        # Ensure the config object is properly formatted for Trainer
+        if isinstance(config, dict):
+            from TTS.utils.config import Coqpit
+            config = Coqpit(**config)
 
         # Training logic
         if import_source == "bin.train_tts" and load_tts_samples and setup_model:
