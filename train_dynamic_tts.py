@@ -1,5 +1,6 @@
 import os
 import argparse
+import hashlib
 from trainer import Trainer, TrainerArgs
 from TTS.tts.configs.glow_tts_config import GlowTTSConfig
 from TTS.tts.configs.shared_configs import BaseDatasetConfig
@@ -8,6 +9,10 @@ from TTS.tts.models.glow_tts import GlowTTS
 from TTS.tts.utils.text.tokenizer import TTSTokenizer
 from TTS.utils.audio import AudioProcessor
 from TTS.tts.utils.speakers import SpeakerManager
+
+def hash_filename(filename):
+    """Generate a short hash for long filenames."""
+    return hashlib.md5(filename.encode("utf-8")).hexdigest()
 
 def train_tts_model(model_name, dataset_path, output_path, use_phonemes=True, phoneme_language="en-us", multi_speaker=False):
     # Resolve metadata paths relative to the dataset root
@@ -66,6 +71,16 @@ def train_tts_model(model_name, dataset_path, output_path, use_phonemes=True, ph
 
     # Initialize the model
     model = GlowTTS(config, ap, tokenizer, speaker_manager=speaker_manager)
+
+    # Override phoneme cache file naming to avoid long paths
+    def compute_or_load_override(self, cache_path, text, language):
+        short_cache_path = os.path.join(
+            os.path.dirname(cache_path),
+            hash_filename(os.path.basename(cache_path)) + ".npy"
+        )
+        return self.compute_or_load(short_cache_path, text, language)
+
+    model.dataset.compute_or_load = compute_or_load_override.__get__(model.dataset)
 
     # Initialize the trainer
     trainer = Trainer(

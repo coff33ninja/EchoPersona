@@ -1253,6 +1253,15 @@
         "documentation": {}
     },
     {
+        "label": "hashlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "hashlib",
+        "description": "hashlib",
+        "detail": "hashlib",
+        "documentation": {}
+    },
+    {
         "label": "Tee",
         "kind": 6,
         "importPath": ".venv.Scripts.pywin32_postinstall",
@@ -5354,6 +5363,15 @@
         "description": "list_tts_functions",
         "peekOfCode": "TARGET_METHODS = [\n    \"train\",\n    \"fit\",\n    \"tts\",\n    \"save_wav\",\n    \"download_model\",\n    \"load_config\",\n    \"load_tts_samples\",\n    \"setup_model\",\n]",
         "detail": "list_tts_functions",
+        "documentation": {}
+    },
+    {
+        "label": "hash_filename",
+        "kind": 2,
+        "importPath": "train_dynamic_tts",
+        "description": "train_dynamic_tts",
+        "peekOfCode": "def hash_filename(filename):\n    \"\"\"Generate a short hash for long filenames.\"\"\"\n    return hashlib.md5(filename.encode(\"utf-8\")).hexdigest()\ndef train_tts_model(model_name, dataset_path, output_path, use_phonemes=True, phoneme_language=\"en-us\", multi_speaker=False):\n    # Resolve metadata paths relative to the dataset root\n    meta_file_train = os.path.abspath(os.path.join(dataset_path, \"metadata.csv\"))\n    meta_file_val = os.path.abspath(os.path.join(dataset_path, \"valid.csv\"))\n    # Define dataset configuration\n    dataset_config = BaseDatasetConfig(\n        formatter=\"ljspeech\" if not multi_speaker else \"vctk\",",
+        "detail": "train_dynamic_tts",
         "documentation": {}
     },
     {
