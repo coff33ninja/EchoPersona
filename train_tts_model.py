@@ -274,7 +274,7 @@ def train_model(
 
         # Ensure the config object is properly formatted for Trainer
         if isinstance(config, dict):
-            from TTS.utils.config import Coqpit
+            from coqpit import Coqpit
             config = Coqpit(**config)
 
         # Training logic
