@@ -9,7 +9,7 @@ torchaudio~=2.2.0 # Or torchaudio==2.2.0
 
 # Numerical and Scientific Computing
 numpy==1.26.4  # Back to recent version < 2.0 (compatible with gruut)
-scipy==1.12.0  # More recent than 1.4.1, compatible with numpy 1.26
+scipy==1.13.1  # More recent than 1.4.1, compatible with numpy 1.26
 numba==0.61.2  # More recent than 0.48.0
 
 # Audio Processing
